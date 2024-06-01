@@ -1,6 +1,6 @@
 .sidebar-container {
     max-width: 250px;
-    min-height: 100vh;
+    max-height: 100vh;
     position: sticky;
     position: -webkit-sticky;
     top: 0;

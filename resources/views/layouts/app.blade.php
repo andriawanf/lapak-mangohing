@@ -22,7 +22,6 @@
 
 <body class="antialiased font-poppins">
     <div class="min-h-screen">
-        {{-- @include('layouts.navigation') --}}
 
         <!-- Page Content -->
         <main class="relative">
