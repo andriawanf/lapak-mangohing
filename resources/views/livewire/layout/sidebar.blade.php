@@ -13,34 +13,36 @@
                 {{-- <img src="/icons/layout-grid.svg" width="24" height="24" alt=""> --}}
                 <h1>Dasboard</h1>
             </x-nav-link>
-            <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
-                <i data-lucide="shopping-basket"
-                    class="transition-all stroke-1 stroke-white/80 group-hover:stroke-tertiary "></i>
+            <x-nav-link :href="route('dashboard.admin.orders')" :active="request()->routeIs('dashboard.admin.orders')" class="flex items-center justify-start gap-2">
+                <i data-lucide="scroll-text"
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.orders') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 {{-- <img src="/icons/shopping-basket.svg" width="24" height="24" alt=""> --}}
                 <h1>Orders</h1>
             </x-nav-link>
             <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
-                <i data-lucide="shopping-bag"
-                    class="transition-all stroke-1 stroke-white/80 group-hover:stroke-tertiary "></i>
+                <i data-lucide="shopping-cart"
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.products') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 <h1>Products</h1>
             </x-nav-link>
-            <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
+            <x-nav-link :href="route('dashboard.admin.categories')" :active="request()->routeIs('dashboard.admin.categories')" class="flex items-center justify-start gap-2">
                 <i data-lucide="layout-list"
-                    class="transition-all stroke-1 stroke-white/80 group-hover:stroke-tertiary "></i>
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.categories') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 <h1>Categories</h1>
             </x-nav-link>
-            <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
-                <i data-lucide="star" class="transition-all stroke-1 stroke-white/80 group-hover:stroke-tertiary "></i>
+            <x-nav-link :href="route('dashboard.admin.reviews')" :active="request()->routeIs('dashboard.admin.reviews')" class="flex items-center justify-start gap-2">
+                <i data-lucide="star"
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.reviews') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 <h1>Reviews</h1>
             </x-nav-link>
-            <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
-                <i data-lucide="users" class="transition-all stroke-1 stroke-white/80 group-hover:stroke-tertiary "></i>
+            <x-nav-link :href="route('dashboard.admin.users')" :active="request()->routeIs('dashboard.admin.users')" class="flex items-center justify-start gap-2">
+                <i data-lucide="users"
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.users') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 <h1>Users</h1>
             </x-nav-link>
             <hr class="bg-white/20 border-1 border-white/20">
-            <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
+            <x-nav-link :href="route('dashboard.admin.profile')" :active="request()->routeIs('dashboard.admin.profile')" class="flex items-center justify-start gap-2">
                 <i data-lucide="circle-user-round"
-                    class="transition-all stroke-1 stroke-white/80 group-hover:stroke-tertiary "></i>
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.profile') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 <h1>Profile</h1>
             </x-nav-link>
         </div>

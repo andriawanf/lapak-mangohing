@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Admin\ProductList;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,9 +22,12 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
     Route::get('/dashboard-admin', function () {
         return view('admin/dashboard-admin');
     })->name('dashboard.admin');
-    Route::get('/dashboard-admin/products', function () {
-        return view('admin/dashboard-admin');
-    })->name('dashboard.admin.products');
+    Route::get('/dashboard-admin/products', ProductList::class)->name('dashboard.admin.products');
+    Route::get('/dashboard-admin/orders', ProductList::class)->name('dashboard.admin.orders');
+    Route::get('/dashboard-admin/categories', ProductList::class)->name('dashboard.admin.categories');
+    Route::get('/dashboard-admin/reviews', ProductList::class)->name('dashboard.admin.reviews');
+    Route::get('/dashboard-admin/users', ProductList::class)->name('dashboard.admin.users');
+    Route::get('/dashboard-admin/profile', ProductList::class)->name('dashboard.admin.profile');
 });
 
 require __DIR__ . '/auth.php';

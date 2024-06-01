@@ -21,13 +21,16 @@
 </head>
 
 <body class="antialiased font-poppins">
-    <div class="min-h-screen">
-
+    <main class="relative flex flex-row min-h-screen">
+        {{-- sidebar --}}
+        <livewire:layout.sidebar />
         <!-- Page Content -->
-        <main class="relative">
+        <div class="relative w-full bg-gradient-to-r from-white to-primary/10">
+            <livewire:layout.navbar />
             {{ $slot }}
-        </main>
-    </div>
+            <livewire:layout.footer />
+        </div>
+    </main>
     @livewireScripts
     <!-- Development version -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
