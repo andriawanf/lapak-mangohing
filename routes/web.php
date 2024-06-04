@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\ProductList;
@@ -28,7 +29,7 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
     Route::group(['prefix' => '/dashboard-admin/products'], function () {
         Route::get('/list', ProductList::class)->name('dashboard.admin.products.list');
         Route::get('/add-product', AddProduct::class)->name('dashboard.admin.products.add');
-        Route::post('/add-product', [ProductList::class, 'store'])->name('dashboard.admin.products.store');
+        Route::post('/add-product', [ProductController::class, 'store'])->name('dashboard.admin.products.store');
         Route::get('/edit-product/{id}', [ProductList::class, 'edit'])->name('dashboard.admin.products.edit');
         Route::patch('/edit-product/{id}', [ProductList::class, 'update'])->name('dashboard.admin.products.update');
         Route::delete('/delete-product/{id}', [ProductList::class, 'destroy'])->name('dashboard.admin.products.destroy');

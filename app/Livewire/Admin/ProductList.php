@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class ProductList extends Component

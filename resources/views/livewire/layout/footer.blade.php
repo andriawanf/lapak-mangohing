@@ -1,4 +1,4 @@
-<footer class="py-4 mx-3 mb-6 md:flex md:items-center md:justify-between md:py-6 xl:py-8">
+<footer class="p-4 mx-3 md:flex md:items-center md:justify-between md:p-6 xl:p-8">
     <ul class="flex flex-wrap items-center mb-6 space-y-1 md:mb-0">
         <li><a href="#" class="mr-4 text-sm font-normal text-gray-500 hover:underline md:mr-6 ">Terms
                 and conditions</a></li>
