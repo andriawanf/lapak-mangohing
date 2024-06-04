@@ -25,7 +25,7 @@
         {{-- sidebar --}}
         <livewire:layout.sidebar />
         <!-- Page Content -->
-        <div class="relative w-full bg-gradient-to-r from-white to-primary/10">
+        <div class="relative w-full bg-gradient-to-t from-white to-primary/10">
             <livewire:layout.navbar />
             {{ $slot }}
             <livewire:layout.footer />

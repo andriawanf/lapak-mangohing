@@ -19,9 +19,9 @@
                 {{-- <img src="/icons/shopping-basket.svg" width="24" height="24" alt=""> --}}
                 <h1>Orders</h1>
             </x-nav-link>
-            <x-nav-link :href="route('dashboard.admin.products')" :active="request()->routeIs('dashboard.admin.products')" class="flex items-center justify-start gap-2">
+            <x-nav-link :href="route('dashboard.admin.products.list')" :active="request()->routeIs('dashboard.admin.products.list')" class="flex items-center justify-start gap-2">
                 <i data-lucide="shopping-cart"
-                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.products') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
+                    class="transition-all stroke-1 {{ request()->routeIs('dashboard.admin.products.list') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                 <h1>Products</h1>
             </x-nav-link>
             <x-nav-link :href="route('dashboard.admin.categories')" :active="request()->routeIs('dashboard.admin.categories')" class="flex items-center justify-start gap-2">

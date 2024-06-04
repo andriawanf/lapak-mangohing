@@ -1,4 +1,4 @@
-<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 ">
+<div class="p-3 mx-3 my-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
     <!-- Card header -->
     <div class="items-center justify-between lg:flex">
         <div class="mb-4 lg:mb-0">
@@ -129,6 +129,10 @@
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
                                     Status
                                 </th>
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white text-tertiary">
@@ -172,6 +176,11 @@
                                     <span
                                         class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md dark:bg-gray-700 dark:text-green-400 border border-green-100 dark:border-green-500">Completed</span>
                                 </td>
+                                <td class="flex items-center justify-center p-4 whitespace-nowrap">
+                                    <a href="#">
+                                        <i data-lucide="ellipsis-vertical"></i>
+                                    </a>
+                                </td>
                             </tr>
                             <tr class="bg-gray-100">
                                 <td class="p-4 text-sm font-normal text-gray-900 whitespace-nowrap ">
@@ -206,6 +215,11 @@
                                 <td class="p-4 whitespace-nowrap">
                                     <span
                                         class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md border border-red-100 dark:border-red-400 dark:bg-gray-700 dark:text-red-400">Cancelled</span>
+                                </td>
+                                <td class="flex items-center justify-center p-4 whitespace-nowrap">
+                                    <a href="#">
+                                        <i data-lucide="ellipsis-vertical"></i>
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
@@ -242,6 +256,11 @@
                                     <span
                                         class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md border border-purple-100 dark:bg-gray-700 dark:border-purple-500 dark:text-purple-400">In
                                         progress</span>
+                                </td>
+                                <td class="flex items-center justify-center p-4 whitespace-nowrap">
+                                    <a href="#">
+                                        <i data-lucide="ellipsis-vertical"></i>
+                                    </a>
                                 </td>
                             </tr>
                             <tr class="bg-gray-100">
@@ -285,6 +304,11 @@
                                         class="bg-orange-100 text-orange-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-md border border-orange-100 dark:bg-gray-700 dark:border-orange-300 dark:text-orange-300">In
                                         review</span>
                                 </td>
+                                <td class="flex items-center justify-center p-4 whitespace-nowrap">
+                                    <a href="#">
+                                        <i data-lucide="ellipsis-vertical"></i>
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -294,63 +318,141 @@
     </div>
     <!-- Card Footer -->
     <div class="flex items-center justify-between pt-3 sm:pt-6">
-        <div>
-            <button class="inline-flex items-center p-2 text-sm font-medium text-center rounded-lg text-tertiary "
-                type="button" data-dropdown-toggle="transactions-dropdown">Last 7 days <svg class="w-4 h-4 ml-2"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg></button>
-            <!-- Dropdown menu -->
-            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow"
-                id="transactions-dropdown">
-                <div class="px-4 py-3" role="none">
-                    <p class="text-sm font-medium text-gray-900 truncate " role="none">
-                        Sep 16, 2021 - Sep 22, 2021
-                    </p>
-                </div>
-                <ul class="py-1" role="none">
-                    <li>
+        @if (request()->routeIs('dashboard.admin'))
+            <div>
+                <button class="inline-flex items-center p-2 text-sm font-medium text-center rounded-lg text-tertiary "
+                    type="button" data-dropdown-toggle="transactions-dropdown">Last 7 days <svg class="w-4 h-4 ml-2"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                        </path>
+                    </svg></button>
+                <!-- Dropdown menu -->
+                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow"
+                    id="transactions-dropdown">
+                    <div class="px-4 py-3" role="none">
+                        <p class="text-sm font-medium text-gray-900 truncate " role="none">
+                            Sep 16, 2021 - Sep 22, 2021
+                        </p>
+                    </div>
+                    <ul class="py-1" role="none">
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                role="menuitem">Yesterday</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                role="menuitem">Today</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                role="menuitem">Last 7 days</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                role="menuitem">Last 30 days</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                role="menuitem">Last 90 days</a>
+                        </li>
+                    </ul>
+                    <div class="py-1" role="none">
                         <a href="#"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            role="menuitem">Yesterday</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            role="menuitem">Today</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            role="menuitem">Last 7 days</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            role="menuitem">Last 30 days</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            role="menuitem">Last 90 days</a>
-                    </li>
-                </ul>
-                <div class="py-1" role="none">
-                    <a href="#"
-                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        role="menuitem">Custom...</a>
+                            role="menuitem">Custom...</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="flex-shrink-0">
-            <a href="#"
-                class="inline-flex items-center p-2 text-xs font-medium uppercase rounded-lg text-tertiary sm:text-sm hover:bg-primary hover:text-white">
-                Transactions Report
-                <svg class="w-4 h-4 ml-1 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
+            <div class="flex-shrink-0">
+                <a href="#"
+                    class="inline-flex items-center p-2 text-xs font-medium uppercase rounded-lg text-tertiary sm:text-sm hover:bg-primary hover:text-white">
+                    Transactions Report
+                    <svg class="w-4 h-4 ml-1 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+        @elseif (request()->routeIs('dashboard.admin.orders'))
+            <div class="items-center w-full p-4 sm:flex sm:justify-between">
+                <div class="flex items-center mb-4 sm:mb-0">
+                    <span class="text-sm font-normal text-gray-500">Showing <span
+                            class="font-semibold text-tertiary ">1-20</span> of <span
+                            class="font-semibold text-tertiary ">2290</span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <ol class="flex justify-center gap-1 text-xs font-medium">
+                        <li>
+                            <a href="#"
+                                class="inline-flex items-center justify-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8 rtl:rotate-180">
+                                <span class="sr-only">Prev Page</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                                class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
+                                1
+                            </a>
+                        </li>
+
+                        <li class="block leading-8 text-center text-white rounded bg-primary border-primary size-8">
+                            2
+                        </li>
+
+                        <li>
+                            <a href="#"
+                                class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
+                                3
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                                class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
+                                4
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
+                                ...
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
+                                7
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                                class="inline-flex items-center justify-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8 rtl:rotate-180">
+                                <span class="sr-only">Next Page</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        @endif
     </div>
 </div>
