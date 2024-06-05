@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -69,7 +70,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = product::findOrFail($id);
-        return view('product.edit', compact('product'));
+        return view('livewire.admin.products.edit-product', compact('product'));
     }
 
     public function update(Request $request, $id)
@@ -125,11 +126,22 @@ class ProductController extends Controller
             foreach ($request->file('product_images') as $image) {
                 $imageName = time() . '_' . uniqid() . '_' . $image->hashName();
                 $image->storeAs('public/images/products', $imageName);
+                Storage::delete('public/images/products/' . $product->product_images);
                 $images[] = $imageName;
             }
+
             $product->update(['product_images' => json_encode($images)]);
         }
 
-        return redirect()->route('product.index')->with('success', 'Product updated successfully');
+        return redirect()->route('dashboard.admin.products.list')->with('success', 'Product updated successfully');
+    }
+
+
+    public function destroy($id)
+    {
+        $product = product::findOrFail($id);
+        Storage::delete('public/images/products/' . $product->product_images);
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully');
     }
 }

@@ -59,13 +59,15 @@
                         <div>
                             <x-input-label for="product_category" :value="__('Product Category')" class="mb-2" />
                             <select id="product_category" name="product_category" wire:model='product_category'
-                                class="w-full text-base border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary"
-                                value="{{ old('product_category') }}">
+                                class="w-full text-base border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                 <option value="">Chosee type</option>
-                                <option value="makaroni">Makaroni</option>
-                                <option value="keripik">Keripik</option>
-                                <option value="kerupuk">Kerupuk</option>
+                                <option value="makaroni" {{ old('product_category') == 'makaroni' ? 'selected' : '' }}>
+                                    Makaroni</option>
+                                <option value="keripik" {{ old('product_category') == 'keripik' ? 'selected' : '' }}>
+                                    Keripik</option>
+                                <option value="kerupuk" {{ old('product_category') == 'kerupuk' ? 'selected' : '' }}>
+                                    Kerupuk</option>
                             </select>
                             @error('product_category')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -98,7 +100,7 @@
                         <x-input-label for="product_description" :value="__('Descriptions')" class="mb-2" />
                         <textarea id="product_description" rows="14" name="product_description" wire:model='product_description'
                             class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary"
-                            placeholder="Write your thoughts here..." value="{{ old('product_description') }}"></textarea>
+                            placeholder="Write your thoughts here...">{{ old('product_description') }}</textarea>
                     </div>
                     {{-- input discount --}}
                     <div class="grid grid-cols-2 space-x-6">
