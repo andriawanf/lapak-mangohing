@@ -10,27 +10,39 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'product_name' => 'required',
-            'product_number' => 'required',
-            'product_category' => 'required',
-            'product_price' => 'required|integer',
-            'product_stock' => 'required|integer',
-            'product_description' => 'required',
-            'discount_percentage' => 'required|integer',
-            'minim_orders' => 'required|integer',
-            'discount_period_start' => 'required|date',
-            'discount_period_end' => 'required|date',
-            'product_tag' => 'required',
-            'product_weight' => 'required',
-            'product_length' => 'required',
-            'product_breadth' => 'required',
-            'product_width' => 'required',
-            'product_images' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        $request->validate(
+            [
+                'product_name' => 'required',
+                'product_number' => 'required',
+                'product_category' => 'required',
+                'product_price' => 'required|integer',
+                'product_stock' => 'required|integer',
+                'product_description' => 'required',
+                'discount_percentage' => 'required|integer',
+                'minim_orders' => 'required|integer',
+                'discount_period_start' => 'required|date',
+                'discount_period_end' => 'required|date',
+                'product_tag' => 'required',
+                'product_weight' => 'required',
+                'product_length' => 'required',
+                'product_breadth' => 'required',
+                'product_width' => 'required',
+                'product_images' => 'required|array',
+                'product_images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            ],
+            [
+                'product_images.required' => 'Please upload an image',
+                'product_images.*.mimes' => 'Only jpeg,png and bmp images are allowed',
+                'product_images.*.max' => 'Sorry! Maximum allowed size for an image is 10MB',
+            ]
+        );
 
-        $image = $request->file('product_images');
-        $image->storeAs('/images', $image->hashName());
+        $images = [];
+        foreach ($request->file('product_images') as $image) {
+            $imageName = time() . '_' . uniqid() . '_' . $image->hashName();
+            $image->storeAs('public/images/products', $imageName);
+            $images[] = $imageName;
+        }
 
         product::create([
             'product_name' => $request->product_name,
@@ -48,7 +60,7 @@ class ProductController extends Controller
             'product_length' => $request->product_length,
             'product_breadth' => $request->product_breadth,
             'product_width' => $request->product_width,
-            'product_images' => $image->hashName(),
+            'product_images' => json_encode($images),
         ]);
         return redirect()->back()->with('success', 'Product created successfully');
     }

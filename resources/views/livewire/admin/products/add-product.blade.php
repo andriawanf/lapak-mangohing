@@ -196,22 +196,8 @@
                     {{-- input product description --}}
                     <div>
                         <x-input-label for="product_images" :value="__('Product Images')" class="mb-2" />
-                        <div class="grid grid-cols-3 gap-3">
-                            <div class="relative">
-                                <img id="product_image" src="/images/8.jpg" alt="product image"
-                                    class="object-cover rounded-xl">
-                                <i data-lucide="trash-2" class="absolute text-lg text-red-500 bottom-3 left-3"></i>
-                            </div>
-                            <div class="relative">
-                                <img id="product_image" src="/images/8.jpg" alt="product image"
-                                    class="object-cover rounded-xl">
-                                <i data-lucide="trash-2" class="absolute text-lg text-red-500 bottom-3 left-3"></i>
-                            </div>
-                            <div class="relative">
-                                <img id="product_image" src="/images/8.jpg" alt="product image"
-                                    class="object-cover rounded-xl">
-                                <i data-lucide="trash-2" class="absolute text-lg text-red-500 bottom-3 left-3"></i>
-                            </div>
+                        <div class="grid grid-cols-3 gap-3" id="image_array_preview">
+                            {{-- image preview --}}
                         </div>
                         <div class="flex items-center justify-center w-full mt-3">
                             <label for="dropzone-file"
@@ -229,8 +215,8 @@
                                         800x400px)
                                     </p>
                                 </div>
-                                <input id="dropzone-file" type="file" class="hidden" name="product_images"
-                                    value="{{ old('product_images') }}" />
+                                <input id="dropzone-file" type="file" class="hidden" name="product_images[]"
+                                    multiple accept="image/*" value="{{ old('product_images') }}" />
                             </label>
                         </div>
                         @error('product_images')
