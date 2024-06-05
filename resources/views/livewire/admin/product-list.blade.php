@@ -148,69 +148,76 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white text-tertiary">
-                            @foreach ($products as $product)
+                            @if ($products->count() > 0)
+                                @foreach ($products as $product)
+                                    <tr>
+                                        <td class="w-4 p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox{{ $product->id }}" aria-describedby="checkbox-1"
+                                                    type="checkbox"
+                                                    class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary">
+                                                <label for="checkbox" class="sr-only">checkbox</label>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-sm font-normal text-gray-900 whitespace-nowrap ">
+                                            @php $image = json_decode($product->product_images, true); @endphp
+                                            <div class="w-full rounded-lg">
+                                                <img src="{{ asset('storage/images/products/' . $image[0]) }}"
+                                                    width="56" height="56" alt="product-image"
+                                                    class="object-cover rounded-lg">
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap ">
+                                            {{ $product->product_name }}
+                                            <p class="text-xs font-normal text-tertiary/50">Tag:
+                                                {{ $product->product_tag }}
+                                            </p>
+                                        </td>
+                                        <td
+                                            class="max-w-sm p-4 overflow-hidden text-sm font-normal truncate text-tertiary/80 xl:max-w-xs ">
+                                            {{ $product->product_description }}
+                                        </td>
+                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
+                                            #{{ $product->product_number }}
+                                        </td>
+                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
+                                            Rp. {{ $product->product_price }}
+                                        </td>
+                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
+                                            {{ $product->discount_percentage }}%
+                                        </td>
+                                        <td class="p-4 space-x-2 whitespace-nowrap">
+                                            <button type="button"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
+                                                    </path>
+                                                    <path fill-rule="evenodd"
+                                                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                                Edit
+                                            </button>
+                                            <button type="button"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
                                 <tr>
-                                    <td class="w-4 p-4">
-                                        <div class="flex items-center">
-                                            <input id="checkbox{{ $product->id }}" aria-describedby="checkbox-1"
-                                                type="checkbox"
-                                                class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary">
-                                            <label for="checkbox" class="sr-only">checkbox</label>
-                                        </div>
-                                    </td>
-                                    <td class="p-4 text-sm font-normal text-gray-900 whitespace-nowrap ">
-                                        <div class="w-full rounded-lg">
-                                            <img src="{{ asset('storage/images/products/' . $product->product_images . '') }}"
-                                                width="56" height="56" alt="product-image"
-                                                class="object-cover rounded-lg">
-                                        </div>
-                                    </td>
-                                    <td class="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap ">
-                                        {{ $product->product_name }}
-                                        <p class="text-xs font-normal text-tertiary/50">Tag:
-                                            {{ $product->product_tag }}
-                                        </p>
-                                    </td>
-                                    <td
-                                        class="max-w-sm p-4 overflow-hidden text-sm font-normal truncate text-tertiary/80 xl:max-w-xs ">
-                                        {{ $product->product_description }}
-                                    </td>
-                                    <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                        #{{ $product->product_number }}
-                                    </td>
-                                    <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                        Rp. {{ $product->product_price }}
-                                    </td>
-                                    <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                        {{ $product->discount_percentage }}%
-                                    </td>
-                                    <td class="p-4 space-x-2 whitespace-nowrap">
-                                        <button type="button"
-                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary">
-                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
-                                                </path>
-                                                <path fill-rule="evenodd"
-                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            Edit
-                                        </button>
-                                        <button type="button"
-                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary">
-                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            Delete
-                                        </button>
-                                    </td>
+                                    <td colspan="8" class="p-4 text-center">No data found.</td>
                                 </tr>
-                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
