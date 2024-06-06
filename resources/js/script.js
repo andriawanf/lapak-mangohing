@@ -615,3 +615,23 @@ if (document.getElementById('traffic-by-device')) {
 	});
 }
 
+// Form upload images preview
+$(document).ready(function () {
+	$('#dropzone-file').on('change', function () {
+		$('#image_array_preview').empty();
+		for(let i=0;i<this.files.length;++i){
+            let filereader = new FileReader();
+            let $img=jQuery.parseHTML(`
+				<div class="relative">
+                    <img id="product_image${i}" src="" alt="product image" class="object-cover rounded-xl">
+                    <i data-lucide="trash-2" class="absolute text-lg text-red-500 bottom-3 left-3"></i>
+                </div>
+			`);
+            filereader.onload = function(){
+                $('#product_image'+i).attr('src', this.result);
+            };
+            filereader.readAsDataURL(this.files[i]);
+            $("#image_array_preview").append($img);
+        }
+	});
+});

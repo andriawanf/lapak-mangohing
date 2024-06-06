@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\product;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,7 +21,7 @@ class RolePermissionTable extends Seeder
         $user = User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('asdasdasd'),
         ]);
 
         $user->assignRole($roleAdmin);

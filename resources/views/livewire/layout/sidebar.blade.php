@@ -50,7 +50,7 @@
     <form method="POST" action="{{ route('logout') }}" class="w-full">
         @csrf
         <x-primary-button
-            class="w-full bg-[#e93b3c] text-white py-2.5 focus:bg-[#a52a2b] active:bg-[#a52a2b] flex items-center justify-center gap-2">
+            class="w-full bg-[#e93b3c] text-white py-2.5 focus:bg-red-800 active:bg-red-800 flex items-center justify-center gap-2">
             <i data-lucide="log-out" class="transition-all stroke-2 stroke-white/80 group-hover:stroke-tertiary "></i>
             <h1>Logout</h1>
         </x-primary-button>
