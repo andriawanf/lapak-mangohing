@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\Products\AddProduct;
+use App\Livewire\Admin\Products\EditProduct;
 use App\Livewire\Admin\UserList;
 use Illuminate\Support\Facades\Route;
 
@@ -30,9 +31,9 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
         Route::get('/list', ProductList::class)->name('dashboard.admin.products.list');
         Route::get('/add-product', AddProduct::class)->name('dashboard.admin.products.add');
         Route::post('/add-product', [ProductController::class, 'store'])->name('dashboard.admin.products.store');
-        Route::get('/edit-product/{id}', [ProductList::class, 'edit'])->name('dashboard.admin.products.edit');
-        Route::patch('/edit-product/{id}', [ProductList::class, 'update'])->name('dashboard.admin.products.update');
-        Route::delete('/delete-product/{id}', [ProductList::class, 'destroy'])->name('dashboard.admin.products.destroy');
+        Route::get('/edit-product/{id}', [EditProduct::class, 'edit'])->name('dashboard.admin.products.edit');
+        Route::put('/edit-product/{id}', [ProductController::class, 'update'])->name('dashboard.admin.products.update');
+        Route::delete('/delete-product/{id}', [ProductController::class, 'destroy'])->name('dashboard.admin.products.destroy');
     });
     Route::get('/dashboard-admin/orders', OrderList::class)->name('dashboard.admin.orders');
     Route::get('/dashboard-admin/categories', ProductList::class)->name('dashboard.admin.categories');
