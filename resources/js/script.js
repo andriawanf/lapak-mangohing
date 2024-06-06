@@ -621,17 +621,19 @@ $(document).ready(function () {
 		$('#image_array_preview').empty();
 		for(let i=0;i<this.files.length;++i){
             let filereader = new FileReader();
-            let $img=jQuery.parseHTML(`
+            let $img=`
 				<div class="relative">
                     <img id="product_image${i}" src="" alt="product image" class="object-cover rounded-xl">
-                    <i data-lucide="trash-2" class="absolute text-lg text-red-500 bottom-3 left-3"></i>
+					<button type="button" class="absolute text-lg text-red-500 bottom-3 left-3 z-50" >
+                    	<i data-lucide="trash-2" id="remove_image${i}" ></i>
+					</button>
                 </div>
-			`);
+			`;
             filereader.onload = function(){
                 $('#product_image'+i).attr('src', this.result);
             };
             filereader.readAsDataURL(this.files[i]);
-            $("#image_array_preview").append($img);
+            $("#image_array_preview").html($img);
         }
 	});
 });

@@ -209,6 +209,21 @@
                             <x-input-label for="product_images" :value="__('Product Images')" class="mb-2" />
                             <div class="grid grid-cols-3 gap-3" id="image_array_preview">
                                 {{-- image preview --}}
+                                @php
+                                    $images = json_decode($products->product_images, true);
+                                @endphp
+                                @if ($product_images == null)
+                                    @foreach ($images as $image)
+                                        <div class="relative">
+                                            <img id="product_image"
+                                                src="{{ asset('storage/images/products/' . $image) }}"
+                                                alt="product image" class="object-cover rounded-xl">
+                                            <i data-lucide="trash-2"
+                                                class="absolute text-lg text-red-500 bottom-3 left-3"></i>
+                                        </div>
+                                    @endforeach
+                                @else
+                                @endif
                             </div>
                             <div class="flex items-center justify-center w-full mt-3">
                                 <label for="dropzone-file"

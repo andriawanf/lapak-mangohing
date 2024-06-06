@@ -123,10 +123,13 @@ class ProductController extends Controller
 
         if ($request->hasFile('product_images')) {
             $images = [];
+            $product_images = json_decode($product->product_images, true);
+            foreach ($product_images as $image) {
+                Storage::delete('public/images/products/' . $image);
+            }
             foreach ($request->file('product_images') as $image) {
                 $imageName = time() . '_' . uniqid() . '_' . $image->hashName();
                 $image->storeAs('public/images/products', $imageName);
-                Storage::delete('public/images/products/' . $product->product_images);
                 $images[] = $imageName;
             }
 

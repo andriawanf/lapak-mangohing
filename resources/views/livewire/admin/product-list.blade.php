@@ -216,17 +216,17 @@
                                             <button type="button"
                                                 data-modal-target="detail-modal-product{{ $product->id }}"
                                                 data-modal-toggle="detail-modal-product{{ $product->id }}"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-700">
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-0 focus:ring-blue-700">
                                                 <i data-lucide="receipt-text" class="w-4 h-4"></i>
                                             </button>
                                             <a href="{{ route('dashboard.admin.products.edit', $product->id) }}">
                                                 <button type="button"
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-500">
+                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-0 focus:ring-orange-500">
                                                     <i data-lucide="pencil" class="w-4 h-4"></i>
                                                 </button>
                                             </a>
                                             <button type="button"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary">
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
                                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                                             </button>
                                         </td>
