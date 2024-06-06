@@ -123,16 +123,17 @@
                                         <img class="w-10 h-10 rounded-full" src="/images/mang-ohing-logo.png"
                                             alt="avatar">
                                         <div class="text-sm font-normal text-gray-500 ">
-                                            <div class="text-base font-semibold text-tertiary">{{ $user->name }}
+                                            <div class="text-sm font-semibold text-tertiary">{{ $user->name }}
                                             </div>
                                             <div class="text-sm font-normal text-gray-500 ">
                                                 {{ $user->email }}</div>
                                         </div>
                                     </td>
-                                    <td class="p-4 text-base font-medium text-tertiary whitespace-nowrap">
+                                    <td class="p-4 text-sm font-medium text-tertiary whitespace-nowrap">
                                         {{ $user->roles[0]->name }}</td>
-                                    <td class="p-4 text-base font-medium text-tertiary whitespace-nowrap">
-                                        Bogor</td>
+                                    <td
+                                        class="max-w-xs p-4 text-sm font-medium truncate text-tertiary whitespace-nowrap xl:max-w-xs">
+                                        Perumahan Villa Bogor Indah 5, Cluster Merak Blok CF4 No.12, Bogor, 16123</td>
                                     <td class="p-4 whitespace-nowrap">
                                         @if ($user->email_verified_at)
                                             <span

@@ -212,7 +212,7 @@
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
                                             {{ $product->discount_percentage }}%
                                         </td>
-                                        <td class="p-4 space-x-1">
+                                        <td class="flex flex-wrap gap-1 p-4">
                                             <button type="button"
                                                 data-modal-target="detail-modal-product{{ $product->id }}"
                                                 data-modal-toggle="detail-modal-product{{ $product->id }}"

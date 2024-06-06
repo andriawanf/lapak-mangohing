@@ -20,3 +20,7 @@
 #sidebar.sidebar-close  h1 {
     display: none;
 }
+
+#sidebar.sidebar-close a {
+    justify-content: center;
+}
