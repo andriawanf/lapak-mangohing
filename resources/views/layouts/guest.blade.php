@@ -25,7 +25,7 @@
         <div class="container py-3 mx-auto">
             <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start">
-                    <a href="/" class="flex mr-4">
+                    <a href="/" class="flex ml-4">
                         <img src="/images/mang-ohing-logo.png" class="h-8 mr-3" alt="Flowbite Logo" />
                         <span class="self-center text-xl font-semibold text-[#d43637] whitespace-nowrap">Lapak Mang
                             Ohing</span>

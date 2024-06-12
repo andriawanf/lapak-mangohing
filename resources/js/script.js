@@ -618,22 +618,41 @@ if (document.getElementById('traffic-by-device')) {
 // Form upload images preview
 $(document).ready(function () {
 	$('#dropzone-file').on('change', function () {
-		$('#image_array_preview').empty();
+		// check if there's already images, if yes, add the new images
+		let images = $('#image_array_preview').data('images') || [];
 		for(let i=0;i<this.files.length;++i){
             let filereader = new FileReader();
-            let $img=`
-				<div class="relative">
-                    <img id="product_image${i}" src="" alt="product image" class="object-cover rounded-xl">
-					<button type="button" class="absolute text-lg text-red-500 bottom-3 left-3 z-50" >
-                    	<i data-lucide="trash-2" id="remove_image${i}" ></i>
-					</button>
-                </div>
-			`;
             filereader.onload = function(){
-                $('#product_image'+i).attr('src', this.result);
+                const $img=`
+					<div class="relative" id="img-container-${images.length + i}">
+                        <img id="product_image${images.length + i}" src="${this.result}" alt="product image" class="object-cover rounded-xl">
+						<button type="button" class="absolute bottom-2 right-2 z-50 delete-image" data-id="${images.length + i}" >
+							<div class="p-2 bg-white rounded-lg text-red-500">
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+							</div>
+						</button>
+                    </div>
+				`;
+                $("#image_array_preview").append($img);
+				images.push(this.result);
             };
             filereader.readAsDataURL(this.files[i]);
-            $("#image_array_preview").html($img);
+            
         }
+		$('#image_array_preview').data('images', images);
+
+		// Add delete image functionality
+		$(document).on('click', '.delete-image', function(){
+            const id = $(this).data('id');
+            $('#img-container-'+id).remove();
+			images.splice(id);
+			$('#dropzone-file').val('');
+        });
+    });
+});
+
+$(document).ready(function () {
+	$('#dropdown-product').click(function () {
+		$('#dropdown-arrow').toggleClass('rotate-180');
 	});
 });

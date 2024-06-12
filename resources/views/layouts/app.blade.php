@@ -25,7 +25,7 @@
         {{-- sidebar --}}
         <livewire:layout.sidebar />
         <!-- Page Content -->
-        <div class="relative w-full bg-gradient-to-t from-white to-primary/10">
+        <div class="relative w-full bg-white">
             <livewire:layout.navbar />
             {{ $slot }}
             <livewire:layout.footer />
@@ -39,6 +39,9 @@
 
     <!-- Production version -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    {{-- datepicker flowbite --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
+
 </body>
 
 </html>

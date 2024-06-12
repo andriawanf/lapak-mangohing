@@ -21,6 +21,14 @@
     display: none;
 }
 
+#sidebar.sidebar-close  span {
+    display: none;
+}
+
+#sidebar.sidebar-close  #dropdown-product #dropdown-arrow {
+    display: none;
+}
+
 #sidebar.sidebar-close a {
     justify-content: center;
 }
