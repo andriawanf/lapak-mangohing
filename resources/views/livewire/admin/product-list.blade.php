@@ -207,7 +207,7 @@
                                             #{{ $product->product_number }}
                                         </td>
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            Rp. {{ $product->product_price }}
+                                            Rp. {{ number_format($product->product_price, 0, ',', '.') }}
                                         </td>
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
                                             {{ $product->discount_percentage }}%
@@ -225,10 +225,16 @@
                                                     <i data-lucide="pencil" class="w-4 h-4"></i>
                                                 </button>
                                             </a>
-                                            <button type="button"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                            </button>
+                                            <form
+                                                action="{{ route('dashboard.admin.products.destroy', $product->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                     <x-modal :id="$product->id" :product="$product" />
