@@ -619,6 +619,7 @@ if (document.getElementById('traffic-by-device')) {
 $(document).ready(function () {
 	$('#dropzone-file').on('change', function () {
 		// check if there's already images, if yes, add the new images
+		$('#image_array_preview').empty();
 		let images = $('#image_array_preview').data('images') || [];
 		for(let i=0;i<this.files.length;++i){
             let filereader = new FileReader();
