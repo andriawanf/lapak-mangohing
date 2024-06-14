@@ -1,4 +1,4 @@
-@props(['id', 'product'])
+@props(['id', 'data'])
 
 <div id="detail-modal-product{{ $id }}" tabindex="-1"
     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -7,8 +7,8 @@
         <div class="relative bg-white rounded-lg shadow">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5">
-                <h3 class="text-xl font-semibold text-tertiary">
-                    {{ $product->product_name }}
+                <h3 class="text-2xl font-bold text-tertiary">
+                    #{{ $data->product_number }}
                 </h3>
                 <button type="button"
                     class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-tertiary ms-auto"
@@ -22,97 +22,100 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <div class="grid grid-cols-2 p-4 space-x-6 md:p-5">
-                <div class="space-y-4">
-                    <h1 class="mb-4 text-lg font-semibold">Product Informations</h1>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Product Name:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_name }}</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Product Number:</p>
-                        <h1 class="text-base font-semibold text-tertiary">#{{ $product->product_number }}</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Category:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_category }}</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Price:</p>
-                        <h1 class="text-base font-semibold text-tertiary">Rp.
-                            {{ number_format($product->product_price, 0, ',', '.') }}</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Stocks:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_stock }} pcs</h1>
-                    </div>
-                    <div class="flex flex-row items-start gap-2">
-                        <p class="text-base text-tertiary">Description:</p>
-                        <h1 class="text-base font-semibold text-tertiary">"{{ $product->product_description }}"</h1>
-                    </div>
-                    <div class="flex flex-col items-start gap-4">
-                        <h1 class="text-base text-tertiary">Product Images:</h1>
-                        <div class="flex gap-2 flex-nowrap">
-                            @php
-                                $image = json_decode($product->product_images, true);
-                            @endphp
+            <div class="flex flex-col gap-6 p-4 md:p-5">
+                <div class="grid grid-rows-2 gap-2 border h-fit">
+                    <div class="grid grid-flow-col-dense {{ $data->product_images > 0 ? 'grid-cols-1' : 'hidden' }}">
+                        @php
+                            $image = json_decode($data->product_images, true);
+                            $image = $image[0] ?? null;
+                        @endphp
 
-                            @foreach ($image as $img)
-                                <div class="w-full rounded-lg">
-                                    <img src="{{ asset('storage/images/products/' . $img) }}" width="128"
-                                        height="128" alt="product-image" class="object-cover rounded-lg">
-                                </div>
-                            @endforeach
-                        </div>
+                        @if ($image)
+                            <img src="{{ asset('storage/images/products/' . $image) }}" alt="product-image"
+                                class="object-cover w-full rounded-lg h-52">
+                        @endif
+                    </div>
+                    <div
+                        class="grid grid-flow-col-dense {{ $data->product_images > 1 ? 'grid-cols-2' : 'hidden' }} gap-2">
+                        @php
+                            $images = json_decode($data->product_images, true);
+                            $images = array_slice($images, 1);
+                        @endphp
+
+                        @foreach ($images as $img)
+                            <img src="{{ asset('storage/images/products/' . $img) }}" alt="product-image"
+                                class="object-cover w-full rounded-lg h-52">
+                        @endforeach
                     </div>
                 </div>
-                <div class="space-y-4">
-                    <h1 class="mb-4 text-lg font-semibold">Product Details</h1>
-                    <div class="flex flex-row items-start gap-2">
-                        <p class="text-base text-tertiary">Tags:</p>
-                        <h1 class="text-base font-semibold text-tertiary">"{{ $product->product_tag }}"</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Weight:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_weight }} kg</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Length:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_length }} cm</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Breadth:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_breadth }} cm</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Width:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->product_width }} cm</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Discount:</p>
-                        <h1 class="text-base font-semibold text-tertiary">{{ $product->discount_percentage }}%</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Minimum Orders:</p>
-                        <h1 class="text-base font-semibold text-tertiary">
-                            {{ number_format($product->minimum_order, 0, ',', '.') }}</h1>
-                    </div>
-                    <div class="flex flex-row items-center gap-2">
-                        <p class="text-base text-tertiary">Discount Period:</p>
-                        <div class="flex flex-row gap-4">
-                            <h1 class="text-base font-semibold text-tertiary">{{ $product->discount_period_start }}
-                            </h1>
-                            <h1 class="text-base text-tertiary">to</h1>
-                            <h1 class="text-base font-semibold text-tertiary">{{ $product->discount_period_end }}</h1>
+                <div class="pt-4 space-y-4 border-t border-gray-200">
+                    <h1 class="text-lg font-semibold">Details</h1>
+                    <div>
+                        <div class="flex flex-col items-start gap-2 mb-4">
+                            <x-input-label class="text-xs text-tertiary" :value="__('Product Name')" />
+                            <x-text-input type="text" class="w-full text-sm uppercase border-gray-200 text-tertiary"
+                                value="{{ $data->product_name }}" readonly disabled />
+                        </div>
+                        <div class="flex flex-col items-start gap-2 mb-4">
+                            <x-input-label for="product_name" class="text-xs text-tertiary" :value="__('Descriptions')" />
+                            <textarea type="text" class="w-full text-sm border border-gray-300 rounded-lg text-tertiary" rows="5" readonly
+                                disabled>{{ $data->product_description }}</textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('Price')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="Rp. {{ number_format($data->product_price, 0, ',', '.') }}" readonly
+                                    disabled />
+                            </div>
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('Stocks')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_stock }} pcs" readonly disabled />
+                            </div>
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('Category')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_category }}" readonly disabled />
+                            </div>
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('Tags')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_tag }}" readonly disabled />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('Weight')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_weight }} cm" readonly disabled />
+                            </div>
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('length')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_length }} cm" readonly disabled />
+                            </div>
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('Breadth')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_breadth }} cm" readonly disabled />
+                            </div>
+                            <div class="flex flex-col items-start gap-2">
+                                <x-input-label class="text-xs text-tertiary" :value="__('width')" />
+                                <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
+                                    value="{{ $data->product_width }} cm" readonly disabled />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Modal footer -->
             <div
-                class="flex items-center justify-end w-full p-4 space-x-3 border-t border-gray-200 rounded-b md:p-5 rtl:space-x-reverse">
+                class="flex items-center justify-end w-full gap-3 p-4 border-t border-gray-200 rounded-b md:p-5 rtl:space-x-reverse">
+                <button data-modal-hide="detail-modal-product{{ $id }}" type="button"
+                    class="text-white bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Close</button>
                 <a href="{{ route('dashboard.admin.products.edit', $id) }}">
-                    <button data-modal-hide="extralarge-modal" type="button"
+                    <button type="button"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Edit
                         Product</button>
                 </a>

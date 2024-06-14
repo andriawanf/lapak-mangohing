@@ -48,10 +48,10 @@ class ProductController extends Controller
             'product_price' => $request->product_price,
             'product_stock' => $request->product_stock,
             'product_description' => $request->product_description,
-            'discount_percentage' => $request->discount_percentage ?? 0,
-            'minimum_order_amount' => $request->minim_orders ?? 0,
-            'discount_period_start' => $request->discount_period_start ?? null,
-            'discount_period_end' => $request->discount_period_end ?? null,
+            // 'discount_percentage' => $request->discount_percentage ?? 0,
+            // 'minimum_order_amount' => $request->minim_orders ?? 0,
+            // 'discount_period_start' => $request->discount_period_start ?? null,
+            // 'discount_period_end' => $request->discount_period_end ?? null,
             'product_tag' => $request->product_tag,
             'product_weight' => $request->product_weight,
             'product_length' => $request->product_length,
@@ -79,10 +79,6 @@ class ProductController extends Controller
                 'product_price' => 'required|integer',
                 'product_stock' => 'required|integer',
                 'product_description' => 'required',
-                'discount_percentage' => 'required|integer',
-                'minim_orders' => 'required|integer',
-                'discount_period_start' => 'required|date',
-                'discount_period_end' => 'required|date',
                 'product_tag' => 'required',
                 'product_weight' => 'required',
                 'product_length' => 'required',
@@ -106,10 +102,10 @@ class ProductController extends Controller
             'product_price' => $request->product_price,
             'product_stock' => $request->product_stock,
             'product_description' => $request->product_description,
-            'discount_percentage' => $request->discount_percentage ?? 0,
-            'minimum_order_amount' => $request->minim_orders ?? 0,
-            'discount_period_start' => $request->discount_period_start ?? null,
-            'discount_period_end' => $request->discount_period_end ?? null,
+            // 'discount_percentage' => $request->discount_percentage ?? 0,
+            // 'minimum_order_amount' => $request->minim_orders ?? 0,
+            // 'discount_period_start' => $request->discount_period_start ?? null,
+            // 'discount_period_end' => $request->discount_period_end ?? null,
             'product_tag' => $request->product_tag,
             'product_weight' => $request->product_weight,
             'product_length' => $request->product_length,
@@ -139,7 +135,10 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = product::findOrFail($id);
-        Storage::delete('public/images/products/' . $product->product_images);
+        $images = json_decode($product->product_images, true);
+        foreach ($images as $image) {
+            Storage::delete('storage/images/products/' . $image);
+        }
         $product->delete();
         return redirect()->back()->with('success', 'Product deleted successfully');
     }

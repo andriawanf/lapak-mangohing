@@ -46,13 +46,13 @@
                         </x-nav-link>
                     </li>
                     <li>
-                        <x-nav-link :href="route('dashboard.admin.products.add')" :active="request()->routeIs('dashboard.admin.products.add')" class="w-full pl-11">
-                            <h1>Add Product</h1>
+                        <x-nav-link :href="route('dashboard.admin.products.discount')" :active="request()->routeIs('dashboard.admin.products.discount')" class="w-full pl-11">
+                            <h1>Discounts</h1>
                         </x-nav-link>
                     </li>
                     <li>
-                        <x-nav-link :href="route('dashboard.admin.categories')" :active="request()->routeIs('dashboard.admin.categories')" class="w-full pl-11">
-                            <h1>Categories</h1>
+                        <x-nav-link :href="route('dashboard.admin.products.inventory')" :active="request()->routeIs('dashboard.admin.products.inventory')" class="w-full pl-11">
+                            <h1>Inventory</h1>
                         </x-nav-link>
                     </li>
                 </ul>

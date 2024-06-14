@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class product extends Model
 {
@@ -18,14 +20,16 @@ class product extends Model
         'product_category',
         'product_number',
         'product_stock',
-        'discount_percentage',
-        'minimum_order_amount',
-        'discount_period_start',
-        'discount_period_end',
         'product_tag',
         'product_weight',
         'product_length',
         'product_breadth',
         'product_width'
     ];
+
+
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class);
+    }
 }

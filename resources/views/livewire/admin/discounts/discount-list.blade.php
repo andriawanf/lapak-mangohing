@@ -28,7 +28,7 @@
     <!-- Card header -->
     <div class="items-end justify-between lg:flex">
         <div class="mb-4 lg:mb-0">
-            <h3 class="mb-4 text-xl font-bold text-tertiary">Products List</h3>
+            <h3 class="mb-4 text-xl font-bold text-tertiary">Discount List</h3>
             <div class="flex items-center gap-4">
                 <form action="#" method="GET" class="hidden lg:block ">
                     <label for="topbar-search" class="sr-only">Search</label>
@@ -104,28 +104,21 @@
             </div>
         </div>
         <div class="flex items-center ml-auto space-x-2 sm:space-x-3">
-            <a href="{{ route('dashboard.admin.products.add') }}">
-                <button type="button"
-                    class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary sm:w-auto">
-                    <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                    Create Product
-                </button>
-            </a>
-            <a href="#"
-                class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center bg-white border border-gray-300 rounded-lg text-tertiary hover:bg-gray-100 focus:ring-4 focus:ring-primary sm:w-auto">
+            <button type="button" data-modal-target="addDiscountModal" data-modal-toggle="addDiscountModal"
+                class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-4 focus:ring-primary sm:w-auto">
                 <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
-                        d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                         clip-rule="evenodd"></path>
                 </svg>
-                Export
-            </a>
+                Create Discount
+            </button>
+            {{-- modal --}}
+            @php
+                $idModal = 'addDiscountModal';
+            @endphp
+            <x-modal-discount :id="$idModal" :discounts="$discounts" :products="$products" />
         </div>
     </div>
     <!-- Table -->
@@ -143,90 +136,74 @@
                                         <label for="checkbox-all" class="sr-only">checkbox</label>
                                     </div>
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product image
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    Start Date
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product name
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    End Date
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product description
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    Product Names
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    product number
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    Prices
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product price
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    Discounts
                                 </th>
-                                {{-- <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Discount
-                                </th> --}}
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Action
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    Minimum Orders
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                    Actions
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white text-tertiary">
-                            @if ($products->count() > 0)
-                                @foreach ($products as $product)
+                            @if ($discounts->count() > 0)
+                                @foreach ($discounts as $discount)
                                     <tr>
-                                        <td class="w-4 p-4">
+                                        <td class="p-4">
                                             <div class="flex items-center">
-                                                <input id="checkbox{{ $product->id }}" aria-describedby="checkbox-1"
+                                                <input id="checkbox-{{ $discount->id }}" aria-describedby="checkbox-1"
                                                     type="checkbox"
                                                     class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary">
-                                                <label for="checkbox" class="sr-only">checkbox</label>
+                                                <label for="checkbox-{{ $discount->id }}"
+                                                    class="sr-only">checkbox</label>
                                             </div>
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-900 whitespace-nowrap ">
-                                            @php $image = json_decode($product->product_images, true); @endphp
-                                            <div class="w-full rounded-lg">
-                                                <img src="{{ asset('storage/images/products/' . $image[0]) }}"
-                                                    width="56" height="56" alt="product-image"
-                                                    class="object-cover rounded-lg">
-                                            </div>
+                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                            {{ $discount->start_date }}
                                         </td>
-                                        <td class="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap ">
-                                            {{ $product->product_name }}
-                                            <p class="text-xs font-normal text-tertiary/50">Tag:
-                                                {{ $product->product_tag }}
-                                            </p>
+                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                            {{ $discount->end_date }}
                                         </td>
-                                        <td
-                                            class="max-w-sm p-4 overflow-hidden text-sm font-normal truncate text-tertiary/80 xl:max-w-xs ">
-                                            {{ $product->product_description }}
+                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                            {{ $discount->product->product_name }}
                                         </td>
-                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            #{{ $product->product_number }}
+                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                            Rp.
+                                            {{ number_format($discount->product->product_price, 0, ',', '.') }}
                                         </td>
-                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            Rp. {{ number_format($product->product_price, 0, ',', '.') }}
+                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                            {{ $discount->discount_percentage }}%
                                         </td>
-                                        {{-- <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            {{ $product->discount_percentage }}%
-                                        </td> --}}
+                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                            Rp. {{ number_format($discount->minimum_order, 0, ',', '.') }}
+                                        </td>
                                         <td class="flex flex-wrap gap-1 p-4">
-                                            <button type="button"
-                                                data-modal-target="detail-modal-product{{ $product->id }}"
-                                                data-modal-toggle="detail-modal-product{{ $product->id }}"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-0 focus:ring-blue-700">
-                                                <i data-lucide="receipt-text" class="w-4 h-4"></i>
-                                            </button>
-                                            <a href="{{ route('dashboard.admin.products.edit', $product->id) }}">
+                                            <div>
                                                 <button type="button"
+                                                    data-modal-target="editDiscountModal-{{ $discount->discount_id }}"
+                                                    data-modal-toggle="editDiscountModal-{{ $discount->discount_id }}"
                                                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-0 focus:ring-orange-500">
                                                     <i data-lucide="pencil" class="w-4 h-4"></i>
                                                 </button>
-                                            </a>
+                                                <x-modal-discount :id="$discount->discount_id" :discounts="$discount"
+                                                    :products="$products" />
+                                            </div>
                                             <form
-                                                action="{{ route('dashboard.admin.products.destroy', $product->id) }}"
+                                                action="{{ route('dashboard.admin.products.discount.destroy', $discount->discount_id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
@@ -237,7 +214,6 @@
                                             </form>
                                         </td>
                                     </tr>
-                                    <x-modal :id="$product->id" :data="$product" />
                                 @endforeach
                             @else
                                 <tr>

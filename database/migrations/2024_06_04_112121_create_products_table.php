@@ -12,17 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary()->autoIncrement();
             $table->string('product_name');
             $table->string('product_number');
             $table->string('product_category');
             $table->bigInteger('product_price');
             $table->integer('product_stock');
             $table->text('product_description');
-            $table->string('discount_percentage');
-            $table->bigInteger('minimum_order_amount');
-            $table->date('discount_period_start');
-            $table->date('discount_period_end');
             $table->string('product_tag');
             $table->integer('product_weight');
             $table->integer('product_length');

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Admin\Discounts\DiscountList;
 use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\Products\AddProduct;
@@ -34,9 +36,14 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
         Route::get('/edit-product/{id}', [EditProduct::class, 'edit'])->name('dashboard.admin.products.edit');
         Route::put('/edit-product/{id}', [ProductController::class, 'update'])->name('dashboard.admin.products.update');
         Route::delete('/delete-product/{id}', [ProductController::class, 'destroy'])->name('dashboard.admin.products.destroy');
+        Route::get('/inventory', ProductList::class)->name('dashboard.admin.products.inventory');
+        // discount
+        Route::get('/discounts', DiscountList::class)->name('dashboard.admin.products.discount');
+        Route::post('/add-discount', [DiscountController::class, 'store'])->name('dashboard.admin.products.discount.store');
+        Route::put('/edit-discount/{id}', [DiscountController::class, 'update'])->name('dashboard.admin.products.discount.update');
+        Route::delete('/delete-discount/{id}', [DiscountController::class, 'destroy'])->name('dashboard.admin.products.discount.destroy');
     });
     Route::get('/dashboard-admin/orders', OrderList::class)->name('dashboard.admin.orders');
-    Route::get('/dashboard-admin/categories', ProductList::class)->name('dashboard.admin.categories');
     Route::get('/dashboard-admin/reviews', ProductList::class)->name('dashboard.admin.reviews');
     Route::get('/dashboard-admin/users', UserList::class)->name('dashboard.admin.users');
     Route::get('/dashboard-admin/users/{user}/edit', UserList::class)->name('dashboard.admin.users.edit');

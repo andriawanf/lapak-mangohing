@@ -254,7 +254,7 @@
                         {{-- pricing --}}
                         {{-- product images --}}
                         <div>
-                            <h3 class="mb-2 text-base font-medium text-tertiary">Pricing & Discount</h3>
+                            <h3 class="mb-2 text-base font-medium text-tertiary">Pricing</h3>
                             <div class="flex flex-col w-full gap-4 p-6 bg-white border border-gray-200 rounded-xl">
                                 <div>
                                     <x-input-label for="product_price" class="mb-2 text-xs text-tertiary/60">
@@ -267,7 +267,7 @@
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="grid grid-cols-2 space-x-6">
+                                {{-- <div class="grid grid-cols-2 space-x-6">
                                     <div>
                                         <x-input-label for="discount_percentage" :value="__('Discount Type (Optionals)')"
                                             class="mb-2 text-xs text-tertiary/60" />
@@ -341,7 +341,7 @@
                                             <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
