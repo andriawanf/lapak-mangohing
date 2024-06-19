@@ -25,11 +25,11 @@
             </li>
             <li class="w-full">
                 <button type="button" id="dropdown-product"
-                    class="flex w-full items-center justify-between px-4 py-2.5 text-sm font-normal leading-[120%] text-white/80 hover:text-tertiary hover:bg-white hover:font-medium hover:rounded-lg focus:outline-none transition duration-150 ease-in-out rounded-lg group"
+                    class="flex w-full items-center justify-between px-4 py-2.5 text-sm  leading-[120%] {{ str_contains(request()->route()->getName(), 'products') ? 'text-white font-normal' : 'text-white/80 font-normal' }}  hover:text-tertiary hover:bg-white hover:font-medium hover:rounded-lg focus:outline-none transition duration-150 ease-in-out rounded-lg group"
                     aria-controls="dropdown-example" data-collapse-toggle="dropdown-example"
                     data-collapse-active="text-white/80 font-semibold {{ str_contains(request()->route()->getName(), 'products') ? 'text-white' : '' }}">
                     <i data-lucide="shopping-cart"
-                        class="transition-all stroke-1 w-4 h-4 {{ request()->routeIs('dashboard.admin.products.list') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} {{ str_contains(request()->route()->getName(), 'products') ? 'stroke-white' : '' }}"></i>
+                        class="transition-all  w-4 h-4 {{ str_contains(request()->route()->getName(), 'products') ? 'stroke-white group-hover:stroke-tertiary stroke-2' : 'stroke-1 stroke-white/80 group-hover:stroke-tertiary' }}"></i>
                     <span class="flex-1 text-left ms-3 rtl:text-right whitespace-nowrap">Product</span>
                     <svg class="w-3 h-3 transition-transform  {{ str_contains(request()->route()->getName(), 'products') ? 'rotate-180' : '' }}"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" id="dropdown-arrow"

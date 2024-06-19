@@ -136,25 +136,32 @@
                                         <label for="checkbox-all" class="sr-only">checkbox</label>
                                     </div>
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     Start Date
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     End Date
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     Product Names
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     Prices
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     Discounts
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     Minimum Orders
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold text-left uppercase text-tertiary">
                                     Actions
                                 </th>
                             </tr>
@@ -172,23 +179,23 @@
                                                     class="sr-only">checkbox</label>
                                             </div>
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                        <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             {{ $discount->start_date }}
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                        <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             {{ $discount->end_date }}
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                        <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             {{ $discount->product->product_name }}
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                        <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             Rp.
                                             {{ number_format($discount->product->product_price, 0, ',', '.') }}
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                        <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             {{ $discount->discount_percentage }}%
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap">
+                                        <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             Rp. {{ number_format($discount->minimum_order, 0, ',', '.') }}
                                         </td>
                                         <td class="flex flex-wrap gap-1 p-4">

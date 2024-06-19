@@ -145,11 +145,7 @@
                                 </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product image
-                                </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product name
+                                    Product
                                 </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
@@ -185,19 +181,17 @@
                                                 <label for="checkbox" class="sr-only">checkbox</label>
                                             </div>
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-900 whitespace-nowrap ">
+                                        <td class="flex items-center gap-4 p-4">
                                             @php $image = json_decode($product->product_images, true); @endphp
-                                            <div class="w-full rounded-lg">
-                                                <img src="{{ asset('storage/images/products/' . $image[0]) }}"
-                                                    width="56" height="56" alt="product-image"
-                                                    class="object-cover rounded-lg">
+                                            <img src="{{ asset('storage/images/products/' . $image[0]) }}"
+                                                width="56" height="56" alt="product-image"
+                                                class="object-cover rounded-lg">
+                                            <div class="text-sm font-semibold text-gray-900 whitespace-nowrap ">
+                                                {{ $product->product_name }}
+                                                <p class="text-xs font-normal text-tertiary/50">Tag:
+                                                    {{ $product->product_tag }}
+                                                </p>
                                             </div>
-                                        </td>
-                                        <td class="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap ">
-                                            {{ $product->product_name }}
-                                            <p class="text-xs font-normal text-tertiary/50">Tag:
-                                                {{ $product->product_tag }}
-                                            </p>
                                         </td>
                                         <td
                                             class="max-w-sm p-4 overflow-hidden text-sm font-normal truncate text-tertiary/80 xl:max-w-xs ">
