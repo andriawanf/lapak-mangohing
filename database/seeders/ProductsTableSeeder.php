@@ -18,7 +18,7 @@ class ProductsTableSeeder extends Seeder
 
         for ($i = 0; $i < 50; $i++) {
             product::create([
-                'product_name' => $faker->word,
+                'product_name' => $faker->words(3, true),
                 'product_number' => $faker->unique()->numerify('PROD-####'),
                 'product_category' => $faker->randomElement(['Makaroni', 'Keripik', 'Lain-lain']),
                 'product_price' => $faker->numberBetween(1000, 50000),
