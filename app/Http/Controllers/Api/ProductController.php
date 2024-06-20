@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
             $products = Product::with('images')->paginate(10);
@@ -65,7 +65,7 @@ class ProductController extends Controller
                 $files = $request->file('product_images');
                 foreach ($files as $file) {
                     $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalName();
-                    $path = $file->storeAs('public/images/products', $imageName);
+                    $path = $file->storeAs('storage/images/products/', $imageName);
 
                     $image = new Image;
                     $image->url = $path;
@@ -130,7 +130,7 @@ class ProductController extends Controller
                 $files = $request->file('product_images');
                 foreach ($files as $file) {
                     $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('public/images/products', $imageName);
+                    $path = $file->storeAs('storage/images/products', $imageName);
 
                     $image = new Image;
                     $image->url = $path;

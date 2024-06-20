@@ -8,7 +8,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5">
                 <h3 class="text-2xl font-bold text-tertiary">
-                    #{{ $data->product_number }}
+                    #{{ $data['product_number'] }}
                 </h3>
                 <button type="button"
                     class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-tertiary ms-auto"
@@ -23,30 +23,13 @@
             </div>
             <!-- Modal body -->
             <div class="flex flex-col gap-6 p-4 md:p-5">
-                <div class="grid grid-rows-2 gap-2 border h-fit">
-                    <div class="grid grid-flow-col-dense {{ $data->product_images > 0 ? 'grid-cols-1' : 'hidden' }}">
-                        @php
-                            $image = json_decode($data->product_images, true);
-                            $image = $image[0] ?? null;
-                        @endphp
-
-                        @if ($image)
-                            <img src="{{ asset('storage/images/products/' . $image) }}" alt="product-image"
-                                class="object-cover w-full rounded-lg h-52">
-                        @endif
-                    </div>
-                    <div
-                        class="grid grid-flow-col-dense {{ $data->product_images > 1 ? 'grid-cols-2' : 'hidden' }} gap-2">
-                        @php
-                            $images = json_decode($data->product_images, true);
-                            $images = array_slice($images, 1);
-                        @endphp
-
-                        @foreach ($images as $img)
-                            <img src="{{ asset('storage/images/products/' . $img) }}" alt="product-image"
-                                class="object-cover w-full rounded-lg h-52">
-                        @endforeach
-                    </div>
+                <div class="grid grid-cols-2 gap-2 grid-flow-row-dense">
+                    @foreach ($data['images'] as $index => $image)
+                        <div class="{{ $index % 2 === 0 ? 'col-span-2' : '' }}">
+                            <img src="{{ $image['url'] ? asset($image['url']) : asset('images/mang-ohing-logo.png') }}"
+                                alt="product-image" class="object-cover w-full rounded-lg h-52">
+                        </div>
+                    @endforeach
                 </div>
                 <div class="pt-4 space-y-4 border-t border-gray-200">
                     <h1 class="text-lg font-semibold">Details</h1>
@@ -54,56 +37,56 @@
                         <div class="flex flex-col items-start gap-2 mb-4">
                             <x-input-label class="text-xs text-tertiary" :value="__('Product Name')" />
                             <x-text-input type="text" class="w-full text-sm uppercase border-gray-200 text-tertiary"
-                                value="{{ $data->product_name }}" readonly disabled />
+                                value="{{ $data['product_name'] }}" readonly disabled />
                         </div>
                         <div class="flex flex-col items-start gap-2 mb-4">
                             <x-input-label for="product_name" class="text-xs text-tertiary" :value="__('Descriptions')" />
                             <textarea type="text" class="w-full text-sm border border-gray-300 rounded-lg text-tertiary" rows="5" readonly
-                                disabled>{{ $data->product_description }}</textarea>
+                                disabled>{{ $data['product_description'] }}</textarea>
                         </div>
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('Price')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="Rp. {{ number_format($data->product_price, 0, ',', '.') }}" readonly
+                                    value="Rp. {{ number_format($data['product_price'], 0, ',', '.') }}" readonly
                                     disabled />
                             </div>
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('Stocks')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_stock }} pcs" readonly disabled />
+                                    value="{{ $data['product_stock'] }} pcs" readonly disabled />
                             </div>
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('Category')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_category }}" readonly disabled />
+                                    value="{{ $data['product_category'] }}" readonly disabled />
                             </div>
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('Tags')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_tag }}" readonly disabled />
+                                    value="{{ $data['product_tag'] }}" readonly disabled />
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('Weight')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_weight }} cm" readonly disabled />
+                                    value="{{ $data['product_weight'] }} cm" readonly disabled />
                             </div>
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('length')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_length }} cm" readonly disabled />
+                                    value="{{ $data['product_length'] }} cm" readonly disabled />
                             </div>
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('Breadth')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_breadth }} cm" readonly disabled />
+                                    value="{{ $data['product_breadth'] }} cm" readonly disabled />
                             </div>
                             <div class="flex flex-col items-start gap-2">
                                 <x-input-label class="text-xs text-tertiary" :value="__('width')" />
                                 <x-text-input type="text" class="w-full text-sm border-gray-200 text-tertiary"
-                                    value="{{ $data->product_width }} cm" readonly disabled />
+                                    value="{{ $data['product_width'] }} cm" readonly disabled />
                             </div>
                         </div>
                     </div>
