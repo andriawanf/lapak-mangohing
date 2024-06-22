@@ -21,7 +21,7 @@ class ImagesTableSeeder extends Seeder
         foreach ($products as $product) {
             for ($i = 0; $i < 3; $i++) {
                 Image::create([
-                    'url' => $faker->imageUrl(640, 480, 'products', true),
+                    'url' => 'default-product.png',
                     'product_id' => $product->id,
                 ]);
             }

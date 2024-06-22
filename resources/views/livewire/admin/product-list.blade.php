@@ -182,7 +182,7 @@
                                             </div>
                                         </td>
                                         <td class="flex items-center gap-4 p-4">
-                                            <img src="{{ $product['images'] ? asset($product['images'][0]['url']) : asset('images/mang-ohing-logo.png') }}"
+                                            <img src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
                                                 width="56" height="56" alt="product-image"
                                                 class="object-cover rounded-lg" loading="lazy">
                                             <div class="text-sm font-semibold text-gray-900 whitespace-nowrap ">
@@ -265,7 +265,7 @@
                     @else
                         <li>
                             <span
-                                class="inline-flex items-center justify-center bg-white border border-gray-100 rounded text-tertiary px-3 py-2">
+                                class="inline-flex items-center justify-center px-3 py-2 bg-white border border-gray-100 rounded text-tertiary">
                                 {!! $link['label'] !!}
                             </span>
                         </li>

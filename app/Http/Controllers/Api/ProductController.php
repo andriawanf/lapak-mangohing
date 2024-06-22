@@ -65,13 +65,20 @@ class ProductController extends Controller
                 $files = $request->file('product_images');
                 foreach ($files as $file) {
                     $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalName();
-                    $path = $file->storeAs('storage/images/products/', $imageName);
+                    $path = $file->storeAs('public/images/products/', $imageName);
 
                     $image = new Image;
-                    $image->url = $path;
+                    $image->url = $imageName;
                     $image->product_id = $product->id;
                     $image->save();
                 }
+            } else {
+                $imageName = 'default-product.png';
+                $path = 'images/products/' . $imageName;
+                $image = new Image;
+                $image->url = $imageName;
+                $image->product_id = $product->id;
+                $image->save();
             }
 
             return new ProductResource(true, 'Product added successfully', $product);
@@ -133,10 +140,17 @@ class ProductController extends Controller
                     $path = $file->storeAs('storage/images/products', $imageName);
 
                     $image = new Image;
-                    $image->url = $path;
+                    $image->url = $imageName;
                     $image->product_id = $product->id;
                     $image->save();
                 }
+            } else {
+                $imageName = 'default-product.png';
+                $path = 'images/products/' . $imageName;
+                $image = new Image;
+                $image->url = $imageName;
+                $image->product_id = $product->id;
+                $image->save();
             }
 
             return new ProductResource(true, 'Product updated successfully', $product);

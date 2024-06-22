@@ -23,10 +23,10 @@
             </div>
             <!-- Modal body -->
             <div class="flex flex-col gap-6 p-4 md:p-5">
-                <div class="grid grid-cols-2 gap-2 grid-flow-row-dense">
+                <div class="grid grid-flow-row-dense grid-cols-2 gap-2">
                     @foreach ($data['images'] as $index => $image)
                         <div class="{{ $index % 2 === 0 ? 'col-span-2' : '' }}">
-                            <img src="{{ $image['url'] ? asset($image['url']) : asset('images/mang-ohing-logo.png') }}"
+                            <img src="{{ $image['url'] ? asset('/storage/images/products/' . $image['url']) : asset('storage/images/mang-ohing-logo.png') }}"
                                 alt="product-image" class="object-cover w-full rounded-lg h-52">
                         </div>
                     @endforeach
