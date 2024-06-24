@@ -14,10 +14,10 @@ class DiscountController extends Controller
     public function index()
     {
         try {
-            $discounts = Discount::with('product')->paginate(10);
+            $discounts = Discount::with('product')->orderBy('created_at', 'desc')->paginate(10);
             return new DiscountCollection($discounts);
-        } catch (\Throwable $th) {
-            //throw $th;
+        } catch (\Exception $e) {
+            return response()->json(['errpr' => false, 'message' => 'An error occurred while retrieving discounts: ' . $e->getMessage()], 500);
         }
     }
 

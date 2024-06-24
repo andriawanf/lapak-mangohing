@@ -172,7 +172,7 @@ class ProductController extends Controller
             $product = Product::findOrFail($id);
 
             foreach ($product->images as $image) {
-                Storage::delete($image->url);
+                Storage::delete('public/images/products/' . $image->url);
                 $image->delete();
             }
 

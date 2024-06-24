@@ -14,7 +14,7 @@ class EditProduct extends Component
     public function edit($id)
     {
         $client = new Client();
-        $response = $client->request('GET', env('API_URL') . '/' . $id);
+        $response = $client->request('GET', config('services.api_url') . '/products' . '/' . $id);
         $dataproducts = json_decode($response->getBody()->getContents(), true);
         $products = $dataproducts['data'];
         return view('livewire.admin.products.edit-product', ['products' => $products]);

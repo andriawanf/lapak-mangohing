@@ -14,13 +14,14 @@ class ProductList extends Component
     {
         $client = new Client();
         $page = $request->query('page', 1);
+        $url = config('services.api_url') . '/products';
         try {
-            $response = $client->request('GET', env('API_URL'), [
+            $response = $client->request('GET', $url, [
                 'query' => ['page' => $page],
             ]);
 
             $data_products = json_decode($response->getBody()->getContents(), true);
-            return view('livewire.admin.product-list', ['data_products' => $data_products]);
+            return view('livewire.admin.product-list', ['data_products' => $data_products, 'page' => $page]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch products'], 500);
         }

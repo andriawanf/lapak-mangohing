@@ -16,9 +16,9 @@ class ProductController extends Controller
     {
 
         $client = new Client();
-
+        $url = config('services.api_url') . '/products';
         try {
-            $response = $client->post(env('API_URL'), [
+            $response = $client->post($url, [
                 'multipart' => $this->prepareMultipartData($request)
             ]);
 
@@ -58,7 +58,8 @@ class ProductController extends Controller
     public function edit($id)
     {
         $client = new Client();
-        $response = $client->request('GET', env('API_URL') . '/' . $id);
+        $url = config('services.api_url') . '/products' . '/' . $id;
+        $response = $client->request('GET', $url);
         $dataproducts = json_decode($response->getBody()->getContents(), true);
         $products = $dataproducts['data'];
         return view('livewire.admin.products.edit-product', ['product' => $products]);
@@ -86,8 +87,9 @@ class ProductController extends Controller
         }
 
         $client = new Client();
+        $url = config('services.api_url') . '/products' . '/' . $id;
         try {
-            $response = $client->post(env('API_URL') . '/' . $id, [
+            $response = $client->post($url, [
                 'multipart' => $this->prepareMultipartData($request)
             ]);
             return redirect()->route('dashboard.admin.products.list')->with('success', 'Product updated successfully');
@@ -101,7 +103,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $client = new Client();
-        $response = $client->delete(env('API_URL') . '/' . $id);
+        $response = $client->delete(config('services.api_url') . '/products' . '/' . $id);
 
         return redirect()->back()->with('success', 'Product deleted successfully');
     }
