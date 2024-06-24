@@ -167,59 +167,58 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white text-tertiary">
-                            @if ($discounts->count() > 0)
+                            @if (count($discounts) > 0)
                                 @foreach ($discounts as $discount)
                                     <tr>
                                         <td class="p-4">
                                             <div class="flex items-center">
-                                                <input id="checkbox-{{ $discount->id }}" aria-describedby="checkbox-1"
-                                                    type="checkbox"
+                                                <input id="checkbox-{{ $discount['discount_id'] }}"
+                                                    aria-describedby="checkbox-1" type="checkbox"
                                                     class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary">
-                                                <label for="checkbox-{{ $discount->id }}"
+                                                <label for="checkbox-{{ $discount['discount_id'] }}"
                                                     class="sr-only">checkbox</label>
                                             </div>
                                         </td>
                                         <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
-                                            {{ $discount->start_date }}
+                                            {{ $discount['start_date'] }}
                                         </td>
                                         <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
-                                            {{ $discount->end_date }}
+                                            {{ $discount['end_date'] }}
                                         </td>
                                         <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
-                                            {{ $discount->product->product_name }}
+                                            {{ $discount['product']['product_name'] }}
                                         </td>
                                         <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
                                             Rp.
-                                            {{ number_format($discount->product->product_price, 0, ',', '.') }}
+                                            {{ number_format($discount['product']['product_price'], 0, ',', '.') }}
                                         </td>
                                         <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
-                                            {{ $discount->discount_percentage }}%
+                                            {{ $discount['discount_percentage'] }}%
                                         </td>
                                         <td class="p-4 text-sm font-normal text-tertiary whitespace-nowrap">
-                                            Rp. {{ number_format($discount->minimum_order, 0, ',', '.') }}
+                                            Rp. {{ number_format($discount['minimum_order'], 0, ',', '.') }}
                                         </td>
                                         <td class="flex flex-wrap gap-1 p-4">
                                             <div>
                                                 <button type="button"
-                                                    data-modal-target="editDiscountModal-{{ $discount->discount_id }}"
-                                                    data-modal-toggle="editDiscountModal-{{ $discount->discount_id }}"
+                                                    data-modal-target="editDiscountModal-{{ $discount['discount_id'] }}"
+                                                    data-modal-toggle="editDiscountModal-{{ $discount['discount_id'] }}"
                                                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-0 focus:ring-orange-500">
                                                     <i data-lucide="pencil" class="w-4 h-4"></i>
                                                 </button>
-                                                <x-modal-discount :id="$discount->discount_id" :discounts="$discount"
+                                                <x-modal-discount :id="$discount['discount_id']" :discounts="$discount"
                                                     :products="$products" />
                                             </div>
-                                            <form
-                                                action="{{ route('dashboard.admin.products.discount.destroy', $discount->discount_id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
-                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                </button>
-                                            </form>
+                                            <button data-modal-target="popup-modal-{{ $discount['discount_id'] }}"
+                                                data-modal-toggle="popup-modal-{{ $discount['discount_id'] }}"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
                                         </td>
+                                        <x-modal-popup :id="$discount['discount_id']" :route="route(
+                                            'dashboard.admin.products.discount.destroy',
+                                            $discount['discount_id'],
+                                        )" />
                                     </tr>
                                 @endforeach
                             @else
