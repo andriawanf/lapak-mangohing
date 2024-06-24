@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-            $products = Product::with('images')->paginate(10);
+            $products = Product::with('images')->orderBy('created_at', 'desc')->paginate(10);
             return new ProductCollection($products);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'An error occurred while retrieving products: ' . $e->getMessage()], 500);
@@ -133,11 +133,18 @@ class ProductController extends Controller
             $product->product_width = $request->product_width;
             $product->save();
 
+            if ($product) {
+                foreach ($product->images as $image) {
+                    Storage::delete('public/images/products/' . $image->url);
+                    $image->delete();
+                }
+            }
+
             if ($request->hasFile('product_images')) {
                 $files = $request->file('product_images');
                 foreach ($files as $file) {
                     $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('storage/images/products', $imageName);
+                    $path = $file->storeAs('public/images/products', $imageName);
 
                     $image = new Image;
                     $image->url = $imageName;

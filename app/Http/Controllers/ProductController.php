@@ -22,9 +22,10 @@ class ProductController extends Controller
                 'multipart' => $this->prepareMultipartData($request)
             ]);
 
-            return redirect()->back()->with('success', 'Product created successfully');
+            $page = $request->query('page', 1);
+            return redirect()->route('dashboard.admin.products.list', ['page' => $page])->with('success', 'Product created successfully');
         } catch (RequestException $e) {
-            return redirect()->back()->with('error', 'Failed to add product. Please try again.');
+            return redirect()->route('dashboard.admin.products.list' . '?page=1')->with('error', 'Failed to add product. Please try again.');
         }
     }
 

@@ -2,9 +2,10 @@
     <div class="w-full px-3 py-6">
         <div class="flex items-end justify-between">
             <div class="flex items-end justify-start gap-3 mb-10">
-                <div class="p-3 border border-gray-200 rounded-md bg-white/50 backdrop-blur-sm hover:bg-white">
+                <a href="{{ route('dashboard.admin.products.list') }}"
+                    class="p-3 border border-gray-200 rounded-md bg-white/50 backdrop-blur-sm hover:bg-white">
                     <i data-lucide="arrow-left" class="w-4 h-4 stroke-2"></i>
-                </div>
+                </a>
                 <div>
                     <p class="mb-1 text-xs font-medium text-tertiary/60">Back to product list</p>
                     <h3 class="text-lg font-semibold text-tertiary">Edit Product</h3>
