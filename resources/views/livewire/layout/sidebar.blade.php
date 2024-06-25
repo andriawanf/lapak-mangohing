@@ -58,9 +58,9 @@
                 </ul>
             </li>
             <li class="w-full">
-                <x-nav-link :href="route('dashboard.admin.reviews')" :active="request()->routeIs('dashboard.admin.reviews')" class="flex items-center justify-start w-full gap-2">
+                <x-nav-link :href="route('dashboard.admin.products.review.list')" :active="request()->routeIs('dashboard.admin.products.review.list')" class="flex items-center justify-start w-full gap-2">
                     <i data-lucide="star"
-                        class="transition-all stroke-1 w-4 h-4 {{ request()->routeIs('dashboard.admin.reviews') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
+                        class="transition-all stroke-1 w-4 h-4 {{ request()->routeIs('dashboard.admin.products.review.list') ? 'stroke-tertiary' : 'stroke-white/80 group-hover:stroke-tertiary' }} "></i>
                     <h1>Reviews</h1>
                 </x-nav-link>
             </li>

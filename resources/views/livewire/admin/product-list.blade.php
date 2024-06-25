@@ -152,17 +152,17 @@
                                     Product description
                                 </th>
                                 <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary whitespace-nowrap">
                                     product number
                                 </th>
                                 <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary whitespace-nowrap">
                                     Product price
                                 </th>
-                                {{-- <th scope="col"
+                                <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Discount
-                                </th> --}}
+                                    Stocks(pcs)
+                                </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
                                     Action
@@ -181,19 +181,21 @@
                                                 <label for="checkbox" class="sr-only">checkbox</label>
                                             </div>
                                         </td>
-                                        <td class="flex items-center gap-4 p-4">
-                                            <img src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                                width="56" height="56" alt="product-image"
-                                                class="object-cover rounded-lg" loading="lazy">
-                                            <div class="text-sm font-semibold text-gray-900 whitespace-nowrap ">
-                                                {{ $product['product_name'] }}
-                                                <p class="text-xs font-normal text-tertiary/50">Tag:
-                                                    {{ $product['product_tag'] }}
-                                                </p>
-                                            </div>
+                                        <td class="p-2">
+                                            <div class="flex items-center gap-4">
+                                                <img src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
+                                                    width="56" height="56" alt="product-image"
+                                                    class="object-cover rounded-lg" loading="lazy">
+                                                <div class="text-sm font-semibold text-gray-900 whitespace-nowrap ">
+                                                    {{ $product['product_name'] }}
+                                                    <p class="text-xs font-normal text-tertiary/50">Tag:
+                                                        {{ $product['product_tag'] }}
+                                                    </p>
+                                                </div>
+                                                </d>
                                         </td>
                                         <td
-                                            class="max-w-sm p-4 overflow-hidden text-sm font-normal truncate text-tertiary/80 xl:max-w-xs ">
+                                            class="max-w-sm p-4 overflow-hidden text-sm font-normal line-clamp-1 text-tertiary/80 xl:max-w-xs ">
                                             {{ $product['product_description'] }}
                                         </td>
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
@@ -202,9 +204,9 @@
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
                                             Rp. {{ number_format($product['product_price'], 0, ',', '.') }}
                                         </td>
-                                        {{-- <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            {{ $product->discount_percentage }}%
-                                        </td> --}}
+                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
+                                            {{ $product['product_stock'] }} pcs
+                                        </td>
                                         <td class="flex flex-wrap gap-1 p-4">
                                             <button type="button"
                                                 data-modal-target="detail-modal-product{{ $product['id'] }}"
