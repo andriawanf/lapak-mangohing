@@ -218,7 +218,7 @@
                                         <x-modal-popup :id="$discount['discount_id']" :route="route(
                                             'dashboard.admin.products.discount.destroy',
                                             $discount['discount_id'],
-                                        )" />
+                                        )" :title="$discount['product']['product_name'] . ' discount?'" />
                                     </tr>
                                 @endforeach
                             @else

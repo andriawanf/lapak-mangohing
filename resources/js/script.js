@@ -1,4 +1,5 @@
 import ApexCharts from 'apexcharts';
+import { Dropzone } from "dropzone";
 
 
 lucide.createIcons();
@@ -6,12 +7,12 @@ const btnToggleSidebar = document.getElementById('toggleSidebar');
 const sidebar = document.getElementById('sidebar');
 
 btnToggleSidebar.addEventListener('click', () => {
-    sidebar.classList.toggle('sidebar-close');
-    sessionStorage.setItem('sidebar', sidebar.classList.contains('sidebar-close') ? 'true' : 'false');
+	sidebar.classList.toggle('sidebar-close');
+	sessionStorage.setItem('sidebar', sidebar.classList.contains('sidebar-close') ? 'true' : 'false');
 });
 
 if (sessionStorage.getItem('sidebar') === 'true') {
-    sidebar.classList.add('sidebar-close');
+	sidebar.classList.add('sidebar-close');
 }
 
 
@@ -197,7 +198,7 @@ if (document.getElementById('new-products-chart')) {
 			}
 		},
 		tooltip: {
-			shared : false,
+			shared: false,
 			intersect: false,
 			style: {
 				fontSize: '14px',
@@ -310,7 +311,7 @@ if (document.getElementById('sales-by-category')) {
 			}
 		},
 		tooltip: {
-			shared : true,
+			shared: true,
 			intersect: false,
 			style: {
 				fontSize: '14px',
@@ -555,9 +556,9 @@ const getTrafficChannelsChartOptions = () => {
 		responsive: [{
 			breakpoint: 430,
 			options: {
-			  chart: {
-				height: 300
-			  }
+				chart: {
+					height: 300
+				}
 			}
 		}],
 		stroke: {
@@ -621,10 +622,10 @@ $(document).ready(function () {
 		// check if there's already images, if yes, add the new images
 		$('#image_array_preview').empty();
 		let images = $('#image_array_preview').data('images') || [];
-		for(let i=0;i<this.files.length;++i){
-            let filereader = new FileReader();
-            filereader.onload = function(){
-                const $img=`
+		for (let i = 0; i < this.files.length; ++i) {
+			let filereader = new FileReader();
+			filereader.onload = function () {
+				const $img = `
 					<div class="relative" id="img-container-${images.length + i}">
                         <img id="product_image${images.length + i}" src="${this.result}" alt="product image" class="object-cover rounded-xl">
 						<button type="button" class="absolute bottom-2 right-2 z-50 delete-image" data-id="${images.length + i}" >
@@ -634,22 +635,22 @@ $(document).ready(function () {
 						</button>
                     </div>
 				`;
-                $("#image_array_preview").append($img);
+				$("#image_array_preview").append($img);
 				images.push(this.result);
-            };
-            filereader.readAsDataURL(this.files[i]);
-            
-        }
+			};
+			filereader.readAsDataURL(this.files[i]);
+
+		}
 		$('#image_array_preview').data('images', images);
 
 		// Add delete image functionality
-		$(document).on('click', '.delete-image', function(){
-            const id = $(this).data('id');
-            $('#img-container-'+id).remove();
+		$(document).on('click', '.delete-image', function () {
+			const id = $(this).data('id');
+			$('#img-container-' + id).remove();
 			images.splice(id);
 			$('#dropzone-file').val('');
-        });
-    });
+		});
+	});
 });
 
 $(document).ready(function () {
@@ -657,3 +658,69 @@ $(document).ready(function () {
 		$('#dropdown-arrow').toggleClass('rotate-180');
 	});
 });
+
+
+// text editor 
+$('#product_description').summernote({
+	placeholder: 'Write your thoughts here...',
+	tabsize: 2,
+	height: 120,
+	toolbar: [
+		['style', ['style']],
+		['font', ['bold', 'underline', 'clear']],
+		['color', ['color']],
+		['para', ['ul', 'ol', 'paragraph']],
+		['table', ['table']],
+		['insert', ['link', 'picture', 'video']],
+		['view', ['fullscreen', 'codeview', 'help']]
+	]
+});
+
+// dropzone image file
+Dropzone.autoDiscover = false;
+
+const dropzone = new Dropzone("#product-form", {
+	previewTemplate: document.querySelector('#dzPreviewContainer').innerHTML,
+	url: '#',
+	paramName: "product_images",
+	addRemoveLinks: true,
+	autoProcessQueue: false,
+	uploadMultiple: true,
+	parallelUploads: 100,
+	maxFiles: 100,
+	acceptedFiles: '.jpeg, .jpg, .png, .gif',
+	thumbnailWidth: 150,
+	thumbnailHeight: 150,
+	previewsContainer: "#previews",
+	timeout: 0,
+	headers: {
+		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	},
+	init: function () {
+		const myDropzone = this;
+		this.element.querySelector("button[type=submit]").addEventListener("click", function (e) {
+			// Make sure that the form isn't actually being sent.
+			e.preventDefault();
+			e.stopPropagation();
+			myDropzone.processQueue();
+		});
+		this.on("sendingmultiple", function () {
+			// Gets triggered when the form is actually being sent.
+			// Hide the success button or the complete form.
+			$('#message').text('images uploading...');
+		});
+		this.on("successmultiple", function (files, response) {
+			// Gets triggered when the files have successfully been sent.
+			// Redirect user or notify of success.
+			$('#message').text('images uploaded successfully');
+			setTimeout(function () {
+				window.location.href = "/dashboard-admin/products/list";
+			}, 2000);
+		});
+		this.on("errormultiple", function (files, response) {
+			// Gets triggered when there was an error sending the files.
+			// Maybe show form again, and notify user of error
+		});
+	}
+});
+

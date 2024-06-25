@@ -15,6 +15,25 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
+        $validatedData = Validator::make($request->all(), [
+            'product_name' => 'required',
+            'product_description' => 'required',
+            'product_images' => 'required',
+            'product_price' => 'required|integer',
+            'product_stock' => 'required|integer',
+            'product_category' => 'required',
+            'product_tag' => 'required',
+            'product_weight' => 'required|integer',
+            'product_length' => 'required|integer',
+            'product_breadth' => 'required|integer',
+            'product_width' => 'required|integer',
+            'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
+
+        if ($validatedData->fails()) {
+            return redirect()->back()->with('error', 'Failed to add product. Please try again.');
+        }
+
         $client = new Client();
         $url = config('services.api_url') . '/products';
         try {
@@ -22,10 +41,9 @@ class ProductController extends Controller
                 'multipart' => $this->prepareMultipartData($request)
             ]);
 
-            $page = $request->query('page', 1);
-            return redirect()->route('dashboard.admin.products.list', ['page' => $page])->with('success', 'Product created successfully');
+            return redirect()->route('dashboard.admin.products.list')->with('success', 'Product created successfully');
         } catch (RequestException $e) {
-            return redirect()->route('dashboard.admin.products.list' . '?page=1')->with('error', 'Failed to add product. Please try again.');
+            return redirect()->route('dashboard.admin.products.list')->with('error', 'Failed to add product. Please try again.');
         }
     }
 

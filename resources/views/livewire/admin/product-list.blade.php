@@ -218,17 +218,13 @@
                                                     <i data-lucide="pencil" class="w-4 h-4"></i>
                                                 </button>
                                             </a>
-                                            <form
-                                                action="{{ route('dashboard.admin.products.destroy', $product['id']) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
-                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                </button>
-                                            </form>
+                                            <button data-modal-target="popup-modal-{{ $product['id'] }}"
+                                                data-modal-toggle="popup-modal-{{ $product['id'] }}"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
                                         </td>
+                                        <x-modal-popup :id="$product['id']" :route="route('dashboard.admin.products.destroy', $product['id'])" :title="$product['product_name'] . ' product?'" />
                                     </tr>
                                     <x-modal :id="$product['id']" :data="$product" />
                                 @endforeach
