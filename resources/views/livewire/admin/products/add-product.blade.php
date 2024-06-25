@@ -1,9 +1,10 @@
 <div class="w-full px-3 py-6">
     <div class="flex items-end justify-between">
         <div class="flex items-end justify-start gap-3 mb-10">
-            <div class="p-3 border border-gray-200 rounded-md bg-white/50 backdrop-blur-sm hover:bg-white">
+            <a href="{{ route('dashboard.admin.products.list') }}"
+                class="p-3 border border-gray-200 rounded-md bg-white/50 backdrop-blur-sm hover:bg-white">
                 <i data-lucide="arrow-left" class="w-4 h-4 stroke-2"></i>
-            </div>
+            </a>
             <div>
                 <p class="mb-1 text-xs font-medium text-tertiary/60">Back to product list</p>
                 <h3 class="text-lg font-semibold text-tertiary">Add New Product</h3>
@@ -37,7 +38,8 @@
         @endif
     </div>
 
-    <form action="{{ route('dashboard.admin.products.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('dashboard.admin.products.store') }}" method="POST" enctype="multipart/form-data"
+        id="product-form" class="dropzone">
         @csrf
         <div class="grid grid-cols-2 gap-6">
             <div class="space-y-6">
@@ -60,7 +62,7 @@
                             <x-input-label for="product_description" :value="__('Descriptions')"
                                 class="mb-2 text-xs text-tertiary/60" />
                             <textarea id="product_description" rows="6" name="product_description" wire:model='product_description'
-                                class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary"
+                                class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
                                 placeholder="Write your thoughts here...">{{ old('product_description') }}</textarea>
                         </div>
                     </div>
@@ -133,34 +135,6 @@
                 </div>
             </div>
             <div class="space-y-6">
-                {{-- product images --}}
-                <div>
-                    <h3 class="mb-2 text-base font-medium text-tertiary">Product Images</h3>
-                    <div class="flex flex-col w-full gap-2 p-6 bg-white border border-gray-200 rounded-xl">
-                        <label for="dropzone-file"
-                            class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                                <svg class="w-6 h-6 mb-4 text-tertiary" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
-                                <p class="mb-2 text-xs text-tertiary"><span class="font-semibold">Click
-                                        to upload</span> or drag and drop</p>
-                                <p class="text-xs text-tertiary">SVG, PNG, JPG or GIF (MAX.
-                                    800x400px)
-                                </p>
-                            </div>
-                            <input id="dropzone-file" type="file" class="hidden" name="product_images[]" multiple
-                                accept="image/*" value="{{ old('product_images') }}" />
-                        </label>
-                        <div class="grid items-center justify-start grid-cols-3 gap-2" id="image_array_preview"></div>
-                    </div>
-                    @error('product_images')
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
 
                 {{-- Shipping & delivery --}}
                 <div>
@@ -230,76 +204,84 @@
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
-                        {{-- <div class="grid grid-cols-2 space-x-6">
-                            <div>
-                                <x-input-label for="discount_percentage" :value="__('Discount Type (Optionals)')"
-                                    class="mb-2 text-xs text-tertiary/60" />
-                                <x-text-input type="number" name="discount_percentage"
-                                    wire:model='discount_percentage' id="discount_percentage"
-                                    label="discount_percentage" class="w-full text-sm" placeholder="10%"
-                                    value="{{ old('discount_percentage') }}" />
-                                @error('discount_percentage')
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div>
-                                <x-input-label for="minim_orders" :value="__('Minimum Orders (Optionals)')"
-                                    class="mb-2 text-xs text-tertiary/60" />
-                                <x-text-input type="number" name="minim_orders" wire:model='minim_orders'
-                                    id="minim_orders" label="minim_orders" class="w-full text-sm"
-                                    placeholder="Enter minimim amount" value="{{ old('minim_orders') }}" />
-                                @error('minim_orders')
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                @enderror
+                    </div>
+                </div>
+
+                {{-- product images --}}
+                <div>
+                    <h3 class="mb-2 text-base font-medium text-tertiary">Product Images</h3>
+                    <div class="flex flex-col w-full gap-2 p-6 bg-white border border-gray-200 rounded-xl">
+                        <x-input-label for="product_stock" class="mb-2 text-xs text-tertiary/60">
+                            Product Images <span class="text-red-500">*</span>
+                        </x-input-label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="dropzone-file" class="dz-default dz-message needsclick" data-dz-message>
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-tertiary" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p class="mb-2 text-sm text-tertiary"><span class="font-semibold">Click to
+                                            upload</span> or drag and drop</p>
+                                    <p class="text-xs text-tertiary">SVG, PNG, JPG or GIF (MAX.
+                                        800x400px)</p>
+                                </div>
+                                <input id="file" type="file" class="hidden" name="product_images[]" />
+                            </label>
+                        </div>
+                        <div class="dropzone-drag-area" id="previews">
+                            <div class="hidden" id="dzPreviewContainer">
+                                <div class="dz-preview dz-file-preview">
+                                    <div class="dz-photo">
+                                        <img class="dz-thumbnail" data-dz-thumbnail>
+                                        <div class="dz-details">
+                                            <div class="dz-filename"><span data-dz-name></span></div>
+                                            <div class="dz-size" data-dz-size></div>
+                                        </div>
+                                        <div
+                                            class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full dz-progress">
+                                            <span class="dz-upload" data-dz-uploadprogress></span>
+                                        </div>
+                                        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                                        <button class="dz-delete" type="button" data-dz-remove>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                id="times">
+                                                <path fill="#FFFFFF"
+                                                    d="M13.41,12l4.3-4.29a1,1,0,1,0-1.42-1.42L12,10.59,7.71,6.29A1,1,0,0,0,6.29,7.71L10.59,12l-4.3,4.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l4.29,4.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <h1 id="message"></h1>
 
-                        <div date-rangepicker datepicker-autohide datepicker-orientation="top left" datepicker-buttons
-                            datepicker-autoselect-today class="grid grid-cols-2 gap-6">
-                            <div>
-                                <x-input-label for="discount_period_start" :value="__('Peroid Start (Optionals)')"
-                                    class="mb-2 text-xs text-tertiary/60" />
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
-                                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path
-                                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                        </svg>
-                                    </div>
-                                    <x-text-input type="text" name="discount_period_start"
-                                        wire:model='discount_period_start' id="discount_period_start"
-                                        label="discount_period-start" class="w-full text-sm ps-10"
-                                        placeholder="Select date start" value="{{ old('discount_period_start') }}" />
-                                </div>
-                                @error('discount_period_start')
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                @enderror
+                        {{-- <label for="dropzone-file"
+                            class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                                <svg class="w-6 h-6 mb-4 text-tertiary" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                </svg>
+                                <p class="mb-2 text-xs text-tertiary"><span class="font-semibold">Click
+                                        to upload</span> or drag and drop</p>
+                                <p class="text-xs text-tertiary">SVG, PNG, JPG or GIF (MAX.
+                                    800x400px)
+                                </p>
                             </div>
-                            <div>
-                                <x-input-label for="discount_period_end" :value="__('Peroid End (Optionals)')"
-                                    class="mb-2 text-xs text-tertiary/60" />
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
-                                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path
-                                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                        </svg>
-                                    </div>
-                                    <x-text-input type="text" name="discount_period_end"
-                                        wire:model='discount_period_end' id="discount_period_end"
-                                        label="discount_period_end" class="w-full text-sm ps-10"
-                                        placeholder="Select date end" value="{{ old('discount_period_end') }}" />
-                                </div>
-                                @error('discount_period_end')
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div> --}}
+                            <input id="dropzone-file" type="file" class="hidden" name="product_images[]" multiple
+                                accept="image/*" value="{{ old('product_images') }}" />
+                        </label>
+                        <div class="grid items-center justify-start grid-cols-3 gap-2" id="image_array_preview"></div> --}}
                     </div>
+                    @error('product_images')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex items-center justify-end gap-3">
@@ -309,8 +291,18 @@
                             Cancel
                         </button>
                     </a>
-                    <button type="submit"
+                    <button type="submit" id="formSubmit"
                         class="inline-flex items-center justify-center w-1/2 px-4 py-3 text-sm font-medium text-center text-white transition duration-150 ease-in-out bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-700 sm:w-auto">
+                        <svg aria-hidden="true" role="status" class="hidden w-4 h-4 text-white me-3 animate-spin"
+                            id="spinner-loading" viewBox="0 0 100 101" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="#E5E7EB" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
                         Add product
                     </button>
                 </div>

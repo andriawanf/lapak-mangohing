@@ -40,13 +40,13 @@
                             <option value="">Select product</option>
                             @if ($id == 'addDiscountModal')
                                 @foreach ($products as $product)
-                                    <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                    <option value="{{ $product['id'] }}">{{ $product['product_name'] }}</option>
                                 @endforeach
                             @else
                                 @foreach ($products as $product)
-                                    <option value="{{ $product->id }}"
-                                        {{ $product->id == $discounts->product_id ? 'selected' : '' }}>
-                                        {{ $product->product_name }}</option>
+                                    <option value="{{ $product['id'] }}"
+                                        {{ $product['id'] == $discounts['product_id'] ? 'selected' : '' }}>
+                                        {{ $product['product_name'] }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -60,7 +60,7 @@
                         </x-input-label>
                         <x-text-input type="number" name="discount_percentage" id="discount_percentage"
                             class="w-full text-sm" placeholder="10%"
-                            value="{{ $id == 'addDiscountModal' ? '' : $discounts->discount_percentage }}" />
+                            value="{{ $id == 'addDiscountModal' ? '' : $discounts['discount_percentage'] }}" />
                         @error('discount_percentage')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
@@ -71,7 +71,7 @@
                         </x-input-label>
                         <x-text-input type="number" name="minimum_order" id="minimum_order" class="w-full text-sm"
                             placeholder="Rp.2999"
-                            value="{{ $id == 'addDiscountModal' ? '' : $discounts->minimum_order }}" />
+                            value="{{ $id == 'addDiscountModal' ? '' : $discounts['minimum_order'] }}" />
                         @error('minimum_order')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
@@ -93,7 +93,7 @@
                                 </div>
                                 <x-text-input type="text" name="start_date" id="start_date" label="start_date"
                                     class="block w-full text-sm ps-10" placeholder="Select date start"
-                                    value="{{ $id == 'addDiscountModal' ? '' : $discounts->start_date }}" />
+                                    value="{{ $id == 'addDiscountModal' ? '' : $discounts['start_date'] }}" />
                             </div>
                             @error('start_date')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -113,7 +113,7 @@
                                 </div>
                                 <x-text-input type="text" name="end_date" id="end_date" label="end_date"
                                     class="block w-full text-sm ps-10" placeholder="Select date end"
-                                    value="{{ $id == 'addDiscountModal' ? '' : $discounts->end_date }}" />
+                                    value="{{ $id == 'addDiscountModal' ? '' : $discounts['end_date'] }}" />
                             </div>
                             @error('end_date')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>

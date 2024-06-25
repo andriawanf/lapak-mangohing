@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Products;
 
 use App\Models\product;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
@@ -12,9 +13,11 @@ class EditProduct extends Component
 
     public function edit($id)
     {
-        $products = product::findOrFail($id);
-        $product_images = $this->product_images;
-        return view('livewire.admin.products.edit-product', compact('products', 'product_images'));
+        $client = new Client();
+        $response = $client->request('GET', config('services.api_url') . '/products' . '/' . $id);
+        $dataproducts = json_decode($response->getBody()->getContents(), true);
+        $products = $dataproducts['data'];
+        return view('livewire.admin.products.edit-product', ['products' => $products]);
     }
 
     public function render()

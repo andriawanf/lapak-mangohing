@@ -27,6 +27,10 @@ class product extends Model
         'product_width'
     ];
 
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 
     public function discounts()
     {

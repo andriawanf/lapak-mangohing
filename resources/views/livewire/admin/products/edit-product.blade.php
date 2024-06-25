@@ -2,9 +2,10 @@
     <div class="w-full px-3 py-6">
         <div class="flex items-end justify-between">
             <div class="flex items-end justify-start gap-3 mb-10">
-                <div class="p-3 border border-gray-200 rounded-md bg-white/50 backdrop-blur-sm hover:bg-white">
+                <a href="{{ route('dashboard.admin.products.list') }}"
+                    class="p-3 border border-gray-200 rounded-md bg-white/50 backdrop-blur-sm hover:bg-white">
                     <i data-lucide="arrow-left" class="w-4 h-4 stroke-2"></i>
-                </div>
+                </a>
                 <div>
                     <p class="mb-1 text-xs font-medium text-tertiary/60">Back to product list</p>
                     <h3 class="text-lg font-semibold text-tertiary">Edit Product</h3>
@@ -38,7 +39,7 @@
             @endif
         </div>
 
-        <form action="{{ route('dashboard.admin.products.update', $products->id) }}" method="POST"
+        <form action="{{ route('dashboard.admin.products.update', $products['id']) }}" method="POST"
             enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -54,7 +55,7 @@
                                 </x-input-label>
                                 <x-text-input type="text" name="product_name" wire:model='product_name'
                                     id="product_name" label="product_name" class="w-full text-sm"
-                                    value="{{ $products->product_name }}" placeholder="write your product name" />
+                                    value="{{ $products['product_name'] }}" placeholder="write your product name" />
                                 @error('product_name')
                                     <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
                                 @enderror
@@ -64,7 +65,7 @@
                                     class="mb-2 text-xs text-tertiary/60" />
                                 <textarea id="product_description" rows="6" name="product_description" wire:model='product_description'
                                     class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary"
-                                    placeholder="Write your thoughts here...">{{ $products->product_description }}</textarea>
+                                    placeholder="Write your thoughts here...">{{ $products['product_description'] }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -82,13 +83,13 @@
 
                                     <option value="">Chosee type</option>
                                     <option value="makaroni"
-                                        {{ $products->product_category == 'makaroni' ? 'selected' : '' }}>
+                                        {{ $products['product_category'] == 'makaroni' ? 'selected' : '' }}>
                                         Makaroni</option>
                                     <option value="keripik"
-                                        {{ $products->product_category == 'keripik' ? 'selected' : '' }}>
+                                        {{ $products['product_category'] == 'keripik' ? 'selected' : '' }}>
                                         Keripik</option>
                                     <option value="kerupuk"
-                                        {{ $products->product_category == 'kerupuk' ? 'selected' : '' }}>
+                                        {{ $products['product_category'] == 'kerupuk' ? 'selected' : '' }}>
                                         Kerupuk</option>
                                 </select>
                                 @error('product_category')
@@ -101,7 +102,7 @@
                                 </x-input-label>
                                 <x-text-input type="text" name="product_tag" wire:model='product_tag'
                                     id="product_tag" label="product_tag" class="w-full text-sm"
-                                    value="{{ $products->product_tag }}" placeholder="ex: makaroni, original, ..." />
+                                    value="{{ $products['product_tag'] }}" placeholder="ex: makaroni, original, ..." />
                                 @error('product_tag')
                                     <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                                 @enderror
@@ -119,7 +120,7 @@
                                 </x-input-label>
                                 <x-text-input type="text" name="product_number" wire:model='product_number'
                                     id="product_number" label="product_number" class="w-full text-sm"
-                                    value="{{ $products->product_number }}" placeholder="ex: MK0000" />
+                                    value="{{ $products['product_number'] }}" placeholder="ex: MK0000" />
                                 @error('product_number')
                                     <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
                                 @enderror
@@ -130,7 +131,7 @@
                                 </x-input-label>
                                 <x-text-input type="number" name="product_stock" wire:model='product_stock'
                                     id="product_stock" label="product_stock" class="w-full text-sm" min="0"
-                                    value="{{ $products->product_stock }}" placeholder="100" />
+                                    value="{{ $products['product_stock'] }}" placeholder="100" />
                                 @error('product_stock')
                                     <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                                 @enderror
@@ -138,8 +139,8 @@
                         </div>
                     </div>
                 </div>
+                {{-- product images --}}
                 <div class="space-y-6">
-                    {{-- product images --}}
                     <div>
                         <h3 class="mb-2 text-base font-medium text-tertiary">Product Images</h3>
                         <div class="flex flex-col w-full gap-2 p-6 bg-white border border-gray-200 rounded-xl">
@@ -163,16 +164,14 @@
                             </label>
                             <div class="grid items-center justify-start grid-cols-3 gap-2" id="image_array_preview">
 
-                                @php
-                                    $images = json_decode($products->product_images);
-                                @endphp
-                                @foreach ($images as $index => $image)
-                                    <div class="relative" id={{ 'image-container-' . $index }}>
-                                        <img id="{{ 'product_image' . $index }}"
-                                            src="{{ asset('storage/images/products/' . $image) }}"
-                                            alt="{{ 'product_image' . $index }}" class="object-cover rounded-xl">
+                                @foreach ($products['images'] as $image)
+                                    <div class="relative" id={{ 'image-container-' . $image['id'] }}>
+                                        <img id="{{ 'product_image' . $image['id'] }}"
+                                            src="{{ $image ? asset('/storage/images/products/' . $image['url']) : asset('/storage/images/products/default-product.png') }}"
+                                            alt="{{ 'product_image' . $image['id'] }}"
+                                            class="object-cover rounded-xl">
                                         <button type="button" class="absolute z-50 bottom-2 right-2 delete-image"
-                                            data-id="{{ $index }}">
+                                            data-id="{{ $image['id'] }}">
                                             <div class="p-2 text-red-500 bg-white rounded-lg">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -195,168 +194,166 @@
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
+                    </div>
 
-                        {{-- Shipping & delivery --}}
-                        <div>
-                            <h3 class="mb-2 text-base font-medium text-tertiary">Shipping & Delivery</h3>
-                            <div class="flex flex-col w-full gap-4 p-6 bg-white border border-gray-200 rounded-xl">
+                    {{-- Shipping & delivery --}}
+                    <div>
+                        <h3 class="mb-2 text-base font-medium text-tertiary">Shipping & Delivery</h3>
+                        <div class="flex flex-col w-full gap-4 p-6 bg-white border border-gray-200 rounded-xl">
+                            <div>
+                                <x-input-label for="product_weight" class="mb-2 text-xs text-tertiary/60">
+                                    Product Weight (kg) <span class="text-red-500">*</span>
+                                </x-input-label>
+                                <x-text-input type="number" name="product_weight" wire:model='product_weight'
+                                    id="product_weight" label="product_weight" class="w-full text-sm"
+                                    placeholder="1.5" value="{{ $products['product_weight'] }}" />
+                                @error('product_weight')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="grid grid-cols-3 space-x-2">
                                 <div>
-                                    <x-input-label for="product_weight" class="mb-2 text-xs text-tertiary/60">
-                                        Product Weight (kg) <span class="text-red-500">*</span>
+                                    <x-input-label for="product_length" class="mb-2 text-xs text-tertiary/60">
+                                        Length (cm) <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <x-text-input type="number" name="product_weight" wire:model='product_weight'
-                                        id="product_weight" label="product_weight" class="w-full text-sm"
-                                        placeholder="1.5" value="{{ $products->product_weight }}" />
-                                    @error('product_weight')
+                                    <x-text-input type="number" name="product_length" wire:model='product_length'
+                                        id="product_length" label="product_length" class="w-full text-sm"
+                                        placeholder="1.5" value="{{ $products['product_length'] }}" />
+                                    @error('product_length')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="grid grid-cols-3 space-x-2">
-                                    <div>
-                                        <x-input-label for="product_length" class="mb-2 text-xs text-tertiary/60">
-                                            Length (cm) <span class="text-red-500">*</span>
-                                        </x-input-label>
-                                        <x-text-input type="number" name="product_length"
-                                            wire:model='product_length' id="product_length" label="product_length"
-                                            class="w-full text-sm" placeholder="1.5"
-                                            value="{{ $products->product_length }}" />
-                                        @error('product_length')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div>
-                                        <x-input-label for="product_breadth" class="mb-2 text-xs text-tertiary/60">
-                                            Breadth (cm) <span class="text-red-500">*</span>
-                                        </x-input-label>
-                                        <x-text-input type="number" name="product_breadth"
-                                            wire:model='product_breadth' id="product_breadth" label="product_breadth"
-                                            class="w-full text-sm" placeholder="1.5"
-                                            value="{{ $products->product_breadth }}" />
-                                        @error('product_breadth')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div>
-                                        <x-input-label for="product_width" class="mb-2 text-xs text-tertiary/60">
-                                            Width (cm) <span class="text-red-500">*</span>
-                                        </x-input-label>
-                                        <x-text-input type="number" name="product_width" wire:model='product_width'
-                                            id="product_width" label="product_width" class="w-full text-sm"
-                                            placeholder="1.5" value="{{ $products->product_width }}" />
-                                        @error('product_width')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- pricing --}}
-                        {{-- product images --}}
-                        <div>
-                            <h3 class="mb-2 text-base font-medium text-tertiary">Pricing</h3>
-                            <div class="flex flex-col w-full gap-4 p-6 bg-white border border-gray-200 rounded-xl">
                                 <div>
-                                    <x-input-label for="product_price" class="mb-2 text-xs text-tertiary/60">
-                                        Product Price (IDR) <span class="text-red-500">*</span>
+                                    <x-input-label for="product_breadth" class="mb-2 text-xs text-tertiary/60">
+                                        Breadth (cm) <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <x-text-input type="number" name="product_price" wire:model='product_price'
-                                        id="product_price" label="product_price" class="w-full text-sm"
-                                        value="{{ $products->product_price }}" />
-                                    @error('product_price')
+                                    <x-text-input type="number" name="product_breadth" wire:model='product_breadth'
+                                        id="product_breadth" label="product_breadth" class="w-full text-sm"
+                                        placeholder="1.5" value="{{ $products['product_breadth'] }}" />
+                                    @error('product_breadth')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                {{-- <div class="grid grid-cols-2 space-x-6">
-                                    <div>
-                                        <x-input-label for="discount_percentage" :value="__('Discount Type (Optionals)')"
-                                            class="mb-2 text-xs text-tertiary/60" />
-                                        <x-text-input type="number" name="discount_percentage"
-                                            wire:model='discount_percentage' id="discount_percentage"
-                                            label="discount_percentage" class="w-full text-sm" placeholder="10%"
-                                            min="0" value="{{ $products->discount_percentage }}" />
-                                        @error('discount_percentage')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div>
-                                        <x-input-label for="minim_orders" :value="__('Minimum Orders (Optionals)')"
-                                            class="mb-2 text-xs text-tertiary/60" />
-                                        <x-text-input type="number" name="minim_orders" wire:model='minim_orders'
-                                            id="minim_orders" label="minim_orders" class="w-full text-sm"
-                                            placeholder="Enter minimim amount" min="0"
-                                            value="{{ $products->minim_orders }}" />
-                                        @error('minim_orders')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                <div>
+                                    <x-input-label for="product_width" class="mb-2 text-xs text-tertiary/60">
+                                        Width (cm) <span class="text-red-500">*</span>
+                                    </x-input-label>
+                                    <x-text-input type="number" name="product_width" wire:model='product_width'
+                                        id="product_width" label="product_width" class="w-full text-sm"
+                                        placeholder="1.5" value="{{ $products['product_width'] }}" />
+                                    @error('product_width')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
-
-                                <div date-rangepicker datepicker-autohide datepicker-orientation="top left"
-                                    datepicker-buttons datepicker-autoselect-today datepicker-format="yyyy-mm-dd"
-                                    class="grid grid-cols-2 gap-6">
-                                    <div>
-                                        <x-input-label for="discount_period_start" :value="__('Peroid Start (Optionals)')"
-                                            class="mb-2 text-xs text-tertiary/60" />
-                                        <div class="relative">
-                                            <div
-                                                class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
-                                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                                    viewBox="0 0 20 20">
-                                                    <path
-                                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                                </svg>
-                                            </div>
-                                            <x-text-input type="text" name="discount_period_start"
-                                                wire:model='discount_period_start' id="discount_period_start"
-                                                label="discount_period-start" class="w-full text-sm ps-10"
-                                                placeholder="Select date start"
-                                                value="{{ $products->discount_period_start }}" />
-                                        </div>
-                                        @error('discount_period_start')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div>
-                                        <x-input-label for="discount_period_end" :value="__('Peroid End (Optionals)')"
-                                            class="mb-2 text-xs text-tertiary/60" />
-                                        <div class="relative">
-                                            <div
-                                                class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
-                                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                                    viewBox="0 0 20 20">
-                                                    <path
-                                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                                </svg>
-                                            </div>
-                                            <x-text-input type="text" name="discount_period_end"
-                                                wire:model='discount_period_end' id="discount_period_end"
-                                                label="discount_period_end" class="w-full text-sm ps-10"
-                                                placeholder="Select date end"
-                                                value="{{ $products->discount_period_end }}" />
-                                        </div>
-                                        @error('discount_period_end')
-                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div> --}}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="flex items-center justify-end gap-3">
-                            <a href="{{ route('dashboard.admin.products.list') }}">
-                                <button type="button"
-                                    class="inline-flex items-center justify-center w-1/2 px-4 py-3 text-sm font-medium text-center transition duration-150 ease-in-out bg-transparent border rounded-lg text-primary border-primary hover:bg-primary focus:ring-4 focus:ring-primary sm:w-auto hover:text-white">
-                                    Cancel
-                                </button>
-                            </a>
-                            <button type="submit"
-                                class="inline-flex items-center justify-center w-1/2 px-4 py-3 text-sm font-medium text-center text-white transition duration-150 ease-in-out bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-700 sm:w-auto">
-                                Add product
+                    {{-- pricing --}}
+                    {{-- product images --}}
+                    <div>
+                        <h3 class="mb-2 text-base font-medium text-tertiary">Pricing</h3>
+                        <div class="flex flex-col w-full gap-4 p-6 bg-white border border-gray-200 rounded-xl">
+                            <div>
+                                <x-input-label for="product_price" class="mb-2 text-xs text-tertiary/60">
+                                    Product Price (IDR) <span class="text-red-500">*</span>
+                                </x-input-label>
+                                <x-text-input type="number" name="product_price" wire:model='product_price'
+                                    id="product_price" label="product_price" class="w-full text-sm"
+                                    value="{{ $products['product_price'] }}" />
+                                @error('product_price')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            {{-- <div class="grid grid-cols-2 space-x-6">
+                                <div>
+                                    <x-input-label for="discount_percentage" :value="__('Discount Type (Optionals)')"
+                                        class="mb-2 text-xs text-tertiary/60" />
+                                    <x-text-input type="number" name="discount_percentage"
+                                        wire:model='discount_percentage' id="discount_percentage"
+                                        label="discount_percentage" class="w-full text-sm" placeholder="10%"
+                                        min="0" value="{{ $products->discount_percentage }}" />
+                                    @error('discount_percentage')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <x-input-label for="minim_orders" :value="__('Minimum Orders (Optionals)')"
+                                        class="mb-2 text-xs text-tertiary/60" />
+                                    <x-text-input type="number" name="minim_orders" wire:model='minim_orders'
+                                        id="minim_orders" label="minim_orders" class="w-full text-sm"
+                                        placeholder="Enter minimim amount" min="0"
+                                        value="{{ $products->minim_orders }}" />
+                                    @error('minim_orders')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div date-rangepicker datepicker-autohide datepicker-orientation="top left"
+                                datepicker-buttons datepicker-autoselect-today datepicker-format="yyyy-mm-dd"
+                                class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <x-input-label for="discount_period_start" :value="__('Peroid Start (Optionals)')"
+                                        class="mb-2 text-xs text-tertiary/60" />
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
+                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                            </svg>
+                                        </div>
+                                        <x-text-input type="text" name="discount_period_start"
+                                            wire:model='discount_period_start' id="discount_period_start"
+                                            label="discount_period-start" class="w-full text-sm ps-10"
+                                            placeholder="Select date start"
+                                            value="{{ $products->discount_period_start }}" />
+                                    </div>
+                                    @error('discount_period_start')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <x-input-label for="discount_period_end" :value="__('Peroid End (Optionals)')"
+                                        class="mb-2 text-xs text-tertiary/60" />
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
+                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                            </svg>
+                                        </div>
+                                        <x-text-input type="text" name="discount_period_end"
+                                            wire:model='discount_period_end' id="discount_period_end"
+                                            label="discount_period_end" class="w-full text-sm ps-10"
+                                            placeholder="Select date end"
+                                            value="{{ $products->discount_period_end }}" />
+                                    </div>
+                                    @error('discount_period_end')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-3">
+                        <a href="{{ route('dashboard.admin.products.list') }}">
+                            <button type="button"
+                                class="inline-flex items-center justify-center w-1/2 px-4 py-3 text-sm font-medium text-center transition duration-150 ease-in-out bg-transparent border rounded-lg text-primary border-primary hover:bg-primary focus:ring-4 focus:ring-primary sm:w-auto hover:text-white">
+                                Cancel
                             </button>
-                        </div>
+                        </a>
+                        <button type="submit"
+                            class="inline-flex items-center justify-center w-1/2 px-4 py-3 text-sm font-medium text-center text-white transition duration-150 ease-in-out bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-700 sm:w-auto">
+                            Add product
+                        </button>
                     </div>
                 </div>
         </form>

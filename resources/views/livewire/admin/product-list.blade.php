@@ -145,28 +145,24 @@
                                 </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product image
-                                </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Product name
+                                    Product
                                 </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
                                     Product description
                                 </th>
                                 <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary whitespace-nowrap">
                                     product number
                                 </th>
                                 <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary whitespace-nowrap">
                                     Product price
                                 </th>
-                                {{-- <th scope="col"
+                                <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
-                                    Discount
-                                </th> --}}
+                                    Stocks(pcs)
+                                </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase text-tertiary">
                                     Action
@@ -174,70 +170,65 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white text-tertiary">
-                            @if ($products->count() > 0)
-                                @foreach ($products as $product)
+                            @if (count($data_products) > 0)
+                                @foreach ($data_products['data'] as $product)
                                     <tr>
                                         <td class="w-4 p-4">
                                             <div class="flex items-center">
-                                                <input id="checkbox{{ $product->id }}" aria-describedby="checkbox-1"
+                                                <input id="checkbox{{ $product['id'] }}" aria-describedby="checkbox-1"
                                                     type="checkbox"
                                                     class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary">
                                                 <label for="checkbox" class="sr-only">checkbox</label>
                                             </div>
                                         </td>
-                                        <td class="p-4 text-sm font-normal text-gray-900 whitespace-nowrap ">
-                                            @php $image = json_decode($product->product_images, true); @endphp
-                                            <div class="w-full rounded-lg">
-                                                <img src="{{ asset('storage/images/products/' . $image[0]) }}"
+                                        <td class="p-2">
+                                            <div class="flex items-center gap-4">
+                                                <img src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
                                                     width="56" height="56" alt="product-image"
-                                                    class="object-cover rounded-lg">
-                                            </div>
-                                        </td>
-                                        <td class="p-4 text-sm font-semibold text-gray-900 whitespace-nowrap ">
-                                            {{ $product->product_name }}
-                                            <p class="text-xs font-normal text-tertiary/50">Tag:
-                                                {{ $product->product_tag }}
-                                            </p>
+                                                    class="object-cover rounded-lg" loading="lazy">
+                                                <div class="text-sm font-semibold text-gray-900 whitespace-nowrap ">
+                                                    {{ $product['product_name'] }}
+                                                    <p class="text-xs font-normal text-tertiary/50">Tag:
+                                                        {{ $product['product_tag'] }}
+                                                    </p>
+                                                </div>
+                                                </d>
                                         </td>
                                         <td
-                                            class="max-w-sm p-4 overflow-hidden text-sm font-normal truncate text-tertiary/80 xl:max-w-xs ">
-                                            {{ $product->product_description }}
+                                            class="max-w-sm p-4 overflow-hidden text-sm font-normal line-clamp-1 text-tertiary/80 xl:max-w-xs ">
+                                            {{ $product['product_description'] }}
                                         </td>
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            #{{ $product->product_number }}
+                                            #{{ $product['product_number'] }}
                                         </td>
                                         <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            Rp. {{ number_format($product->product_price, 0, ',', '.') }}
+                                            Rp. {{ number_format($product['product_price'], 0, ',', '.') }}
                                         </td>
-                                        {{-- <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
-                                            {{ $product->discount_percentage }}%
-                                        </td> --}}
+                                        <td class="p-4 text-sm font-semibold text-tertiary whitespace-nowrap ">
+                                            {{ $product['product_stock'] }} pcs
+                                        </td>
                                         <td class="flex flex-wrap gap-1 p-4">
                                             <button type="button"
-                                                data-modal-target="detail-modal-product{{ $product->id }}"
-                                                data-modal-toggle="detail-modal-product{{ $product->id }}"
+                                                data-modal-target="detail-modal-product{{ $product['id'] }}"
+                                                data-modal-toggle="detail-modal-product{{ $product['id'] }}"
                                                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-0 focus:ring-blue-700">
                                                 <i data-lucide="receipt-text" class="w-4 h-4"></i>
                                             </button>
-                                            <a href="{{ route('dashboard.admin.products.edit', $product->id) }}">
+                                            <a href="{{ route('dashboard.admin.products.edit', $product['id']) }}">
                                                 <button type="button"
                                                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-0 focus:ring-orange-500">
                                                     <i data-lucide="pencil" class="w-4 h-4"></i>
                                                 </button>
                                             </a>
-                                            <form
-                                                action="{{ route('dashboard.admin.products.destroy', $product->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
-                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                </button>
-                                            </form>
+                                            <button data-modal-target="popup-modal-{{ $product['id'] }}"
+                                                data-modal-toggle="popup-modal-{{ $product['id'] }}"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
                                         </td>
+                                        <x-modal-popup :id="$product['id']" :route="route('dashboard.admin.products.destroy', $product['id'])" :title="$product['product_name'] . ' product?'" />
                                     </tr>
-                                    <x-modal :id="$product->id" :data="$product" />
+                                    <x-modal :id="$product['id']" :data="$product" />
                                 @endforeach
                             @else
                                 <tr>
@@ -253,74 +244,31 @@
     <!-- Card Footer -->
     <div class="items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between">
         <div class="flex items-center mb-4 sm:mb-0">
-            <span class="text-sm font-normal text-gray-500">Showing <span
-                    class="font-semibold text-tertiary ">1-20</span> of <span
-                    class="font-semibold text-tertiary ">2290</span></span>
+            <span class="text-sm font-normal text-gray-500">
+                Showing <span
+                    class="font-semibold text-tertiary">{{ $data_products['meta']['from'] }}-{{ $data_products['meta']['to'] }}</span>
+                of <span class="font-semibold text-tertiary">{{ $data_products['meta']['total'] }}</span>
+            </span>
         </div>
         <div class="flex items-center space-x-3">
             <ol class="flex justify-center gap-1 text-xs font-medium">
-                <li>
-                    <a href="#"
-                        class="inline-flex items-center justify-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8 rtl:rotate-180">
-                        <span class="sr-only">Prev Page</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
-                        1
-                    </a>
-                </li>
-
-                <li class="block leading-8 text-center text-white rounded bg-primary border-primary size-8">
-                    2
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
-                        3
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
-                        4
-                    </a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
-                        ...
-                    </a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="block leading-8 text-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8">
-                        7
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="inline-flex items-center justify-center bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200 size-8 rtl:rotate-180">
-                        <span class="sr-only">Next Page</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </li>
+                @foreach ($data_products['meta']['links'] as $link)
+                    @if ($link['url'])
+                        <li>
+                            <a href="{{ route('dashboard.admin.products.list', ['page' => $link['url'] ? $link['label'] : null]) }}"
+                                class="flex items-center justify-center  px-3 py-2 {{ $link['active'] ? 'bg-primary border border-gray-100 rounded text-white hover:bg-red-800' : 'bg-white border border-gray-100 rounded text-tertiary hover:bg-gray-200' }}">
+                                {!! $link['label'] !!}
+                            </a>
+                        </li>
+                    @else
+                        <li>
+                            <span
+                                class="inline-flex items-center justify-center px-3 py-2 bg-white border border-gray-100 rounded text-tertiary">
+                                {!! $link['label'] !!}
+                            </span>
+                        </li>
+                    @endif
+                @endforeach
             </ol>
         </div>
     </div>
