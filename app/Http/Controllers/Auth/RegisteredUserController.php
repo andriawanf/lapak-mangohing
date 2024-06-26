@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -29,20 +30,27 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        $validate = Validator::make($request->all(), [
+            'username' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'confirm_password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // if ($validate->fails() || $request->confirm_password != $request->password) {
+        //     return back()->withErrors(['confirm_password' => 'Password confirmation does not match']);
+        // } else {
+        // }
         $user = User::create([
-            'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'confirm_password' => Hash::make($request->password),
+            'is_active' => false
         ]);
 
         event(new Registered($user));
-
+        $user->assignRole('customer');
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
