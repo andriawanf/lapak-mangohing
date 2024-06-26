@@ -4,6 +4,7 @@ use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\UserController;
 use App\Livewire\Admin\Discounts\DiscountList;
 use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\ProductList;
@@ -13,7 +14,7 @@ use App\Livewire\Admin\Reviews\ReviewList;
 use App\Livewire\Admin\UserList;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+Route::get('/dashboard', function () {
     return view('welcome');
 });
 
@@ -46,10 +47,16 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
         Route::put('/edit-discount/{id}', [DiscountController::class, 'update'])->name('dashboard.admin.products.discount.update');
         Route::delete('/delete-discount/{id}', [DiscountController::class, 'destroy'])->name('dashboard.admin.products.discount.destroy');
     });
+
+    Route::group(['prefix' => '/dashboard-admin/users'], function () {
+        // users
+        Route::get('/list', UserList::class)->name('dashboard.admin.users');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('dashboard.admin.users.update');
+        Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('dashboard.admin.users.destroy');
+    });
     Route::get('/dashboard-admin/orders', OrderList::class)->name('dashboard.admin.orders');
     // reviews
     Route::get('/dashborad-admin/product/reviews', ReviewList::class)->name('dashboard.admin.products.review.list');
-    Route::get('/dashboard-admin/users', UserList::class)->name('dashboard.admin.users');
     Route::get('/dashboard-admin/users/{user}/edit', UserList::class)->name('dashboard.admin.users.edit');
     Route::delete('/dashboard-admin/users/{user}', UserList::class)->name('dashboard.admin.users.destroy');
     Route::get('/dashboard-admin/profile', ProductList::class)->name('dashboard.admin.profile');

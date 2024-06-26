@@ -18,7 +18,7 @@ class RolePermissionTable extends Seeder
         $roleAdmin = Role::create(['name' => 'admin']);
         $roleUser = Role::create(['name' => 'customer']);
 
-        $user = User::create([
+        $user1 = User::create([
             'username' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('asdasdasd'),
@@ -26,6 +26,16 @@ class RolePermissionTable extends Seeder
             'is_active' => true
         ]);
 
-        $user->assignRole($roleAdmin);
+        $user1->assignRole($roleAdmin);
+
+        $user2 = User::create([
+            'username' => 'Andriawan Firmansyah',
+            'email' => 'andriawanf98@gmail.com',
+            'password' => bcrypt('asdasdasd'),
+            'confirm_password' => bcrypt('asdasdasd'),
+            'is_active' => true
+        ]);
+
+        $user2->assignRole($roleUser);
     }
 }

@@ -226,7 +226,7 @@
                                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                                             </button>
                                         </td>
-                                        <x-modal-popup :id="$product['id']" :route="route('dashboard.admin.products.destroy', $product['id'])" :title="$product['product_name'] . ' product?'" />
+                                        <x-modal-popup :id="'popup-modal-' . $product['id']" :route="route('dashboard.admin.products.destroy', $product['id'])" :title="$product['product_name'] . ' product?'" />
                                     </tr>
                                     <x-modal :id="$product['id']" :data="$product" />
                                 @endforeach
