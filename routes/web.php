@@ -14,9 +14,9 @@ use App\Livewire\Admin\Reviews\ReviewList;
 use App\Livewire\Admin\UserList;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/dashboard', function () {
-    return view('welcome');
-});
+Route::get('/', function () {
+    return view('customer.home.index');
+})->name('dashboard');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

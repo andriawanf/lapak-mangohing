@@ -14,33 +14,29 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- @livewireStyles --}}
+    @vite(['resources/css/app.css', 'resources/css/styles.css', 'resources/js/app.js', 'resources/js/script.js'])
+    @livewireStyles
 </head>
 
-<body class="antialiased font-poppins bg-gradient-to-r from-white to-[#d43637]/10">
-    <nav class="fixed z-50 w-full sm:py-2">
-        <div class="container py-3 mx-auto">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center justify-start">
-                    <a href="/" class="flex ml-4">
-                        <img src="/images/mang-ohing-logo.png" class="h-8 mr-3" alt="Flowbite Logo" />
-                        <span class="self-center text-xl font-semibold text-[#d43637] whitespace-nowrap">Lapak Mang
-                            Ohing</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <div class="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
-        <div class="w-full px-6 overflow-hidden sm:max-w-md sm:rounded-lg lg:max-w-xl">
-            {{ $slot }}
-        </div>
+<body class="antialiased font-poppins bg-[#f2f2f2] relative">
+    <livewire:customer.components.header />
 
-    </div>
-    {{-- @livewireScripts --}}
+    {{ $slot }}
+    @livewireScripts
+    <!-- Development version -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Production version -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    {{-- datepicker flowbite --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 </body>
 
 </html>

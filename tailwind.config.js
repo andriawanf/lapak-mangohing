@@ -26,6 +26,7 @@ export default {
             },
             fontFamily: {
                 poppins: "Poppins, sans-serif",
+                superFood: "SuperFood, sans-serif",
             },
         },
     },

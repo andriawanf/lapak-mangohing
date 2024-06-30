@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "SuperFood";
+    src: url("../../public/fonts/SuperFoods-2OxXo.ttf");
+}

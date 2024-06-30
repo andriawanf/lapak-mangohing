@@ -45,9 +45,11 @@
 
                     <div>
                         <p class="text-xs">
-                            <strong class="block font-medium">{{ Auth::user()->name }}</strong>
-
-                            <span> {{ Auth::user()->email }}</span>
+                            @if (Auth::check())
+                                <strong class="block font-medium">{{ Auth::user()->name }}</strong>
+                                <span> {{ Auth::user()->email }}</span>
+                            @else
+                            @endif
                         </p>
                     </div>
                 </a>

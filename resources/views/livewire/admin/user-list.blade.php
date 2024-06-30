@@ -170,11 +170,12 @@
                                                         <select id="role"
                                                             class="w-full text-sm  border border-gray-300 focus:border-[#d43637] focus:ring-[#d43637] rounded-md shadow-sm"
                                                             name="role">
-                                                            @foreach ($roles as $role)
-                                                                <option value="{{ $role->name }}"
-                                                                    {{ $user->roles[0]->name == $role->name ? 'selected' : '' }}>
-                                                                    {{ $role->name }}</option>
-                                                            @endforeach
+                                                            <option value="admin"
+                                                                {{ $user->roles[0]->name == 'admin' ? 'selected' : '' }}>
+                                                                Admin</option>
+                                                            <option value="customer"
+                                                                {{ $user->roles[0]->name == 'customer' ? 'selected' : '' }}>
+                                                                Customer</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-span-2">
