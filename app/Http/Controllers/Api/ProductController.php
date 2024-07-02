@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-            $products = Product::with('images')->orderBy('created_at', 'desc')->paginate(10);
+            $products = Product::with('images', 'discounts')->orderBy('created_at', 'desc')->get();
             return new ProductCollection($products);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'An error occurred while retrieving products: ' . $e->getMessage()], 500);
