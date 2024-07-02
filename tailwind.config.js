@@ -20,6 +20,7 @@ export default {
                 xl: "1440px",
             },
             colors: {
+                background: "#F2F2F2",
                 primary: "#d43637",
                 secondary: "#f9b066",
                 tertiary: "#242529",
