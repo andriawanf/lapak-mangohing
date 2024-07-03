@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Customer\ProductsController as CustomerProductsController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -18,9 +19,9 @@ Route::get('/', function () {
     return view('customer.home.index');
 })->name('dashboard');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::group(['prefix' => '/product'], function () {
+    Route::get('/collection', [CustomerProductsController::class, 'index'])->name('product.collections');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

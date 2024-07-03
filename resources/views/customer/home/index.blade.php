@@ -5,6 +5,9 @@
     {{-- banner --}}
     {{-- <div class="w-full min-h-20"></div> --}}
 
+    {{-- why choose us --}}
+    <livewire:customer.sections.why-choose-us />
+
     {{-- produk unggulan --}}
     <livewire:customer.sections.best-products />
 

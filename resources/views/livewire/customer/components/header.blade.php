@@ -12,13 +12,13 @@
             <div class="hidden md:block md:mr-12">
                 <nav aria-label="Global">
                     <ul class="flex items-center gap-2 text-sm">
-                        <a href="#"
+                        <a href="{{ route('dashboard') }}"
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out text-tertiary/60 hover:text-white hover:font-medium {{ route('dashboard') == request()->url() ? 'bg-primary text-white font-medium' : '' }}">
                             <li>
                                 Home
                             </li>
                         </a>
-                        <a href="#"
+                        <a href="{{ route('product.collections') }}"
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out">
                             <li>
                                 <h1 class="transition text-tertiary/60 group-hover:text-white"> Produk </h1>
