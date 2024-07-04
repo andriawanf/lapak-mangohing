@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 Route::group(['prefix' => '/product'], function () {
     Route::get('/collection', [CustomerProductsController::class, 'index'])->name('product.collections');
+    Route::get('/collection/search', [CustomerProductsController::class, 'search'])->name('product.collections.search');
 });
 
 Route::middleware('auth')->group(function () {

@@ -9,7 +9,7 @@
                 </div>
             </div>
 
-            <div class="hidden md:block md:mr-12">
+            <div class="hidden md:block md:ms-20">
                 <nav aria-label="Global">
                     <ul class="flex items-center gap-2 text-sm">
                         <a href="{{ route('dashboard') }}"
@@ -19,9 +19,9 @@
                             </li>
                         </a>
                         <a href="{{ route('product.collections') }}"
-                            class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out">
+                            class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out text-tertiary/60 hover:text-white hover:font-medium {{ route('product.collections') == request()->url() || route('product.collections.search') == request()->url() ? 'bg-primary text-white font-medium' : '' }}">
                             <li>
-                                <h1 class="transition text-tertiary/60 group-hover:text-white"> Produk </h1>
+                                Produk
                             </li>
                         </a>
                         <a href="#"
@@ -111,10 +111,10 @@
                         <ul class="p-2 text-sm font-medium text-tertiary text-start ">
                             <li><a href="#" title=""
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    My Account </a></li>
+                                    Account </a></li>
                             <li><a href="#" title=""
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    My Orders </a></li>
+                                    Preorders </a></li>
                             <li><a href="#" title=""
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
                                     Favourites </a></li>

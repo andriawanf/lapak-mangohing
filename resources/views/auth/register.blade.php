@@ -1,6 +1,6 @@
 <x-guest-layout>
     {{-- Form Sign Up --}}
-    <div class="flex items-center justify-center w-full min-h-screen">
+    <div class="flex items-center justify-center w-full min-h-screen food-pattern">
         <div class="max-w-md">
             <div>
                 <h2 class="text-3xl font-bold text-[#010101] leading-[110%]">

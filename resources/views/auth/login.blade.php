@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
     {{-- Form Sign In --}}
-    <div class="flex items-center justify-center w-full min-h-screen">
+    <div class="flex items-center justify-center w-full min-h-screen food-pattern">
         <div class="max-w-md">
             <div>
                 <h2 class="text-3xl font-bold text-[#010101] leading-[110%]">

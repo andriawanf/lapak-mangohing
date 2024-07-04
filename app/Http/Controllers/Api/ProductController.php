@@ -183,4 +183,36 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'message' => 'An error occurred while deleting the product: ' . $e->getMessage()], 500);
         }
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $sortBy = $request->input('sort_by', 'product_name');
+        // $minRating = $request->input('min_rating', []);
+        $minPrice = $request->input('min_price', []);
+
+        if (!$query) {
+            return response()->json(['error' => 'Query parameter is required'], 400);
+        }
+
+        // Lakukan pencarian di sini
+        $products = product::with('images', 'discounts')->where(function ($q) use ($query) {
+            $q->where('product_name', 'LIKE', "%{$query}%")
+                ->orWhere('product_number', 'LIKE', "%{$query}%")
+                ->orWhere('product_stock', 'LIKE', "%{$query}%")
+                ->orWhere('product_tag', 'LIKE', "%{$query}%")
+                ->orWhere('product_price', 'LIKE', "%{$query}%");
+        })
+            //  ->when($minRating, function ($q, $minRating) {
+            //      return $q->where('rating', '>=', $minRating);
+            //  })
+            ->when($minPrice, function ($q) use ($minPrice) {
+                if (!empty($minPrice)) {
+                    $q->whereIn('product_price',  $minPrice);
+                }
+            })
+            ->orderBy($sortBy, 'asc')
+            ->get();
+        return new ProductCollection($products);
+    }
 }

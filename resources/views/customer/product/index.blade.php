@@ -7,7 +7,8 @@
                 <div class="flex flex-col p-4 bg-white shadow rounded-2xl sm:p-6">
                     <div class="inline-flex items-start justify-between">
                         <h1 class="text-base font-bold md:text-xl">Mang Ohing - Produk Unggulan </h1>
-                        <h1 class="text-base font-medium md:text-xl text-tertiary/60">(12 Produk)</h1>
+                        <h1 class="text-base font-medium md:text-xl text-tertiary/60">({{ $productCount }} Produk)
+                        </h1>
                     </div>
                     <hr class="mt-4" />
                     <div class="inline-flex items-start justify-between mt-4">
@@ -32,29 +33,26 @@
                                         aria-labelledby="dropdownFilterSort">
                                         <li>
                                             <div class="flex items-center">
-                                                <input id="checkbox-item-1" type="checkbox" value=""
+                                                <input id="checkbox-item-1" type="checkbox" value="product_number"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary ">
                                                 <label for="checkbox-item-1"
-                                                    class="text-sm font-medium text-gray-900 ms-2 ">Default
-                                                    checkbox</label>
+                                                    class="text-sm font-medium text-gray-900 ms-2 ">Number</label>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="flex items-center">
-                                                <input checked id="checkbox-item-2" type="checkbox" value=""
+                                                <input checked id="checkbox-item-2" type="checkbox" value="product_name"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary ">
                                                 <label for="checkbox-item-2"
-                                                    class="text-sm font-medium text-gray-900 ms-2 ">Checked
-                                                    state</label>
+                                                    class="text-sm font-medium text-gray-900 ms-2 ">Name</label>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="flex items-center">
-                                                <input id="checkbox-item-3" type="checkbox" value=""
+                                                <input id="checkbox-item-3" type="checkbox" value="product_price"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary ">
                                                 <label for="checkbox-item-3"
-                                                    class="text-sm font-medium text-gray-900 ms-2 ">Default
-                                                    checkbox</label>
+                                                    class="text-sm font-medium text-gray-900 ms-2 ">Price</label>
                                             </div>
                                         </li>
                                     </ul>
@@ -109,7 +107,7 @@
                                 </div>
                             </div>
                             {{-- filter rating --}}
-                            <div>
+                            {{-- <div>
                                 <button id="dropdownFilterRating" data-dropdown-toggle="filterRating"
                                     class="inline-flex items-center px-5 py-2 text-sm font-medium text-center rounded-lg bg-gray-50 text-tertiary hover:bg-gray-200 focus:ring-0 focus:outline-none "
                                     type="button">
@@ -155,17 +153,19 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
-                        <form class="flex items-center max-w-lg">
+                        <form action="{{ route('product.collections.search') }}" method="GET"
+                            class="flex items-center max-w-lg">
+                            {{-- @csrf --}}
                             <label for="voice-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
                                     <i data-lucide="search" class="w-4 h-4 text-gray-500 stroke-2"></i>
                                 </div>
-                                <input type="text" id="voice-search"
+                                <input type="text" id="search" name="search"
                                     class="bg-gray-50 border border-gray-200 text-tertiary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full ps-10 p-2.5"
-                                    placeholder="Cari Produk disini..." required />
+                                    placeholder="Cari Produk disini..." value="{{ request('search') }}" />
                             </div>
                             <button type="submit"
                                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-white rounded-lg ms-2 bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-primary">
@@ -328,13 +328,15 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="w-full mt-4 text-center md:mt-8">
-                    <button type="button"
-                        class="flex items-center px-5 py-2.5 mx-auto text-sm font-medium text-white border border-gray-200 rounded-full bg-primary hover:bg-red-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-100">
-                        Load More
-                        <i data-lucide="chevrons-down" class="w-4 h-4 stroke-2 ms-2 animate-bounce"></i>
-                    </button>
-                </div>
+                @if ($productCount > 12)
+                    <div class="w-full mt-4 text-center md:mt-8">
+                        <button type="button"
+                            class="flex items-center px-5 py-2.5 mx-auto text-sm font-medium text-white border border-gray-200 rounded-full bg-primary hover:bg-red-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                            Load More
+                            <i data-lucide="chevrons-down" class="w-4 h-4 stroke-2 ms-2 animate-bounce"></i>
+                        </button>
+                    </div>
+                @endif
             </div>
 
         </div>
