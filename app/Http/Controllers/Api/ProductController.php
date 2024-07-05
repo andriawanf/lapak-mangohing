@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-            $products = Product::with('images', 'discounts')->orderBy('created_at', 'desc')->get();
+            $products = Product::with('images', 'discounts')->get();
             return new ProductCollection($products);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'An error occurred while retrieving products: ' . $e->getMessage()], 500);
@@ -214,5 +214,15 @@ class ProductController extends Controller
             ->orderBy($sortBy, 'asc')
             ->get();
         return new ProductCollection($products);
+    }
+
+    public function addCart($id)
+    {
+        $product = Product::where('id', $id)->first();
+        if ($product) {
+            return response()->json(['success' => true, 'message' => 'Product added to cart successfully', 'data' => $product], 200);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Product not found'], 404);
+        }
     }
 }

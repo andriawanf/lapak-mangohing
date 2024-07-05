@@ -26,4 +26,10 @@ class Discount extends Model
     {
         return $this->belongsTo(product::class);
     }
+
+    public function isValid()
+    {
+        $currentDate = now();
+        return $this->start_date <= $currentDate && $this->end_date >= $currentDate;
+    }
 }

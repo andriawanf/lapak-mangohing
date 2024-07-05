@@ -43,7 +43,8 @@
             @if (auth()->check())
                 <div class="flex items-center lg:space-x-4">
 
-                    <button id="myCartDropdownButton1" data-dropdown-toggle="myCartDropdown1" type="button"
+                    <button data-drawer-target="drawer-my-cart" data-drawer-show="drawer-my-cart"
+                        data-drawer-placement="right" aria-controls="drawer-my-cart" id="myCart" type="button"
                         class="relative inline-flex items-center justify-center p-2 text-sm font-medium leading-none text-white rounded-full bg-primary hover:bg-red-800 ">
                         <span class="sr-only">
                             Cart
@@ -51,45 +52,138 @@
                         <i data-lucide="shopping-cart" class="w-4 h-4 stroke-2"></i>
                         <div
                             class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold bg-yellow-500 border-2 rounded-full text-tertiary border-background -top-2 -end-2">
-                            1</div>
+                            {{ $cartCount }}</div>
                     </button>
 
-                    <div id="myCartDropdown1"
-                        class="z-10 hidden max-w-sm p-4 mx-auto space-y-4 overflow-hidden antialiased bg-white border border-gray-200 rounded-lg shadow-sm">
-                        <div class="grid grid-cols-2">
-                            <div>
-                                <a href="#"
-                                    class="text-sm font-semibold leading-none text-gray-900 truncate hover:underline">Apple
-                                    iPhone 15</a>
-                                <p class="mt-0.5 truncate text-sm font-normal text-gray-500">$599</p>
+                    <!-- drawer component -->
+                    <div id="drawer-my-cart"
+                        class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white max-w-80 md:min-w-96"
+                        tabindex="-1" aria-labelledby="drawer-right-label">
+                        <h3 class="text-lg font-bold text-tertiary">My Cart ({{ $cartCount }})</h3>
+                        <button type="button" data-drawer-hide="drawer-my-cart" aria-controls="drawer-my-cart"
+                            class="text-tertiary bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close menu</span>
+                        </button>
+
+                        <hr class="my-4" />
+                        @foreach ($dataCart as $data)
+                            <div class="flex items-start gap-2">
+                                <img src="{{ $data['product']['images'] ? asset('storage/images/products/' . $data['product']['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
+                                    alt="image-product" class="object-cover rounded size-16">
+                                <div class="w-full">
+                                    <div>
+                                        <p class="text-sm font-normal text-tertiary/60">
+                                            {{ $data['product']['product_category'] }}</p>
+                                        <a href="#"
+                                            class="text-sm font-semibold mt-0.5 text-gray-900 w-full hover:underline line-clamp-1">{{ $data['product']['product_name'] }}</a>
+                                        <p class="text-xs font-normal text-tertiary/60 mt-0.5 line-clamp-1">Tag:
+                                            {{ $data['product']['product_tag'] }}</p>
+                                    </div>
+
+                                    <div class="flex items-center justify-between gap-2 mt-2">
+                                        <div class="relative flex items-center">
+                                            <button type="button" id="decrement-button"
+                                                data-input-counter-decrement="counter-input"
+                                                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-gray-100 focus:ring-20 focus:outline-none">
+                                                <i data-lucide="minus" class="w-2.5 h-2.5 text-tertiary"></i>
+                                            </button>
+                                            <input type="text" id="counter-input" data-input-counter
+                                                class="flex-shrink-0 text-tertiary border-0 bg-transparent text-md font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
+                                                placeholder="" value="{{ $data['quantity'] }}" />
+                                            <button type="button" id="increment-button"
+                                                data-input-counter-increment="counter-input"
+                                                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-gray-100 focus:ring-0 focus:outline-none">
+                                                <i data-lucide="plus" class="w-2.5 h-2.5 text-tertiary"></i>
+                                            </button>
+                                        </div>
+                                        <p class="font-bold text-md text-tertiary">
+                                            Rp. {{ number_format($data['subtotal'], 0, ',', '.') }}</p>
+                                    </div>
+
+                                    <div class="flex justify-end mt-2">
+                                        <button data-modal-target="deleteCart-{{ $data['id'] }}"
+                                            data-modal-toggle="deleteCart-{{ $data['id'] }}" type="button"
+                                            class="text-xs font-normal text-primary hover:underline">
+                                            Remove item
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+                            <hr class="my-4" />
+                        @endforeach
 
-                            <div class="flex items-center justify-end gap-6">
-                                <p class="text-sm font-normal leading-none text-gray-500">Qty: 1</p>
+                        <div class="flex items-center justify-end w-full text-lg font-bold text-tertiary">
+                            <p>Subtotal: <span class="ms-3">Rp. {{ number_format('42342342', 0, ',', '.') }}</span>
+                            </p>
+                        </div>
 
-                                <button data-tooltip-target="tooltipRemoveItem1a" type="button"
-                                    class="text-primary hover:text-red-800">
-                                    <span class="sr-only"> Remove </span>
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor" viewBox="0 0 24 24">
-                                        <path fill-rule="evenodd"
-                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                                <div id="tooltipRemoveItem1a" role="tooltip"
-                                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
-                                    Remove item
-                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                        <div class="w-full mt-6">
+                            <a href="{{ route('product.myCart') }}"
+                                class="mb-2 inline-flex w-full h-fit items-center justify-center rounded-lg border border-primary bg-transparent px-5 py-2.5 text-sm font-medium text-primary hover:text-white hover:bg-primary focus:outline-none focus:bg-red-800"
+                                role="button"> View all ({{ $cartCount }}) </a>
+                            <a href="#" title=""
+                                class="mb-2 inline-flex w-full h-fit items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0"
+                                role="button"> Checkout </a>
+                            <a href="{{ route('product.collections') }}">
+                                <p
+                                    class="w-full text-xs font-normal text-center hover:underline text-tertiary hover:text-primary">
+                                    Continue
+                                    shopping</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    {{-- Modal Delete Cart --}}
+                    @foreach ($dataCart as $data)
+                        <div id="deleteCart-{{ $data['id'] }}" tabindex="-1"
+                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative w-full max-w-md max-h-full p-4">
+                                <div class="relative bg-white rounded-lg shadow">
+                                    <button type="button"
+                                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                        data-modal-hide="deleteCart-{{ $data['id'] }}">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2"
+                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                    <div class="p-4 text-center md:p-5">
+                                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-400 " aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2"
+                                                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                        <h3 class="mb-5 text-lg font-normal text-gray-500 ">
+                                            Are you sure you want to delete <span
+                                                class="font-bold text-primary">{{ $data['product']['product_name'] }}</span>
+                                            ?
+                                        </h3>
+                                        <form action="{{ route('product.collections.deleteCart', $data['id']) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-white bg-red-600 hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                                Yes, I'm sure
+                                            </button>
+                                            </fo>
+                                            <button data-modal-hide="deleteCart-{{ $data['id'] }}" type="button"
+                                                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-0 focus:ring-gray-100 ">No,
+                                                cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <a href="#" title=""
-                            class="mb-2 me-2 inline-flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0"
-                            role="button"> Checkout </a>
-                    </div>
-
+                    @endforeach
 
                     <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown"
                         class="flex items-center text-sm font-medium text-gray-900 rounded-full pe-1 hover:text-primary md:me-0 focus:ring-0"
@@ -100,8 +194,8 @@
                         <p class="w-20 overflow-hidden text-ellipsis text-nowrap">{{ Auth::user()->username }}</p>
                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 4 4 4-4" />
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
 
