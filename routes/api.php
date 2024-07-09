@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,4 +14,14 @@ Route::prefix('product')->group(function () {
     Route::apiResource('/discounts', \App\Http\Controllers\Api\DiscountController::class);
     Route::get('/add-cart/{id}', [ProductController::class, 'addCart']);
     Route::get('/search', [ProductController::class, 'search']);
+});
+
+// auth
+Route::middleware('guest')->group(function () {
+    Route::post('/register', [AuthenticationController::class, 'register']);
+    Route::post('/login', [AuthenticationController::class, 'login']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthenticationController::class, 'logout']);
 });
