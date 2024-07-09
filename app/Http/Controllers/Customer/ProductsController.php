@@ -80,8 +80,13 @@ class ProductsController extends Controller
     // my cart
     public function myCart()
     {
-        $user = Auth::user();
-        $dataCart = Cart::with('product', 'product.images', 'product.discounts')->where('user_id', $user->id)->get();
-        return view('customer.product.shopping-cart', ['dataCart' => $dataCart]);
+        if (Auth::check()) {
+            $user = Auth::user();
+            $cartCount = Cart::where('user_id', $user->id)->count();
+            $dataCart = Cart::with('product', 'product.images', 'product.discounts')->where('user_id', $user->id)->get();
+            return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
+        } else {
+            return redirect()->route('login')->with('error', 'Please login first');
+        }
     }
 }
