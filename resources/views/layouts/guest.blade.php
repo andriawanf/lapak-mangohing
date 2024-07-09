@@ -19,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/css/styles.css', 'resources/js/app.js', 'resources/js/script.js'])
+    @vite(['resources/css/app.css', 'resources/css/styles.css', 'resources/js/app.js', 'resources/js/global-script.js'])
     @livewireStyles
 </head>
 
@@ -36,11 +36,11 @@
     <!-- Production version -->
     <script src="https://unpkg.com/lucide@latest"></script>
     {{-- datepicker flowbite --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script> --}}
 </body>
 
 </html>

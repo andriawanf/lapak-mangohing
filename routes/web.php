@@ -23,8 +23,12 @@ Route::group(['prefix' => '/product'], function () {
     Route::get('/collection', [CustomerProductsController::class, 'index'])->name('product.collections');
     Route::get('/collection/search', [CustomerProductsController::class, 'search'])->name('product.collections.search');
     Route::get('/collection/add-cart/{id}', [CustomerProductsController::class, 'addCart'])->name('product.collections.addCart');
+    Route::post('/collection/update-cart', [CustomerProductsController::class, 'updateCart'])->name('product.collections.updateCart');
     Route::delete('/collection/delete-cart/{id}', [CustomerProductsController::class, 'deleteCart'])->name('product.collections.deleteCart');
     Route::get('/cart', [CustomerProductsController::class, 'myCart'])->name('product.myCart');
+
+    // checkout
+    Route::get('/checkout', [CustomerProductsController::class, 'checkout'])->name('checkout');
 });
 
 Route::middleware('auth')->group(function () {

@@ -9,7 +9,7 @@
                         <a href="#" class="text-sm font-medium text-primary hover:underline">Remove all</a>
                     </div>
                     <div class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
-                        <table class="w-full text-sm text-left text-tertiary">
+                        <table class="w-full text-sm text-left text-tertiary" id="tableCartList">
                             <thead class="text-xs uppercase border-b text-tertiary/60 ">
                                 <tr>
                                     <th scope="col" class="p-4">
@@ -32,12 +32,15 @@
                             </thead>
                             <tbody>
                                 @foreach ($dataCart as $data)
-                                    <tr class="py-2 bg-white border-b">
+                                    <tr class="py-2 bg-white border-b" id="trCartList"
+                                        data-trCartList = "{{ $data['id'] }}">
                                         <td class="w-4 p-4">
                                             <div class="flex items-center">
-                                                <input id="checkbox-table-search-1" type="checkbox"
-                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary focus:ring-2">
-                                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                                <input id="checkbox-product-{{ $data['id'] }}" type="checkbox"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary focus:ring-2"
+                                                    data-id="{{ $data['id'] }}">
+                                                <label for="checkbox-product-{{ $data['id'] }}"
+                                                    class="sr-only">checkbox</label>
                                             </div>
                                         </td>
                                         <td class="flex items-start px-6 py-4">
@@ -56,8 +59,8 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="relative flex items-center max-w-[8rem] mx-auto">
-                                                <button type="button" id="decrement-button"
-                                                    data-input-counter-decrement="quantity-input"
+                                                <button type="button" id="decrement-button-{{ $data['id'] }}"
+                                                    data-input-counter-decrement="quantity-input-{{ $data['id'] }}"
                                                     class="h-10 p-3 bg-gray-100 border border-gray-200 hover:bg-gray-200 rounded-s-lg focus:ring-gray-100 focus:ring-0 focus:outline-none">
                                                     <svg class="w-2 h-2 text-tertiary " aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -66,12 +69,14 @@
                                                             stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
                                                     </svg>
                                                 </button>
-                                                <input type="text" id="quantity-input" data-input-counter
-                                                    aria-describedby="helper-text-explanation"
+                                                <input type="text" id="quantity-input-{{ $data['id'] }}"
+                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                    data-id="{{ $data['id'] }}"
+                                                    data-price="{{ $data['product']['product_price'] }}"
                                                     class="bg-gray-100 border-x-0 border-gray-200 h-10 text-center text-tertiary text-sm  focus:ring-0 focus:ring-primary block w-full py-2.5 "
-                                                    placeholder="{{ $data['quantity'] }}" />
-                                                <button type="button" id="increment-button"
-                                                    data-input-counter-increment="quantity-input"
+                                                    value="{{ $data['quantity'] }}" min="1" />
+                                                <button type="button" id="increment-button-{{ $data['id'] }}"
+                                                    data-input-counter-increment="quantity-input-{{ $data['id'] }}"
                                                     class="h-10 p-3 bg-gray-100 border border-gray-200 hover:bg-gray-200 rounded-e-lg focus:ring-gray-100 focus:ring-0 focus:outline-none">
                                                     <svg class="w-2 h-2 text-tertiary" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -89,8 +94,10 @@
                                                 Remove
                                             </button>
                                         </td>
-                                        <td class="px-6 py-4 text-base font-bold text-tertiary">
-                                            Rp. {{ number_format($data['subtotal'], 0, ',', '.') }}
+                                        <td id="subtotal-{{ $data['id'] }}"
+                                            class="px-6 py-4 text-base font-bold text-tertiary">
+                                            <p class="subtotal-value"> Rp.
+                                                {{ number_format($data['subtotal'], 0, ',', '.') }},00</p>
                                         </td>
                                     </tr>
                                     {{-- modal --}}
@@ -155,7 +162,7 @@
                                 <dl class="flex items-center justify-between gap-4">
                                     <dt class="text-base font-normal text-tertiary/50 hover:text-tertiary">Subtotal
                                     </dt>
-                                    <dd class="text-base font-medium text-tertiary">Rp. 0.00</dd>
+                                    <dd class="text-base font-medium text-tertiary subtotal-product">Rp. 0.00</dd>
                                 </dl>
 
                                 <dl class="flex items-center justify-between gap-4">
@@ -167,11 +174,11 @@
 
                             <dl class="flex items-center justify-between gap-4 pt-2 border-t border-gray-200">
                                 <dt class="text-base font-bold text-tertiary">Total</dt>
-                                <dd class="text-base font-bold text-tertiary">Rp. 0.00</dd>
+                                <dd class="text-base font-bold text-tertiary total-price">Rp. 0.00</dd>
                             </dl>
                         </div>
 
-                        <a href="#"
+                        <a href="{{ route('checkout') }}"
                             class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0 focus:ring-primary-300">Proceed
                             to Checkout</a>
 

@@ -14,7 +14,8 @@ class Header extends Component
             $user = Auth::user();
             $cartCount = Cart::where('user_id', $user->id)->count();
             $dataCart = Cart::with('product', 'product.images', 'product.discounts')->where('user_id', $user->id)->get();
-            return view('livewire.customer.components.header', compact('cartCount', 'dataCart'));
+            $subtotal = $dataCart->sum('subtotal');
+            return view('livewire.customer.components.header', compact('cartCount', 'dataCart', 'subtotal'));
         } else {
             return view('livewire.customer.components.header');
         }

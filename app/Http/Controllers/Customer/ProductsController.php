@@ -70,6 +70,25 @@ class ProductsController extends Controller
         }
     }
 
+    public function updateCart(Request $request)
+    {
+        $user = Auth::user();
+        $product_id = $request->input('product_id');
+        $quantity = $request->input('quantity');
+
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('product_id', $product_id)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity = $quantity;
+            $cartItem->subtotal = $cartItem->product->product_price * $quantity;
+            $cartItem->update();
+        }
+
+        return response()->json(['message' => 'Cart updated successfully'], 200);
+    }
+
     public function deleteCart($id)
     {
         $cart = Cart::find($id);
@@ -85,6 +104,16 @@ class ProductsController extends Controller
             $cartCount = Cart::where('user_id', $user->id)->count();
             $dataCart = Cart::with('product', 'product.images', 'product.discounts')->where('user_id', $user->id)->get();
             return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
+        } else {
+            return redirect()->route('login')->with('error', 'Please login first');
+        }
+    }
+
+    // checkout
+    public function checkout()
+    {
+        if (Auth::check()) {
+            return view('customer.product.checkout');
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }

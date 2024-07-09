@@ -118,7 +118,7 @@
                         @endforeach
 
                         <div class="flex items-center justify-end w-full text-lg font-bold text-tertiary">
-                            <p>Subtotal: <span class="ms-3">Rp. {{ number_format('42342342', 0, ',', '.') }}</span>
+                            <p>Subtotal: <span class="ms-3">Rp. {{ number_format($subtotal, 0, ',', '.') }}</span>
                             </p>
                         </div>
 

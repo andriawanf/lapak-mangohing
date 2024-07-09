@@ -18,7 +18,6 @@ class AuthenticationController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required',
-                'password_confirmation' => 'required|same:password'
             ]);
 
             if ($validator->fails()) {
