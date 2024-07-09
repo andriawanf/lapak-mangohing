@@ -96,7 +96,7 @@
                                         </td>
                                         <td id="subtotal-{{ $data['id'] }}"
                                             class="px-6 py-4 text-base font-bold text-tertiary">
-                                            <p class="subtotal-value"> Rp.
+                                            <p class="subtotal-value text-nowrap"> Rp.
                                                 {{ number_format($data['subtotal'], 0, ',', '.') }},00</p>
                                         </td>
                                     </tr>
