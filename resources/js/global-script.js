@@ -1,65 +1,90 @@
 $(document).ready(function () {
-    // csrf token
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    // Update quantity and subtotal when input value changes
+    $('[id^="quantity-input-"]').off('input').on('input', function () {
+        var input = $(this);
+        var quantity = input.val();
+        var price = input.data('price');
+        var id = input.data('id');
+
+        // Ensure the quantity is at least 1
+        if (quantity < 1) {
+            quantity = 1;
+            input.val(quantity);
+        }
+
+        // Calculate the new subtotal
+        var newSubtotal = price * quantity;
+
+        // Update the subtotal in the table row
+        $('#subtotal-' + id).find('.subtotal-value').text('Rp. ' + newSubtotal.toLocaleString() + ',00');
+
+        // Update the total subtotal in the card
+        updateTotalSubtotal();
+
+        // Send AJAX request to update the database
+        updateQuantityInDatabase(id, quantity);
+    });
+
+    // Decrement button functionality
+    $('[id^="decrement-button-"]').off('click').on('click', function () {
+        var button = $(this);
+        var inputId = button.data('counter-decrement');
+        var input = $('#' + inputId);
+        var quantity = parseInt(input.val()) - 1;
+        // Decrease the quantity by 1
+        if (quantity > 1) {
+            input.val(quantity).trigger('input');
         }
     });
 
-    function updateSubtotal(productId) {
-        var quantity = $('#quantity-input-' + productId).val();
-        var price = $('#quantity-input-' + productId).data('price');
-        var subtotal = quantity * price;
-        $('#subtotal-' + productId + ' .subtotal-value').text(
-            `Rp. ${Intl.NumberFormat('id-ID').format(subtotal)},00`
-        );
+    // Increment button functionality
+    $('[id^="increment-button-"]').off('click').on('click', function () {
+        var button = $(this);
+        var inputId = button.data('counter-increment');
+        var input = $('#' + inputId);
+        var quantity = parseInt(input.val()) + 1;
+        // Increase the quantity by 1
+        input.val(quantity).trigger('input');
+    });
+
+    function updateTotalSubtotal() {
+        var totalSubtotal = 0;
+
+        // Sum all subtotals
+        $('[id^="quantity-input-"]').each(function () {
+            var input = $(this);
+            var quantity = input.val();
+            var price = input.data('price');
+            var subtotal = price * quantity;
+
+            totalSubtotal += subtotal;
+        });
+
     }
 
-    function updateQuantity(input, quantity) {
-        var productId = input.data('id');
-        input.val(quantity);
-        updateSubtotal(productId);
-
+    function updateQuantityInDatabase(id, quantity) {
         $.ajax({
-            url: '/product/collection/update-cart',
+            url: '/product/collection/update-cart', // Ganti dengan URL endpoint untuk memperbarui cart
             method: 'POST',
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                product_id: productId,
+                _token: $('meta[name="csrf-token"]').attr('content'), // Sertakan token CSRF
+                id: id,
                 quantity: quantity
             },
             success: function (response) {
-                // Handle success response (optional)
+                // Jika ada respon yang perlu ditangani, bisa ditambahkan di sini
             },
             error: function (xhr, status, error) {
-                // Handle error response (optional)
-                alert('Error: ' + error);
+                console.error('Failed to update quantity');
+                // Tangani kesalahan, misalnya menampilkan pesan kesalahan ke pengguna
             }
         });
     }
 
-    $('[id^="quantity-input-"]').on('input', function () {
-        var input = $(this);
-        var quantity = input.val();
-        updateQuantity(input, quantity);
-    });
-
-    $('[id^="decrement-button-"]').on('click', function () {
-        var id = $(this).data('input-counter-decrement');
-        var input = $('#' + id);
-        var quantity = parseInt(input.val());
-        if (quantity < 1) quantity = 1;
-        updateQuantity(input, quantity);
-    });
-
-    $('[id^="increment-button-"]').on('click', function () {
-        var id = $(this).data('input-counter-increment');
-        var input = $('#' + id);
-        var quantity = parseInt(input.val());
-        updateQuantity(input, quantity);
-    });
-
+    // Initial calculation of total subtotal
+    updateTotalSubtotal();
 });
+
 
 // total
 $(document).ready(function () {

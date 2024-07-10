@@ -7,22 +7,46 @@ use App\Models\Cart;
 use App\Models\product;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ProductsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $client = new Client();
         $url = config('services.api_url') . '/products';
-        $response = $client->request('GET', $url);
+
+        // Ambil parameter halaman dari request atau default ke halaman 1
+        $page = $request->input('page', 1);
+        $perPage = 12; // Jumlah item per halaman
+
+        // Tambahkan parameter pagination ke URL
+        $response = $client->request('GET', $url, [
+            'query' => [
+                'page' => $page,
+                'per_page' => $perPage,
+            ]
+        ]);
+
         $dataproducts = json_decode($response->getBody()->getContents(), true);
-        $products = collect($dataproducts['data'])->sortBy(function ($product) {
+        $productsData = collect($dataproducts['data'])->sortBy(function ($product) {
             return $product['discounts'] ? 0 : 1;
-        })->forPage(1, 50)->values();
-        $productCount = collect($dataproducts['data'])->count();
-        return view('customer.product.index', ['products' => $products, 'productCount' => $productCount]);
+        });
+
+        $total = count($dataproducts['data']); // Total produk dari API
+
+        // Buat instance LengthAwarePaginator
+        $products = new LengthAwarePaginator(
+            $productsData->forPage($page, $perPage)->values(),
+            $total,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('customer.product.index', ['products' => $products, 'productCount' => $total]);
     }
 
     public function search(Request $request)
@@ -72,21 +96,19 @@ class ProductsController extends Controller
 
     public function updateCart(Request $request)
     {
-        $user = Auth::user();
-        $product_id = $request->input('product_id');
+        $cartId = $request->input('id');
         $quantity = $request->input('quantity');
 
-        $cartItem = Cart::where('user_id', $user->id)
-            ->where('product_id', $product_id)
-            ->first();
+        $cart = Cart::find($cartId);
+        if ($cart) {
+            $cart->quantity = $quantity;
+            $cart->subtotal = $cart->product->product_price * $quantity;
+            $cart->save();
 
-        if ($cartItem) {
-            $cartItem->quantity = $quantity;
-            $cartItem->subtotal = $cartItem->product->product_price * $quantity;
-            $cartItem->update();
+            return response()->json(['success' => true]);
         }
 
-        return response()->json(['message' => 'Cart updated successfully'], 200);
+        return response()->json(['success' => false], 404);
     }
 
     public function deleteCart($id)
@@ -114,6 +136,16 @@ class ProductsController extends Controller
     {
         if (Auth::check()) {
             return view('customer.product.checkout');
+        } else {
+            return redirect()->route('login')->with('error', 'Please login first');
+        }
+    }
+
+    // order summary
+    public function orderSummary()
+    {
+        if (Auth::check()) {
+            return view('customer.product.order-summary');
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }

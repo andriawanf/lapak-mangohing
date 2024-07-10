@@ -27,7 +27,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 9 4-4-4-4" />
                             </svg>
-                            <span class="text-sm font-normal text-tertiary/40 ms-1 md:ms-2">Order Summary</span>
+                            <span class="text-sm font-normal text-tertiary/40 ms-1 md:ms-2">Detail Order</span>
                         </div>
                     </li>
                     <li aria-current="page">
@@ -37,7 +37,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 9 4-4-4-4" />
                             </svg>
-                            <span class="text-sm font-normal text-tertiary/40 ms-1 md:ms-2">Payment</span>
+                            <span class="text-sm font-normal text-tertiary/40 ms-1 md:ms-2">Pembayaran</span>
                         </div>
                     </li>
                 </ol>
@@ -167,6 +167,26 @@
 
                                 <div>
                                     <x-input-label for="kecamatan" class="mb-2 text-xs text-tertiary/60">
+                                        Kabupaten <span class="text-red-500">*</span>
+                                    </x-input-label>
+                                    <select id="kecamatan" name="kecamatan"
+                                        class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
+
+                                        <option value="">Pilih kabupaten</option>
+                                        <option value="bogor">
+                                            Bogor</option>
+                                        <option value="jakarta">
+                                            Jakarta</option>
+                                        <option value="bekasi">
+                                            Bekasi</option>
+                                    </select>
+                                    {{-- @error('kecamatan')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror --}}
+                                </div>
+
+                                <div>
+                                    <x-input-label for="kecamatan" class="mb-2 text-xs text-tertiary/60">
                                         Kecamatan <span class="text-red-500">*</span>
                                     </x-input-label>
                                     <select id="kecamatan" name="kecamatan"
@@ -185,7 +205,7 @@
                                     @enderror --}}
                                 </div>
 
-                                <div class="col-span-2">
+                                <div>
                                     <x-input-label for="kode_pos" class="mb-2 text-xs text-tertiary/60">
                                         Kode pos <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -199,7 +219,7 @@
 
                                 <div class="col-span-2">
                                     <x-input-label for="alamat" class="mb-2 text-xs text-tertiary/60">
-                                        Alamat <span class="text-red-500">*</span>
+                                        Detail alamat <span class="text-red-500">*</span>
                                     </x-input-label>
                                     <textarea id="alamat" rows="6" name="alamat"
                                         class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
@@ -389,8 +409,20 @@
 
                         <div class="space-y-3">
                             <button type="submit"
-                                class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Proceed
-                                to Payment</button>
+                                class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Lanjut
+                                ke Pembayaran</button>
+                        </div>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-sm font-normal text-tertiary/50 hover:text-tertiary"> or </span>
+                            <a href="{{ route('product.collections') }}" title=""
+                                class="inline-flex items-center gap-2 text-sm font-medium underline text-primary hover:no-underline">
+                                Lanjut Belanja
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 </div>

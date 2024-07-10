@@ -2,30 +2,28 @@
     <section
         class="relative z-0 w-full pt-12 pb-12 min-h-fit lg:min-h-fit lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
         <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
-            <div class="md:gap-6 lg:flex lg:items-start ">
+            <h2 class="text-xl font-semibold text-tertiary sm:text-lg mb-8">Keranjang Belanja </h2>
+
+            <div class="md:gap-4 lg:flex lg:items-start ">
                 <div class="flex-none w-full mx-auto lg:max-w-2xl xl:max-w-4xl">
-                    <div class="flex items-end justify-between w-full mb-6">
-                        <h2 class="text-xl font-semibold text-tertiary sm:text-2xl">Keranjang Belanja </h2>
-                        <a href="#" class="text-sm font-medium text-primary hover:underline">Remove all</a>
-                    </div>
                     <div class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
                         <table class="w-full text-sm text-left text-tertiary" id="tableCartList">
-                            <thead class="text-xs uppercase border-b text-tertiary/60 ">
-                                <tr>
-                                    <th scope="col" class="p-4">
+                            <thead class="text-xs uppercase text-tertiary/50 ">
+                                <tr class="bg-tertiary/5">
+                                    <th scope="col" class="p-4 rounded-tl-md">
                                         <div class="flex items-center">
                                             <input id="checkbox-all-search" type="checkbox"
                                                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary focus:ring-2">
                                             <label for="checkbox-all-search" class="sr-only">checkbox</label>
                                         </div>
                                     </th>
-                                    <th scope="col" class="px-6 py-3 rounded-s-lg">
+                                    <th scope="col" class="px-6 py-3">
                                         Produk
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-center">
+                                    <th scope="col" class="px-6 py-3 text-center ">
                                         Quantity
                                     </th>
-                                    <th scope="col" class="px-6 py-3 rounded-e-lg">
+                                    <th scope="col" class="px-6 py-3 rounded-tr-md">
                                         Harga
                                     </th>
                                 </tr>
@@ -51,8 +49,8 @@
                                             </a>
                                             <div class="ml-4">
                                                 <a href="#"
-                                                    class="text-base font-medium text-tertiary hover:underline line-clamp-2">{{ $data['product']['product_name'] }}</a>
-                                                <p class="mt-2 text-sm font-normal text-tertiary/50">Diskon:
+                                                    class="text-md font-medium text-tertiary hover:underline line-clamp-2">{{ $data['product']['product_name'] }}</a>
+                                                <p class="mt-1 text-sm font-normal text-tertiary/50">Diskon:
                                                     {{ $data['product.discounts'] ? $data['product.discounts']['discount_percentage'] . '%' : '0%' }}
                                                 </p>
                                             </div>
@@ -60,7 +58,7 @@
                                         <td class="px-6 py-4">
                                             <div class="relative flex items-center max-w-[8rem] mx-auto">
                                                 <button type="button" id="decrement-button-{{ $data['id'] }}"
-                                                    data-input-counter-decrement="quantity-input-{{ $data['id'] }}"
+                                                    data-counter-decrement="quantity-input-{{ $data['id'] }}"
                                                     class="h-10 p-3 bg-gray-100 border border-gray-200 hover:bg-gray-200 rounded-s-lg focus:ring-gray-100 focus:ring-0 focus:outline-none">
                                                     <svg class="w-2 h-2 text-tertiary " aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -70,13 +68,13 @@
                                                     </svg>
                                                 </button>
                                                 <input type="text" id="quantity-input-{{ $data['id'] }}"
-                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                    aria-describedby="helper-text-explanation"
                                                     data-id="{{ $data['id'] }}"
                                                     data-price="{{ $data['product']['product_price'] }}"
                                                     class="bg-gray-100 border-x-0 border-gray-200 h-10 text-center text-tertiary text-sm  focus:ring-0 focus:ring-primary block w-full py-2.5 "
                                                     value="{{ $data['quantity'] }}" min="1" />
                                                 <button type="button" id="increment-button-{{ $data['id'] }}"
-                                                    data-input-counter-increment="quantity-input-{{ $data['id'] }}"
+                                                    data-counter-increment="quantity-input-{{ $data['id'] }}"
                                                     class="h-10 p-3 bg-gray-100 border border-gray-200 hover:bg-gray-200 rounded-e-lg focus:ring-gray-100 focus:ring-0 focus:outline-none">
                                                     <svg class="w-2 h-2 text-tertiary" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -95,7 +93,7 @@
                                             </button>
                                         </td>
                                         <td id="subtotal-{{ $data['id'] }}"
-                                            class="px-6 py-4 text-base font-bold text-tertiary">
+                                            class="px-6 py-4 text-md font-bold text-tertiary">
                                             <p class="subtotal-value text-nowrap"> Rp.
                                                 {{ number_format($data['subtotal'], 0, ',', '.') }},00</p>
                                         </td>
@@ -118,14 +116,14 @@
                                                     <span class="sr-only">Close modal</span>
                                                 </button>
                                                 <div class="p-4 text-center md:p-5">
-                                                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-400 "
+                                                    <svg class="w-12 h-12 mx-auto mb-4 text-tertiary/40 "
                                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                         fill="none" viewBox="0 0 20 20">
                                                         <path stroke="currentColor" stroke-linecap="round"
                                                             stroke-linejoin="round" stroke-width="2"
                                                             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                                     </svg>
-                                                    <h3 class="mb-5 text-lg font-normal text-gray-500 ">
+                                                    <h3 class="mb-5 text-md font-normal text-gray-500 ">
                                                         Are you sure you want to delete <span
                                                             class="font-bold text-primary">{{ $data['product']['product_name'] }}</span>
                                                         ?
@@ -136,13 +134,13 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="text-white bg-red-600 hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                                            class="text-white bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                                             Yes, I'm sure
                                                         </button>
                                                         </fo>
                                                         <button data-modal-hide="deleteCart-{{ $data['id'] }}"
                                                             type="button"
-                                                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-0 focus:ring-gray-100 ">No,
+                                                            class="py-2.5 px-5 ms-3 text-sm font-medium text-tertiary focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-0 focus:ring-gray-100 ">No,
                                                             cancel</button>
                                                 </div>
                                             </div>
@@ -179,14 +177,14 @@
                         </div>
 
                         <a href="{{ route('checkout') }}"
-                            class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0 focus:ring-primary-300">Proceed
-                            to Checkout</a>
+                            class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0 focus:ring-primary-300">Lanjut
+                            ke Pembayaran</a>
 
                         <div class="flex items-center justify-center gap-2">
                             <span class="text-sm font-normal text-tertiary/50 hover:text-tertiary"> or </span>
                             <a href="{{ route('product.collections') }}" title=""
                                 class="inline-flex items-center gap-2 text-sm font-medium underline text-primary hover:no-underline">
-                                Continue Shopping
+                                Lanjut Belanja
                                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -200,7 +198,7 @@
 
             {{-- rekomendasi --}}
             <div class="hidden xl:mt-8 xl:block">
-                <h3 class="text-2xl font-semibold text-tertiary">Rekomendasi</h3>
+                <h3 class="text-xl font-semibold text-tertiary">Rekomendasi</h3>
                 <div class="grid grid-cols-3 gap-4 mt-6 sm:mt-8">
                     <div class="p-6 space-y-6 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
                         <a href="#" class="overflow-hidden rounded">

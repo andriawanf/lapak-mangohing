@@ -240,7 +240,7 @@
                                             </svg>
                                         </button>
                                         <div id="tooltip-quick-look" role="tooltip"
-                                            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip"
+                                            class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip"
                                             data-popper-placement="top">
                                             Quick look
                                             <div class="tooltip-arrow" data-popper-arrow=""></div>
@@ -258,7 +258,7 @@
                                             </svg>
                                         </button>
                                         <div id="tooltip-add-to-favorites" role="tooltip"
-                                            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip"
+                                            class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip"
                                             data-popper-placement="top">
                                             Add to favorites
                                             <div class="tooltip-arrow" data-popper-arrow=""></div>
@@ -267,7 +267,7 @@
                                 </div>
                                 <a href="#">
                                     <p
-                                        class="text-lg font-semibold leading-tight text-gray-900 min-h-12 hover:underline line-clamp-2">
+                                        class="text-md font-semibold leading-tight text-gray-900 min-h-12 hover:underline line-clamp-2">
                                         {{ $product['product_name'] }}</p>
                                 </a>
 
@@ -309,8 +309,8 @@
                                         </svg>
                                     </div>
 
-                                    <p class="text-sm font-medium text-gray-900">5.0</p>
-                                    <p class="text-sm font-medium text-gray-500">(455)</p>
+                                    <p class="text-xs font-medium text-gray-900">5.0</p>
+                                    <p class="text-xs font-medium text-gray-500">(455)</p>
                                 </div>
 
                                 <ul class="flex items-center gap-4 mt-2">
@@ -321,7 +321,7 @@
                                                 stroke-linejoin="round" stroke-width="2"
                                                 d="M13 7h6l2 4m-8-4v8m0-8V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9h2m8 0H9m4 0h2m4 0h2v-4m0 0h-5m3.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-10 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
                                         </svg>
-                                        <p class="text-sm font-medium text-gray-500">Fast Delivery</p>
+                                        <p class="text-xs font-medium text-gray-500">Fast Delivery</p>
                                     </li>
 
                                     <li class="flex items-center gap-2">
@@ -330,14 +330,32 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
                                                 d="M8 7V6c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1h-1M3 18v-7c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1H4a1 1 0 0 1-1-1Zm8-3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
                                         </svg>
-                                        <p class="text-sm font-medium text-gray-500">Best Price</p>
+                                        <p class="text-xs font-medium text-gray-500">Best Price</p>
                                     </li>
                                 </ul>
 
                                 <div class="flex items-center justify-between gap-4 mt-4">
-                                    <p class="text-xl font-extrabold leading-tight text-gray-900">Rp.
-                                        {{ number_format($product['product_price']) }}
-                                    </p>
+                                    <div>
+                                        @if ($product['discounts'])
+                                            <p class="text-sm font-bold text-tertiary mb-1">
+                                                <span class="line-through">Rp.
+                                                    {{ number_format($product['product_price']) }} </span>
+                                            </p>
+                                            @php
+                                                $discount =
+                                                    ($product['discounts'][0]['discount_percentage'] / 100) *
+                                                    $product['product_price'];
+                                                $price_after_discount = $product['product_price'] - $discount;
+                                            @endphp
+                                            <p class="text-lg font-bold leading-tight text-primary">Rp.
+                                                {{ number_format($price_after_discount, 0, ',', '.') }}
+                                            </p>
+                                        @else
+                                            <p class="text-lg font-bold leading-tight text-tertiary">Rp.
+                                                {{ number_format($product['product_price']) }}
+                                            </p>
+                                        @endif
+                                    </div>
 
                                     <a href="{{ route('product.collections.addCart', $product['id']) }}">
                                         <button type="button"
@@ -357,15 +375,14 @@
                         </div>
                     @endforeach
                 </div>
-                @if ($productCount > 12)
-                    <div class="w-full mt-4 text-center md:mt-8">
-                        <button type="button"
-                            class="flex items-center px-5 py-2.5 mx-auto text-sm font-medium text-white border border-gray-200 rounded-full bg-primary hover:bg-red-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-100">
-                            Load More
-                            <i data-lucide="chevrons-down" class="w-4 h-4 stroke-2 ms-2 animate-bounce"></i>
-                        </button>
-                    </div>
-                @endif
+                <div class="w-full mt-4 text-center md:mt-8">
+                    {{ $products->links() }}
+                    {{-- <button type="button"
+                        class="flex items-center px-5 py-2.5 mx-auto text-sm font-medium text-white border border-gray-200 rounded-full bg-primary hover:bg-red-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                        Load More
+                        <i data-lucide="chevrons-down" class="w-4 h-4 stroke-2 ms-2 animate-bounce"></i>
+                    </button> --}}
+                </div>
             </div>
 
         </div>

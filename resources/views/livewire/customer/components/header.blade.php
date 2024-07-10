@@ -59,7 +59,7 @@
                     <div id="drawer-my-cart"
                         class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white max-w-80 md:min-w-96"
                         tabindex="-1" aria-labelledby="drawer-right-label">
-                        <h3 class="text-lg font-bold text-tertiary">My Cart ({{ $cartCount }})</h3>
+                        <h3 class="text-lg font-bold text-tertiary">Keranjang ({{ $cartCount }})</h3>
                         <button type="button" data-drawer-hide="drawer-my-cart" aria-controls="drawer-my-cart"
                             class="text-tertiary bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -80,26 +80,24 @@
                                         <p class="text-sm font-normal text-tertiary/60">
                                             {{ $data['product']['product_category'] }}</p>
                                         <a href="#"
-                                            class="text-sm font-semibold mt-0.5 text-gray-900 w-full hover:underline line-clamp-1">{{ $data['product']['product_name'] }}</a>
-                                        <p class="text-xs font-normal text-tertiary/60 mt-0.5 line-clamp-1">Tag:
+                                            class="text-sm font-semibold mt-1 text-gray-900 w-full hover:underline line-clamp-1">{{ $data['product']['product_name'] }}</a>
+                                        <p class="text-xs font-normal text-tertiary/60 mt-1 line-clamp-1">Tag:
                                             {{ $data['product']['product_tag'] }}</p>
+                                        @if (count($data['product']['discounts']) > 0)
+                                            <p class="text-xs font-normal text-primary mt-1 line-clamp-1">Diskon:
+                                                {{ number_format($data['product']['discounts']->first()->discount_percentage) }}%
+                                            </p>
+                                        @else
+                                            <p class="text-xs font-normal text-tertiary/60 mt-1 line-clamp-1">Harga
+                                                terbaik</p>
+                                        @endif
                                     </div>
 
-                                    <div class="flex items-center justify-between gap-2 mt-2">
+                                    <div class="flex items-center justify-between gap-2 mt-4">
                                         <div class="relative flex items-center">
-                                            <button type="button" id="decrement-button"
-                                                data-input-counter-decrement="counter-input"
-                                                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-gray-100 focus:ring-20 focus:outline-none">
-                                                <i data-lucide="minus" class="w-2.5 h-2.5 text-tertiary"></i>
-                                            </button>
-                                            <input type="text" id="counter-input" data-input-counter
-                                                class="flex-shrink-0 text-tertiary border-0 bg-transparent text-md font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
-                                                placeholder="" value="{{ $data['quantity'] }}" />
-                                            <button type="button" id="increment-button"
-                                                data-input-counter-increment="counter-input"
-                                                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-gray-100 focus:ring-0 focus:outline-none">
-                                                <i data-lucide="plus" class="w-2.5 h-2.5 text-tertiary"></i>
-                                            </button>
+                                            <p class="text-sm font-medium text-tertiary">Qty: {{ $data['quantity'] }}
+                                                pcs
+                                            </p>
                                         </div>
                                         <p class="font-bold text-md text-tertiary">
                                             Rp. {{ number_format($data['subtotal'], 0, ',', '.') }}</p>
@@ -117,9 +115,16 @@
                             <hr class="my-4" />
                         @endforeach
 
-                        <div class="flex items-center justify-end w-full text-lg font-bold text-tertiary">
-                            <p>Subtotal: <span class="ms-3">Rp. {{ number_format($subtotal, 0, ',', '.') }}</span>
-                            </p>
+                        <div>
+                            <div class="flex items-center justify-between w-full text-base font-semibold text-tertiary">
+                                <p>Diskon:</p>
+                                <p class="ms-3">{{ number_format($discount) }}%</p>
+                            </div>
+                            <div
+                                class="flex items-center justify-between w-full text-base font-semibold text-tertiary mt-2">
+                                <p>Subtotal:</p>
+                                <p class="ms-3">Rp. {{ number_format($subtotal, 0, ',', '.') }}</p>
+                            </div>
                         </div>
 
                         <div class="w-full mt-6">

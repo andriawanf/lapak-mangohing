@@ -29,6 +29,8 @@ Route::group(['prefix' => '/product'], function () {
 
     // checkout
     Route::get('/checkout', [CustomerProductsController::class, 'checkout'])->name('checkout');
+    // order summary
+    Route::get('/order-summary', [CustomerProductsController::class, 'orderSummary'])->name('orderSummary');
 });
 
 Route::middleware('auth')->group(function () {
