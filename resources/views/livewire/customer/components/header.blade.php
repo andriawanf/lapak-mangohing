@@ -27,7 +27,7 @@
                         <a href="#"
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out">
                             <li>
-                                <h1 class="transition text-tertiary/60 group-hover:text-white"> Pre-order </h1>
+                                <h1 class="transition text-tertiary/60 group-hover:text-white"> Mitra Dagang </h1>
                             </li>
                         </a>
                         <a href="#"
@@ -210,26 +210,22 @@
                         <ul class="p-2 text-sm font-medium text-tertiary text-start ">
                             <li><a href="#" title=""
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Account </a></li>
+                                    Informasi Akun </a></li>
                             <li><a href="#" title=""
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Preorders </a></li>
+                                    Mitra Dagang </a></li>
                             <li><a href="#" title=""
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Favourites </a></li>
-                            <li><a href="#" title=""
-                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Delivery Addresses </a></li>
-                            <li><a href="#" title=""
-                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Settings </a></li>
+                                    Pengaturan </a></li>
                         </ul>
 
-                        <div class="p-2 text-sm font-medium text-tertiary">
-                            <a href="#" title=""
+                        <form action="{{ route('logout') }}" method="POST"
+                            class="p-2 text-sm font-medium text-tertiary">
+                            @csrf
+                            <button type="submit"
                                 class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-primary hover:text-white">
-                                Sign Out </a>
-                        </div>
+                                Sign Out </button>
+                        </form>
                     </div>
 
 

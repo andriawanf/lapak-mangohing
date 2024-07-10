@@ -408,9 +408,11 @@
                         </div>
 
                         <div class="space-y-3">
-                            <button type="submit"
-                                class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Lanjut
-                                ke Pembayaran</button>
+                            <a href="{{ route('orderSummary') }}">
+                                <button type="button"
+                                    class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Lihat
+                                    detail order</button>
+                            </a>
                         </div>
                         <div class="flex items-center justify-center gap-2">
                             <span class="text-sm font-normal text-tertiary/50 hover:text-tertiary"> or </span>

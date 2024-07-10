@@ -19,9 +19,9 @@ Route::prefix('product')->group(function () {
 // auth
 Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthenticationController::class, 'register']);
-    Route::post('/login', [AuthenticationController::class, 'login']);
+    Route::post('/log-in', [AuthenticationController::class, 'login']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthenticationController::class, 'logout']);
+    Route::post('/log-out', [AuthenticationController::class, 'logout']);
 });
