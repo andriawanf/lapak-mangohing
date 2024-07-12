@@ -84,14 +84,29 @@ class ProductsController extends Controller
         // Menambahkan atau memperbarui item keranjang
         $cartItem = $cart->cartItems()->where('product_id', $product_id->id)->first();
 
+        // Cek diskon yang berlaku
+        $discount = $product_id->discounts()
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->where('status', true)
+            ->first();
+
+        $discount ? $discountedPrice = $product_id->product_price - ($discount->discount_percentage / 100) * $product_id->product_price : $discountedPrice = $product_id->product_price;
+        // if ($discount) {
+        //     $discountedPrice = $product_id->product_price - (($discount->discount_percentage / 100) * $product_id->product_price);
+        // } else {
+        //     $discountedPrice = $product_id->product_price;
+        // }
+
         if ($cartItem) {
             $cartItem->quantity += $request->quantity;
+            $cartItem->price = $discountedPrice;
             $cartItem->save();
         } else {
             $cartItem = $cart->cartItems()->create([
                 'product_id' => $product_id->id,
                 'quantity' => $request->quantity,
-                'price' => $product_id->product_price,
+                'price' => $discountedPrice,
             ]);
         }
 
@@ -101,27 +116,6 @@ class ProductsController extends Controller
         });
         $cart->update(['total_price' => $totalHarga]);
         return redirect()->back()->with(['success' => 'Product added to cart', 'cart' => $cart]);
-        // if (Auth::check()) {
-        //     $product_id = $id;
-        //     $user = Auth::user();
-        //     $product = product::find($product_id);
-        //     $cartItem = Cart::where('user_id', $user->id)->where('product_id', $product_id)->first();
-        //     if ($cartItem) {
-        //         $qty = $cartItem->quantity += 1;
-        //         $cartItem->subtotal = $product->product_price * $qty;
-        //         $cartItem->update();
-        //     } else {
-        //         $cart = new Cart();
-        //         $cart->user_id = $user->id;
-        //         $cart->product_id = $product_id;
-        //         $cart->quantity = 1;
-        //         $cart->subtotal = $product->product_price;
-        //         $cart->save();
-        //     }
-        //     return redirect()->back()->with('success', 'Product added to cart');
-        // } else {
-        //     return redirect()->route('login')->with('error', 'Please login first');
-        // }
     }
 
     public function updateCart(Request $request)
@@ -137,19 +131,6 @@ class ProductsController extends Controller
         $cart->update(['total_price' => $totalHarga]);
 
         return response()->json(['message' => 'Cart updated', 'cart' => $cart]);
-        // $cartId = $request->input('id');
-        // $quantity = $request->input('quantity');
-
-        // $cart = Cart::find($cartId);
-        // if ($cart) {
-        //     $cart->quantity = $quantity;
-        //     $cart->subtotal = $cart->product->product_price * $quantity;
-        //     $cart->save();
-
-        //     return response()->json(['success' => true]);
-        // }
-
-        // return response()->json(['success' => false], 404);
     }
 
     public function deleteCart($id)
@@ -170,41 +151,64 @@ class ProductsController extends Controller
     public function myCart()
     {
         $user = Auth::user();
-        $dataCart = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first();
-        if ($dataCart) {
-            $cartCount = $dataCart->cartItems->count();
-            return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
+        if (Auth::check()) {
+            $dataCart = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first();
+            if ($dataCart) {
+                $cartCount = $dataCart->cartItems->count();
+                return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
+            } else {
+                $cartCount = 0;
+                return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
+            }
+        } else {
+            return redirect()->route('login')->with('error', 'Please login first');
         }
-        // if (Auth::check()) {
-        //     $user = Auth::user();
-        //     $cartCount = Cart::where('user_id', $user->id)->count();
-        //     $dataCart = Cart::with('product', 'product.images', 'product.discounts')->where('user_id', $user->id)->get();
-        //     return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
-        // } else {
-        //     return redirect()->route('login')->with('error', 'Please login first');
-        // }
     }
+
+    public function calculateCartDetailOrder(Request $request)
+    {
+        $productIds = $request->product_ids;
+        $user = Auth::user();
+
+        $cartItems = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
+
+        $subtotal = $cartItems->sum(function ($item) {
+            $product = $item->product;
+            $discounts = $product->discounts()->get();
+            $price = $product->product_price;
+
+            if ($discounts->isNotEmpty()) {
+                $totalDiscount = $discounts->sum('discount_percentage');
+                $price = $product->product_price * (1 - ($totalDiscount / 100));
+            }
+
+            return $item->quantity * $price;
+        });
+
+        return response()->json([
+            'subtotal' => $subtotal,
+        ]);
+    }
+
 
     // checkout
     public function checkout()
     {
         if (Auth::check()) {
             $user = Auth::user();
-            $cart = $user->carts->with('cartItems.product')->first();
+            $cart = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first();
 
             DB::transaction(function () use ($cart) {
                 foreach ($cart->cartItems as $item) {
                     $product = $item->product;
-                    if ($product->stock < $item->quantity) {
-                        throw new \Exception("Product {$product->name} out of stock");
+                    if ($product->product_stock < $item->quantity) {
+                        throw new \Exception("Product {$product->product_name} out of stock");
                     }
-                    $product->decrement('stock', $item->quantity);
+                    $product->decrement('product_stock', $item->quantity);
                 }
 
-                // Simpan data order dan item order ke dalam tabel yang sesuai
-                // Kosongkan keranjang setelah checkout berhasil
                 $cart->cartItems()->delete();
-                $cart->update(['total_harga' => 0]);
+                $cart->update(['total_price' => 0]);
             });
             return view('customer.product.checkout');
         } else {

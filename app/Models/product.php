@@ -34,7 +34,7 @@ class product extends Model
 
     public function discounts()
     {
-        return $this->hasMany(Discount::class);
+        return $this->belongsToMany(Discount::class, 'discount_products');
     }
 
     public function getActiveDiscountAttribute()

@@ -45,7 +45,7 @@
                                                 <div class="flex items-center">
                                                     <input id="checkbox-product-{{ $data['id'] }}" type="checkbox"
                                                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary focus:ring-2"
-                                                        data-id="{{ $data['id'] }}">
+                                                        data-id="{{ $data->product->id }}">
                                                     <label for="checkbox-product-{{ $data['id'] }}"
                                                         class="sr-only">checkbox</label>
                                                 </div>
@@ -110,7 +110,7 @@
                                                     $subtotal = $data['product']['product_price'] * $data['quantity'];
                                                 @endphp
                                                 <p class="subtotal-value text-nowrap"> Rp.
-                                                    {{ number_format($subtotal, 0, ',', '.') }},00
+                                                    {{ number_format($data->price, 0, ',', '.') }},00
                                                 </p>
                                             </td>
                                         </tr>

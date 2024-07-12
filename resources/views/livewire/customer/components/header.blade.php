@@ -101,11 +101,28 @@
                                                     pcs
                                                 </p>
                                             </div>
-                                            <p class="font-bold text-md text-tertiary">
-                                                @php
-                                                    $subtotal = $data->product->product_price * $data->quantity;
-                                                @endphp
-                                                Rp. {{ number_format($subtotal, 0, ',', '.') }}</p>
+                                            <div>
+                                                @if ($data->product->discounts->isNotEmpty())
+                                                    {{-- reguler_price --}}
+                                                    <p class="text-xs font-bold line-through text-primary text-end">
+                                                        @php
+                                                            $reguler_price =
+                                                                $data->product->product_price * $data->quantity;
+                                                        @endphp
+                                                        Rp. {{ number_format($reguler_price, 0, ',', '.') }}</p>
+                                                    {{-- discounted price --}}
+                                                    <p class="mt-1 font-bold text-md text-tertiary">
+                                                        Rp. {{ number_format($data->price, 0, ',', '.') }}</p>
+                                                @else
+                                                    {{-- reguler_price --}}
+                                                    <p class="font-bold text-md text-tertiary">
+                                                        @php
+                                                            $reguler_price =
+                                                                $data->product->product_price * $data->quantity;
+                                                        @endphp
+                                                        Rp. {{ number_format($reguler_price, 0, ',', '.') }}</p>
+                                                @endif
+                                            </div>
                                         </div>
 
                                         <div class="flex justify-end mt-2">
@@ -121,7 +138,7 @@
                             @endforeach
                         @else
                             <div class="flex items-center justify-center">
-                                <p class="font-semibold text-center text-tertiary">Keranjang masih kosong</p>
+                                <p class="font-semibold text-center text-primary">Keranjang masih kosong</p>
                             </div>
                             <hr class="my-4" />
                         @endif

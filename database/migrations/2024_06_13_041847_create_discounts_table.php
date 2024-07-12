@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('discounts', function (Blueprint $table) {
-            $table->id('discount_id');
-            $table->decimal('discount_percentage', 8);
-            $table->bigInteger('minimum_order')->nullable()->default(0);
+            $table->id();
+            $table->decimal('discount_percentage', 16, 2);
             $table->date('start_date');
             $table->date('end_date');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

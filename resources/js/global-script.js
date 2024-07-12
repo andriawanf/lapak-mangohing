@@ -16,7 +16,7 @@ $(document).ready(function () {
         var newSubtotal = price * quantity;
 
         // Update the subtotal in the table row
-        $('#subtotal-' + id).find('.subtotal-value').text('Rp. ' + newSubtotal.toLocaleString() + ',00');
+        // $('#subtotal-' + id).find('.subtotal-value').text('Rp. ' + newSubtotal.toLocaleString() + ',00');
 
         // Update the total subtotal in the card
         updateTotalSubtotal();
@@ -93,25 +93,35 @@ $(document).ready(function () {
     const subtotalElement = $('.subtotal-product');
     const totalElement = $('.total-price');
 
-    checkboxes.on('change', updateSubtotal);
-    quantityInputs.on('input', updateSubtotal);
+    checkboxes.on('change', updateCart);
+    quantityInputs.on('input', updateCart);
 
-    function updateSubtotal() {
-        let subtotal = 0;
-        let total = 0;
-        checkboxes.each(function () {
-            if ($(this).is(':checked')) {
-                const id = $(this).data('id');
-                const quantityInput = $(`#quantity-input-${id}`);
-                const price = parseFloat(quantityInput.data('price'));
-                const quantity = parseInt(quantityInput.val());
-                subtotal += price * quantity;
-                total += price * quantity;
-            }
-        });
+    function updateCart() {
+        const selectedProductIds = checkboxes.filter(':checked').map(function () {
+            return $(this).data('id');
+        }).get();
 
-        subtotalElement.text(`Rp. ${subtotal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
-        totalElement.text(`Rp. ${total.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+        if (selectedProductIds.length > 0) {
+            $.ajax({
+                url: '/product/cart/calculate',
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    product_ids: selectedProductIds
+                },
+                success: function (response) {
+                    const subtotal = response.subtotal;
+
+                    subtotalElement.text(`Rp. ${subtotal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                    totalElement.text(`Rp. ${subtotal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        } else {
+            subtotalElement.text('Rp. 0.00');
+            totalElement.text('Rp. 0.00');
+        }
     }
-
 });

@@ -26,11 +26,13 @@ Route::group(['prefix' => '/product'], function () {
     Route::post('/collection/update-cart', [CustomerProductsController::class, 'updateCart'])->name('product.collections.updateCart');
     Route::delete('/collection/delete-cart/{id}', [CustomerProductsController::class, 'deleteCart'])->name('product.collections.deleteCart');
     Route::get('/cart', [CustomerProductsController::class, 'myCart'])->name('product.myCart');
+    Route::post('/cart/calculate', [CustomerProductsController::class, 'calculateCartDetailOrder'])->name('product.calculate');
+
 
     // checkout
-    Route::get('/checkout', [CustomerProductsController::class, 'checkout'])->name('checkout');
+    Route::get('/checkout', [CustomerProductsController::class, 'checkout'])->name('checkout')->middleware('auth');
     // order summary
-    Route::get('/order-summary', [CustomerProductsController::class, 'orderSummary'])->name('orderSummary');
+    Route::get('/order-summary', [CustomerProductsController::class, 'orderSummary'])->name('orderSummary')->middleware('auth');
 });
 
 Route::middleware('auth')->group(function () {

@@ -12,19 +12,17 @@ class Discount extends Model
     use HasFactory;
 
     protected $table = 'discounts';
-    protected $primaryKey = 'discount_id';
     protected $fillable = [
         'discount_percentage',
-        'minimum_order',
         'start_date',
         'end_date',
-        'product_id'
+        'status'
     ];
 
     // one discount for one product
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(product::class);
+        return $this->belongsToMany(product::class, 'discount_products');
     }
 
     public function isValid()

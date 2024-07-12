@@ -11,21 +11,12 @@ class Header extends Component
 {
     public function render()
     {
-        if (Auth::user()) {
-            $user = Auth::user();
+        $user = Auth::user();
+        if ($user) {
             $dataCart = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first();
             if ($dataCart) {
                 $cartCount = $dataCart->cartItems->count();
-                $grand_total = $dataCart->cartItems->reduce(function ($subtotal, $cartItem) {
-                    $product = $cartItem->product;
-                    $discounts = $product->discounts()->get(); // Ambil semua diskon terkait produk
-                    if ($discounts->isNotEmpty()) {
-                        $totalDiscount = $discounts->sum('discount_percentage');
-                        $discountedPrice = $product->product_price * (1 - ($totalDiscount / 100));
-                        return $subtotal + $discountedPrice * $cartItem->quantity;
-                    }
-                    return $subtotal + $product->product_price * $cartItem->quantity;
-                }, 0);
+                $grand_total = $dataCart->total_price;
 
                 $discount = $dataCart->cartItems->reduce(function ($discount, $cartItem) {
                     $product = $cartItem->product;
@@ -45,7 +36,7 @@ class Header extends Component
                 return view('livewire.customer.components.header', compact('cartCount', 'dataCart', 'grand_total', 'discount'));
             }
         } else {
-            return view('login');
+            return view('livewire.customer.components.header');
         }
     }
 }
