@@ -71,59 +71,69 @@
                         </button>
 
                         <hr class="my-4" />
-                        @foreach ($dataCart as $data)
-                            <div class="flex items-start gap-2">
-                                <img src="{{ $data['product']['images'] ? asset('storage/images/products/' . $data['product']['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                    alt="image-product" class="object-cover rounded size-16">
-                                <div class="w-full">
-                                    <div>
-                                        <p class="text-sm font-normal text-tertiary/60">
-                                            {{ $data['product']['product_category'] }}</p>
-                                        <a href="#"
-                                            class="text-sm font-semibold mt-1 text-gray-900 w-full hover:underline line-clamp-1">{{ $data['product']['product_name'] }}</a>
-                                        <p class="text-xs font-normal text-tertiary/60 mt-1 line-clamp-1">Tag:
-                                            {{ $data['product']['product_tag'] }}</p>
-                                        @if (count($data['product']['discounts']) > 0)
-                                            <p class="text-xs font-normal text-primary mt-1 line-clamp-1">Diskon:
-                                                {{ number_format($data['product']['discounts']->first()->discount_percentage) }}%
-                                            </p>
-                                        @else
-                                            <p class="text-xs font-normal text-tertiary/60 mt-1 line-clamp-1">Harga
-                                                terbaik</p>
-                                        @endif
-                                    </div>
-
-                                    <div class="flex items-center justify-between gap-2 mt-4">
-                                        <div class="relative flex items-center">
-                                            <p class="text-sm font-medium text-tertiary">Qty: {{ $data['quantity'] }}
-                                                pcs
-                                            </p>
+                        @if ($dataCart != null)
+                            @foreach ($dataCart->cartItems as $data)
+                                <div class="flex items-start gap-2">
+                                    <img src="{{ $data->product->images->isNotEmpty() ? asset('storage/images/products/' . $data->product->images[0]->url) : asset('/storage/images/products/default-product.png') }}"
+                                        alt="image-product" class="object-cover rounded size-16">
+                                    <div class="w-full">
+                                        <div>
+                                            <p class="text-sm font-normal text-tertiary/60">
+                                                {{ $data['product']['product_category'] }}</p>
+                                            <a href="#"
+                                                class="w-full mt-1 text-sm font-semibold text-gray-900 hover:underline line-clamp-1">{{ $data['product']['product_name'] }}</a>
+                                            <p class="mt-1 text-xs font-normal text-tertiary/60 line-clamp-1">Tag:
+                                                {{ $data['product']['product_tag'] }}</p>
+                                            @if (count($data['product']['discounts']) > 0)
+                                                <p class="mt-1 text-xs font-normal text-primary line-clamp-1">Diskon:
+                                                    {{ number_format($data['product']['discounts']->first()->discount_percentage) }}%
+                                                </p>
+                                            @else
+                                                <p class="mt-1 text-xs font-normal text-tertiary/60 line-clamp-1">Harga
+                                                    terbaik</p>
+                                            @endif
                                         </div>
-                                        <p class="font-bold text-md text-tertiary">
-                                            Rp. {{ number_format($data['subtotal'], 0, ',', '.') }}</p>
-                                    </div>
 
-                                    <div class="flex justify-end mt-2">
-                                        <button data-modal-target="deleteCart-{{ $data['id'] }}"
-                                            data-modal-toggle="deleteCart-{{ $data['id'] }}" type="button"
-                                            class="text-xs font-normal text-primary hover:underline">
-                                            Remove item
-                                        </button>
+                                        <div class="flex items-center justify-between gap-2 mt-4">
+                                            <div class="relative flex items-center">
+                                                <p class="text-sm font-medium text-tertiary">Qty:
+                                                    {{ $data['quantity'] }}
+                                                    pcs
+                                                </p>
+                                            </div>
+                                            <p class="font-bold text-md text-tertiary">
+                                                @php
+                                                    $subtotal = $data->product->product_price * $data->quantity;
+                                                @endphp
+                                                Rp. {{ number_format($subtotal, 0, ',', '.') }}</p>
+                                        </div>
+
+                                        <div class="flex justify-end mt-2">
+                                            <button data-modal-target="deleteCart-{{ $data['id'] }}"
+                                                data-modal-toggle="deleteCart-{{ $data['id'] }}" type="button"
+                                                class="text-xs font-normal text-primary hover:underline">
+                                                Remove item
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                                <hr class="my-4" />
+                            @endforeach
+                        @else
+                            <div class="flex items-center justify-center">
+                                <p class="font-semibold text-center text-tertiary">Keranjang masih kosong</p>
                             </div>
                             <hr class="my-4" />
-                        @endforeach
-
+                        @endif
                         <div>
                             <div class="flex items-center justify-between w-full text-base font-semibold text-tertiary">
                                 <p>Diskon:</p>
                                 <p class="ms-3">{{ number_format($discount) }}%</p>
                             </div>
                             <div
-                                class="flex items-center justify-between w-full text-base font-semibold text-tertiary mt-2">
+                                class="flex items-center justify-between w-full mt-2 text-base font-semibold text-tertiary">
                                 <p>Subtotal:</p>
-                                <p class="ms-3">Rp. {{ number_format($subtotal, 0, ',', '.') }}</p>
+                                <p class="ms-3">Rp. {{ number_format($grand_total, 0, ',', '.') }}</p>
                             </div>
                         </div>
 
@@ -144,51 +154,56 @@
                     </div>
 
                     {{-- Modal Delete Cart --}}
-                    @foreach ($dataCart as $data)
-                        <div id="deleteCart-{{ $data['id'] }}" tabindex="-1"
-                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                            <div class="relative w-full max-w-md max-h-full p-4">
-                                <div class="relative bg-white rounded-lg shadow">
-                                    <button type="button"
-                                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
-                                        data-modal-hide="deleteCart-{{ $data['id'] }}">
-                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                stroke-linejoin="round" stroke-width="2"
-                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                        <span class="sr-only">Close modal</span>
-                                    </button>
-                                    <div class="p-4 text-center md:p-5">
-                                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-400 " aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                stroke-linejoin="round" stroke-width="2"
-                                                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                        </svg>
-                                        <h3 class="mb-5 text-lg font-normal text-gray-500 ">
-                                            Are you sure you want to delete <span
-                                                class="font-bold text-primary">{{ $data['product']['product_name'] }}</span>
-                                            ?
-                                        </h3>
-                                        <form action="{{ route('product.collections.deleteCart', $data['id']) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="text-white bg-red-600 hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                                                Yes, I'm sure
-                                            </button>
-                                            </fo>
-                                            <button data-modal-hide="deleteCart-{{ $data['id'] }}" type="button"
-                                                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-0 focus:ring-gray-100 ">No,
-                                                cancel</button>
+                    @if ($dataCart != null)
+                        @foreach ($dataCart->cartItems as $data)
+                            <div id="deleteCart-{{ $data['id'] }}" tabindex="-1"
+                                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                <div class="relative w-full max-w-md max-h-full p-4">
+                                    <div class="relative bg-white rounded-lg shadow">
+                                        <button type="button"
+                                            class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                            data-modal-hide="deleteCart-{{ $data['id'] }}">
+                                            <svg class="w-3 h-3" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                        <div class="p-4 text-center md:p-5">
+                                            <svg class="w-12 h-12 mx-auto mb-4 text-gray-400 " aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 20 20">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+                                            <h3 class="mb-5 text-lg font-normal text-gray-500 ">
+                                                Are you sure you want to delete <span
+                                                    class="font-bold text-primary">{{ $data['product']['product_name'] }}</span>
+                                                ?
+                                            </h3>
+                                            <form action="{{ route('product.collections.deleteCart', $data['id']) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="text-white bg-red-600 hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                                    Yes, I'm sure
+                                                </button>
+                                                </fo>
+                                                <button data-modal-hide="deleteCart-{{ $data['id'] }}"
+                                                    type="button"
+                                                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-0 focus:ring-gray-100 ">No,
+                                                    cancel</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
 
                     <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown"
                         class="flex items-center text-sm font-medium text-gray-900 rounded-full pe-1 hover:text-primary md:me-0 focus:ring-0"

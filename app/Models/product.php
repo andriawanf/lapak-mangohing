@@ -50,4 +50,9 @@ class product extends Model
         }
         return $this->price;
     }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }

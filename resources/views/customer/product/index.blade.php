@@ -206,7 +206,12 @@
                 </div>
                 <div class="grid gap-4 mt-2 sm:grid-cols-2 md:mt-4 lg:grid-cols-3 xl:grid-cols-4">
                     @foreach ($products as $product)
-                        <div class="p-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
+                        <form action="{{ route('product.collections.addCart') }}" method="POST"
+                            class="p-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
+                            @csrf
+                            {{-- hidden input product_id --}}
+                            <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                            <input type="hidden" name="quantity" value="1">
                             <div class="w-full h-56">
                                 <a href="#">
                                     <img class="h-full mx-auto"
@@ -267,7 +272,7 @@
                                 </div>
                                 <a href="#">
                                     <p
-                                        class="text-md font-semibold leading-tight text-gray-900 min-h-12 hover:underline line-clamp-2">
+                                        class="font-semibold leading-tight text-gray-900 text-md min-h-12 hover:underline line-clamp-2">
                                         {{ $product['product_name'] }}</p>
                                 </a>
 
@@ -337,7 +342,7 @@
                                 <div class="flex items-center justify-between gap-4 mt-4">
                                     <div>
                                         @if ($product['discounts'])
-                                            <p class="text-sm font-bold text-tertiary mb-1">
+                                            <p class="mb-1 text-sm font-bold text-tertiary">
                                                 <span class="line-through">Rp.
                                                     {{ number_format($product['product_price']) }} </span>
                                             </p>
@@ -357,22 +362,20 @@
                                         @endif
                                     </div>
 
-                                    <a href="{{ route('product.collections.addCart', $product['id']) }}">
-                                        <button type="button"
-                                            class="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0 ">
-                                            <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
-                                            </svg>
-                                            Add to cart
-                                        </button>
-                                    </a>
+                                    <button type="submit"
+                                        class="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0 ">
+                                        <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2"
+                                                d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
+                                        </svg>
+                                        Add to cart
+                                    </button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     @endforeach
                 </div>
                 <div class="w-full mt-4 text-center md:mt-8">

@@ -2,7 +2,7 @@
     <section
         class="relative z-0 w-full pt-12 pb-12 min-h-fit lg:min-h-fit lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
         <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
-            <h2 class="text-xl font-semibold text-tertiary sm:text-lg mb-8">Keranjang Belanja </h2>
+            <h2 class="mb-8 text-xl font-semibold text-tertiary sm:text-lg">Keranjang Belanja </h2>
 
             <div class="md:gap-4 lg:flex lg:items-start ">
                 <div class="flex-none w-full mx-auto lg:max-w-2xl xl:max-w-4xl">
@@ -29,7 +29,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (count($dataCart) == 0)
+                                @if ($dataCart == null)
                                     <tr>
                                         <td colspan="4" class="p-4 text-center">Kamu belum memiliki produk apapun.
                                             <span><a class="text-primary hover:underline"
@@ -38,7 +38,7 @@
                                         </td>
                                     </tr>
                                 @else
-                                    @foreach ($dataCart as $data)
+                                    @foreach ($dataCart->cartItems as $data)
                                         <tr class="py-2 bg-white border-b" id="trCartList"
                                             data-trCartList = "{{ $data['id'] }}">
                                             <td class="w-4 p-4">
@@ -58,11 +58,11 @@
                                                 </a>
                                                 <div class="ml-4">
                                                     <a href="#"
-                                                        class="text-md font-medium text-tertiary hover:underline line-clamp-2">{{ $data['product']['product_name'] }}</a>
+                                                        class="font-medium text-md text-tertiary hover:underline line-clamp-2">{{ $data['product']['product_name'] }}</a>
                                                     <p class="mt-1 text-sm font-normal text-tertiary/50"
-                                                        data-discount={{ number_format($data['product']['discounts'] ? $data['product']['discounts']->first()->discount_percentage : 0) }}>
+                                                        data-discount={{ number_format($data->product->discounts->first() ? $data->product->discounts->first()->discount_percentage : 0) }}>
                                                         Diskon:
-                                                        {{ $data['product']['discounts'] ? number_format($data['product']['discounts']->first()->discount_percentage) . '%' : '0%' }}
+                                                        {{ $data->product->discounts->first() ? number_format($data->product->discounts->first()->discount_percentage) . '%' : '0%' }}
                                                     </p>
                                                 </div>
                                             </td>
@@ -105,9 +105,13 @@
                                                 </button>
                                             </td>
                                             <td id="subtotal-{{ $data['id'] }}"
-                                                class="px-6 py-4 text-md font-bold text-tertiary">
+                                                class="px-6 py-4 font-bold text-md text-tertiary">
+                                                @php
+                                                    $subtotal = $data['product']['product_price'] * $data['quantity'];
+                                                @endphp
                                                 <p class="subtotal-value text-nowrap"> Rp.
-                                                    {{ number_format($data['subtotal'], 0, ',', '.') }},00</p>
+                                                    {{ number_format($subtotal, 0, ',', '.') }},00
+                                                </p>
                                             </td>
                                         </tr>
                                         {{-- modal --}}
@@ -135,7 +139,7 @@
                                                                 stroke-linejoin="round" stroke-width="2"
                                                                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                                         </svg>
-                                                        <h3 class="mb-5 text-md font-normal text-gray-500 ">
+                                                        <h3 class="mb-5 font-normal text-gray-500 text-md ">
                                                             Are you sure you want to delete <span
                                                                 class="font-bold text-primary">{{ $data['product']['product_name'] }}</span>
                                                             ?
@@ -184,8 +188,8 @@
                             </div>
 
                             <dl class="flex items-center justify-between gap-4 pt-2 border-t border-gray-200">
-                                <dt class="text-md font-bold text-tertiary">Total</dt>
-                                <dd class="text-md font-bold text-tertiary total-price">Rp. 0.00</dd>
+                                <dt class="font-bold text-md text-tertiary">Total</dt>
+                                <dd class="font-bold text-md text-tertiary total-price">Rp. 0.00</dd>
                             </dl>
                         </div>
 
