@@ -2,7 +2,16 @@
     <section
         class="relative z-0 w-full pt-12 pb-12 min-h-fit lg:min-h-fit lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
         <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
-            <form action="#" class="px-4 mx-auto ">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
+            @endif
+            <form action="{{ route('checkout.process') }}" method="POST" class="px-4 mx-auto ">
+                @csrf
+                <input type="hidden" name="product_ids" value="{{ json_encode($cartItems->pluck('product_id')) }}">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li class="inline-flex items-center">
                         <a href="#"
@@ -47,18 +56,18 @@
                         <div class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
                             <div>
                                 <h2 class="mb-4 text-sm font-semibold lg:text-md text-tertiary">Jenis Pembelian</h2>
-                                <select id="negara" name="negara"
+                                <select id="purchase_option" name="purchase_option"
                                     class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                     <option value="">Pilih jenis pembelian</option>
-                                    <option value="mitra dagang">
+                                    <option value="mitra_dagang">
                                         Mitra Dagang</option>
-                                    <option value="bayar sekarang">
+                                    <option value="bayar_sekarang">
                                         Bayar Sekarang</option>
                                 </select>
-                                {{-- @error('negara')
+                                @error('purchase_option')
                                     <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                @enderror --}}
+                                @enderror
                             </div>
 
                             <hr />
@@ -67,31 +76,31 @@
                                 <h2 class="col-span-2 text-sm font-semibold lg:text-md text-tertiary">Detail
                                     Pengiriman</h2>
                                 <div class="col-span-2">
-                                    <x-input-label for="nama_penerima" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_name" class="mb-2 text-xs text-tertiary/60">
                                         Nama penerima <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <x-text-input type="text" name="nama_penerima" id="nama_penerima"
-                                        label="nama_penerima" class="w-full text-sm" value="{{ old('nama_penerima') }}"
+                                    <x-text-input type="text" name="customer_name" id="customer_name"
+                                        label="customer_name" class="w-full text-sm" value="{{ old('customer_name') }}"
                                         placeholder="Your Name" />
-                                    {{-- @error('nama_penerima')
+                                    @error('customer_name')
                                         <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="email" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_email" class="mb-2 text-xs text-tertiary/60">
                                         Email Penerima <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <x-text-input type="text" name="email" id="email" label="email"
-                                        class="w-full text-sm" value="{{ old('email') }}"
-                                        placeholder="example@gmail.com" />
-                                    {{-- @error('email')
+                                    <x-text-input type="text" name="customer_email" id="customer_email"
+                                        label="customer_email" class="w-full text-sm"
+                                        value="{{ old('customer_email') }}" placeholder="example@gmail.com" />
+                                    @error('customer_email')
                                         <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="notelp" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_phone" class="mb-2 text-xs text-tertiary/60">
                                         No. telpon <span class="text-red-500">*</span>
                                     </x-input-label>
                                     <div class="relative">
@@ -99,17 +108,20 @@
                                             class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                             <p class="text-sm font-medium text-tertiary/60">+62</p>
                                         </div>
-                                        <x-text-input type="text" name="notelp" id="notelp" label="notelp"
-                                            class="w-full text-sm pl-11" value="{{ old('notelp') }}"
-                                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" />
+                                        <x-text-input type="text" name="customer_phone" id="customer_phone"
+                                            label="customer_phone" class="w-full text-sm pl-11"
+                                            value="{{ old('customer_phone') }}" placeholder="123-456-7890" />
+                                        @error('customer_phone')
+                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="negara" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_country" class="mb-2 text-xs text-tertiary/60">
                                         Negara <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <select id="negara" name="negara"
+                                    <select id="customer_country" name="customer_country"
                                         class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                         <option value="">Pilih negara</option>
@@ -120,16 +132,16 @@
                                         <option value="Singapura">
                                             Singapura</option>
                                     </select>
-                                    {{-- @error('negara')
+                                    @error('customer_country')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="provinsi" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_province" class="mb-2 text-xs text-tertiary/60">
                                         Provinsi <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <select id="provinsi" name="provinsi"
+                                    <select id="customer_province" name="customer_province"
                                         class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                         <option value="">Pilih provinsi</option>
@@ -140,16 +152,16 @@
                                         <option value="jateng">
                                             Jawa Tengah</option>
                                     </select>
-                                    {{-- @error('provinsi')
+                                    @error('customer_province')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="kota" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_city" class="mb-2 text-xs text-tertiary/60">
                                         Kota <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <select id="kota" name="kota"
+                                    <select id="customer_city" name="customer_city"
                                         class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                         <option value="">Pilih kota</option>
@@ -160,16 +172,16 @@
                                         <option value="bekasi">
                                             Bekasi</option>
                                     </select>
-                                    {{-- @error('kota')
+                                    @error('customer_city')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="kecamatan" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_regency" class="mb-2 text-xs text-tertiary/60">
                                         Kabupaten <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <select id="kecamatan" name="kecamatan"
+                                    <select id="customer_regency" name="customer_regency"
                                         class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                         <option value="">Pilih kabupaten</option>
@@ -180,16 +192,16 @@
                                         <option value="bekasi">
                                             Bekasi</option>
                                     </select>
-                                    {{-- @error('kecamatan')
+                                    @error('customer_regency')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="kecamatan" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_district" class="mb-2 text-xs text-tertiary/60">
                                         Kecamatan <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <select id="kecamatan" name="kecamatan"
+                                    <select id="customer_district" name="customer_district"
                                         class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 text-tertiary focus:ring-primary focus:border-primary">
 
                                         <option value="">Pilih kecamatan</option>
@@ -200,30 +212,45 @@
                                         <option value="bekasi">
                                             Bekasi</option>
                                     </select>
-                                    {{-- @error('kecamatan')
+                                    @error('customer_district')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div>
-                                    <x-input-label for="kode_pos" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_postcode" class="mb-2 text-xs text-tertiary/60">
                                         Kode pos <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <x-text-input type="text" name="kode_pos" id="kode_pos" label="kode_pos"
-                                        class="w-full text-sm" value="{{ old('kode_pos') }}"
-                                        placeholder="kode pos" />
-                                    {{-- @error('kode_pos')
+                                    <x-text-input type="text" name="customer_postcode" id="customer_postcode"
+                                        label="customer_postcode" class="w-full text-sm"
+                                        value="{{ old('customer_postcode') }}" placeholder="kode pos" />
+                                    @error('customer_postcode')
                                         <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
-                                    @enderror --}}
+                                    @enderror
                                 </div>
 
                                 <div class="col-span-2">
-                                    <x-input-label for="alamat" class="mb-2 text-xs text-tertiary/60">
+                                    <x-input-label for="customer_address" class="mb-2 text-xs text-tertiary/60">
                                         Detail alamat <span class="text-red-500">*</span>
                                     </x-input-label>
-                                    <textarea id="alamat" rows="6" name="alamat"
+                                    <textarea id="customer_address" rows="6" name="customer_address"
                                         class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
-                                        placeholder="Masukan detail alamat anda">{{ old('alamat') }}</textarea>
+                                        placeholder="Masukan detail alamat anda">{{ old('customer_address') }}</textarea>
+                                    @error('customer_address')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="col-span-2">
+                                    <x-input-label for="customer_note" class="mb-2 text-xs text-tertiary/60">
+                                        Catatan (optional)
+                                    </x-input-label>
+                                    <textarea id="customer_note" rows="3" name="customer_note"
+                                        class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
+                                        placeholder="masukan catatan anda disini">{{ old('customer_note') }}</textarea>
+                                    @error('customer_note')
+                                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -236,23 +263,24 @@
                                     <div class="grid items-start grid-cols-2 gap-4 lg:grid-cols-1">
                                         <div class="flex items-start">
                                             <div class="flex items-center h-5">
-                                                <input id="dhl" aria-describedby="dhl-text" type="radio"
-                                                    name="delivery-method" value=""
+                                                <input id="pengiriman_gratis"
+                                                    aria-describedby="pengiriman_gratis-text" type="radio"
+                                                    name="shipping_method" value="pengiriman_gratis"
                                                     class="w-4 h-4 bg-white border-gray-300 text-primary focus:ring-2 focus:ring-primary"
                                                     checked />
                                             </div>
 
                                             <div class="text-sm ms-4">
-                                                <label for="dhl" class="font-medium leading-none text-tertiary">
+                                                <label for="free_shipping"
+                                                    class="font-medium leading-none text-tertiary">
                                                     Gratis pengiriman </label>
                                                 <div>
-                                                    <p id="dhl-text"
+                                                    <p id="free_shipping-text"
                                                         class="mt-1 text-xs font-normal text-tertiary/50">
                                                         Min. Pembelian: <span>Rp. 250.000</span></p>
-                                                    <p id="dhl-text"
+                                                    <p id="free_shipping-text"
                                                         class="mt-1 text-xs font-normal text-tertiary/50">
                                                         Estimasi waktu: <span>7-30 hari kerja</span></p>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -266,13 +294,15 @@
                                     <div class="grid items-start grid-cols-2 gap-4 lg:grid-cols-1">
                                         <div class="flex items-start w-full">
                                             <div class="flex items-center h-5">
-                                                <input id="fedex" aria-describedby="fedex-text" type="radio"
-                                                    name="delivery-method" value=""
+                                                <input id="pengiriman_reguler"
+                                                    aria-describedby="pengiriman_reguler-text" type="radio"
+                                                    name="shipping_method" value="pengiriman_reguler"
                                                     class="w-4 h-4 bg-white border-gray-300 text-primary focus:ring-2 focus:ring-primary" />
                                             </div>
 
                                             <div class="text-sm ms-4">
-                                                <label for="fedex" class="font-medium leading-none text-tertiary">
+                                                <label for="pengiriman_reguler"
+                                                    class="font-medium leading-none text-tertiary">
                                                     Pengiriman reguler </label>
                                                 <div>
                                                     <p id="dhl-text"
@@ -296,13 +326,14 @@
                                     <div class="grid items-start grid-cols-2 gap-4 lg:grid-cols-1">
                                         <div class="flex items-start w-full">
                                             <div class="flex items-center h-5">
-                                                <input id="express" aria-describedby="express-text" type="radio"
-                                                    name="delivery-method" value=""
+                                                <input id="pengiriman_cepat" aria-describedby="pengiriman_cepat-text"
+                                                    type="radio" name="shipping_method" value="pengiriman_cepat"
                                                     class="w-4 h-4 bg-white border-gray-300 text-primary focus:ring-2 focus:ring-primary" />
                                             </div>
 
                                             <div class="text-sm ms-4">
-                                                <label for="express" class="font-medium leading-none text-tertiary">
+                                                <label for="pengiriman_cepat"
+                                                    class="font-medium leading-none text-tertiary">
                                                     Pengiriman Cepat</label>
                                                 <div>
                                                     <p id="dhl-text"
@@ -323,58 +354,49 @@
                                     </div>
                                 </div>
                             </div>
+                            @error('shipping_method')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
                     <div
                         class="w-full p-4 mt-6 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md sm:p-6">
                         <div class="space-y-4">
-                            <h2 class="mb-4 text-sm font-semibold lg:text-md text-tertiary">Orderan Anda</h2>
+                            <h2 class="mb-4 text-sm font-semibold lg:text-md text-tertiary">Rincian Produk & Pembayaran
+                            </h2>
                             <div class="space-y-4">
-                                <div class="grid grid-cols-3 gap-2">
-                                    <div class="flex items-start w-full col-span-2 gap-3">
-                                        <img src="{{ asset('/images/mang-ohing-logo.png') }}" alt=""
-                                            class="object-cover rounded-lg size-16">
-                                        <div>
-                                            <p class="text-sm font-medium text-tertiary line-clamp-2">Lorem, ipsum
-                                                dolor
-                                                sit amet consectetur adipisicing elit.</p>
-                                            <div class="flex flex-wrap mt-1 gap-x-2 gap-y-1">
-                                                <p class="text-xs font-normal text-tertiary/50">Berat: 1 kg</p>
-                                                <p class="text-xs font-normal text-tertiary/50">Panjang: 20 cm
-                                                </p>
-                                                <p class="text-xs font-normal text-tertiary/50">Lebar: 10 cm</p>
+                                @foreach ($cartItems as $item)
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div class="flex items-start w-full col-span-2 gap-3">
+                                            <img src="{{ asset('/images/mang-ohing-logo.png') }}" alt=""
+                                                class="object-cover rounded-lg size-16">
+                                            <div>
+                                                <p class="text-sm font-medium text-tertiary line-clamp-2">
+                                                    {{ $item->product->product_name }}</p>
+                                                <div class="flex flex-wrap mt-1 gap-x-2 gap-y-1">
+                                                    <p class="text-xs font-normal text-tertiary/50">Berat:
+                                                        {{ $item->product->product_weight }} kg</p>
+                                                    <p class="text-xs font-normal text-tertiary/50">Panjang:
+                                                        {{ $item->product->product_length }} cm
+                                                    </p>
+                                                    <p class="text-xs font-normal text-tertiary/50">Lebar:
+                                                        {{ $item->product->product_width }} cm</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="flex flex-col items-end justify-start w-full col-span-1">
-                                        <p class="mb-1 text-sm font-medium text-tertiary">26 pcs</p>
-                                        <p class="text-sm font-bold text-tertiary">Rp. 1.820.000</p>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <div class="flex items-start w-full col-span-2 gap-3">
-                                        <img src="{{ asset('/images/mang-ohing-logo.png') }}" alt=""
-                                            class="object-cover rounded-lg size-16">
-                                        <div>
-                                            <p class="text-sm font-medium text-tertiary line-clamp-2">Lorem, ipsum
-                                                dolor
-                                                sit amet consectetur adipisicing elit.</p>
-                                            <div class="flex flex-wrap mt-1 gap-x-2 gap-y-1">
-                                                <p class="text-xs font-normal text-tertiary/50">Berat: 1 kg</p>
-                                                <p class="text-xs font-normal text-tertiary/50">Panjang: 20 cm
-                                                </p>
-                                                <p class="text-xs font-normal text-tertiary/50">Lebar: 10 cm</p>
-                                            </div>
+                                        <div class="flex flex-col items-end justify-start w-full col-span-1">
+                                            <p class="mb-1 text-sm font-medium text-tertiary">{{ $item->quantity }}
+                                                pcs</p>
+                                            @php
+                                                $subtotal = $item->quantity * $item->price;
+                                            @endphp
+                                            <p class="text-sm font-bold text-tertiary">Rp.
+                                                {{ number_format($subtotal, 0, ',', '.') }},00</p>
                                         </div>
                                     </div>
-
-                                    <div class="flex flex-col items-end justify-start w-full col-span-1">
-                                        <p class="mb-1 text-sm font-medium text-tertiary">26 pcs</p>
-                                        <p class="text-sm font-bold text-tertiary">Rp. 1.820.000</p>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                             <hr />
                             <div class="space-y-4">
@@ -408,11 +430,9 @@
                         </div>
 
                         <div class="space-y-3">
-                            <a href="{{ route('orderSummary') }}">
-                                <button type="button"
-                                    class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Lihat
-                                    detail order</button>
-                            </a>
+                            <button type="submit"
+                                class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Buat
+                                Pesanan</button>
                         </div>
                         <div class="flex items-center justify-center gap-2">
                             <span class="text-sm font-normal text-tertiary/50 hover:text-tertiary"> or </span>

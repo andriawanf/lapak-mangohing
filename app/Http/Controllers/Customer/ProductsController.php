@@ -84,39 +84,44 @@ class ProductsController extends Controller
         // Menambahkan atau memperbarui item keranjang
         $cartItem = $cart->cartItems()->where('product_id', $product_id->id)->first();
 
-        // Cek diskon yang berlaku
-        $discount = $product_id->discounts()
-            ->where('start_date', '<=', now())
-            ->where('end_date', '>=', now())
-            ->where('status', true)
-            ->first();
-
-        $discount ? $discountedPrice = $product_id->product_price - ($discount->discount_percentage / 100) * $product_id->product_price : $discountedPrice = $product_id->product_price;
-        // if ($discount) {
-        //     $discountedPrice = $product_id->product_price - (($discount->discount_percentage / 100) * $product_id->product_price);
-        // } else {
-        //     $discountedPrice = $product_id->product_price;
-        // }
-
-        if ($cartItem) {
-            $cartItem->quantity += $request->quantity;
-            $cartItem->price = $discountedPrice;
-            $cartItem->save();
+        if ($product_id->product_stock < $request->quantity) {
+            return redirect()->back()->with('error', 'Stok produk tidak mencukupi');
         } else {
-            $cartItem = $cart->cartItems()->create([
-                'product_id' => $product_id->id,
-                'quantity' => $request->quantity,
-                'price' => $discountedPrice,
-            ]);
-        }
+            // Cek diskon yang berlaku
+            $discount = $product_id->discounts()
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->where('status', true)
+                ->first();
 
-        // Menghitung ulang total harga keranjang
-        $totalHarga = $cart->cartItems->sum(function ($item) {
-            return $item->quantity * $item->price;
-        });
-        $cart->update(['total_price' => $totalHarga]);
-        return redirect()->back()->with(['success' => 'Product added to cart', 'cart' => $cart]);
+            $discountedPrice = 0;
+            if ($discount) {
+                $discountedPrice = $product_id->product_price - ($discount->discount_percentage / 100) * $product_id->product_price;
+            } else {
+                $discountedPrice = $product_id->product_price;
+            }
+
+            if ($cartItem) {
+                $cartItem->quantity += $request->quantity;
+                $cartItem->price = $discountedPrice;
+                $cartItem->save();
+            } else {
+                $cartItem = $cart->cartItems()->create([
+                    'product_id' => $product_id->id,
+                    'quantity' => $request->quantity,
+                    'price' => $discountedPrice,
+                ]);
+            }
+
+            // Menghitung ulang total harga keranjang
+            $totalHarga = $cart->cartItems->sum(function ($item) {
+                return $item->quantity * $item->price;
+            });
+            $cart->update(['total_price' => $totalHarga]);
+            return redirect()->back()->with(['success' => 'Product added to cart', 'cart' => $cart]);
+        }
     }
+
 
     public function updateCart(Request $request)
     {
@@ -185,44 +190,40 @@ class ProductsController extends Controller
             return $item->quantity * $price;
         });
 
+        $grandTotal = $cartItems->sum(function ($item) {
+            $product = $item->product->product_price;
+
+            return $item->quantity * $product;
+        });
+
+        $totalDiscount = $cartItems->sum(function ($item) {
+            $product = $item->product;
+            $discounts = $product->discounts()->get();
+            $totalDiscount = 0;
+            if ($discounts->isNotEmpty()) {
+                $totalDiscount = $discounts->sum('discount_percentage');
+            }
+            return $totalDiscount;
+        });
+
+        // calculate how much discount user get in rupiah
+        $totalDiscountInRupiah = $cartItems->sum(function ($item) {
+            $product = $item->product;
+            $discounts = $product->discounts()->get();
+            $discounted_price = $item->price;
+            $price = $product->product_price;
+            $discountSum = 0;
+            if ($discounts->isNotEmpty()) {
+                $discountSum += $price - $discounted_price;
+            }
+            return $discountSum;
+        });
+
         return response()->json([
             'subtotal' => $subtotal,
+            'total_discount' => $totalDiscount ?? 0,
+            'discounted_price' => $totalDiscountInRupiah ?? 0,
+            'grand_total' => $grandTotal
         ]);
-    }
-
-
-    // checkout
-    public function checkout()
-    {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $cart = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first();
-
-            DB::transaction(function () use ($cart) {
-                foreach ($cart->cartItems as $item) {
-                    $product = $item->product;
-                    if ($product->product_stock < $item->quantity) {
-                        throw new \Exception("Product {$product->product_name} out of stock");
-                    }
-                    $product->decrement('product_stock', $item->quantity);
-                }
-
-                $cart->cartItems()->delete();
-                $cart->update(['total_price' => 0]);
-            });
-            return view('customer.product.checkout');
-        } else {
-            return redirect()->route('login')->with('error', 'Please login first');
-        }
-    }
-
-    // order summary
-    public function orderSummary()
-    {
-        if (Auth::check()) {
-            return view('customer.product.order-summary');
-        } else {
-            return redirect()->route('login')->with('error', 'Please login first');
-        }
     }
 }

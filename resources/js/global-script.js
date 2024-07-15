@@ -91,6 +91,8 @@ $(document).ready(function () {
     const checkboxes = $('input[type="checkbox"][data-id]');
     const quantityInputs = $('input[data-input-counter]');
     const subtotalElement = $('.subtotal-product');
+    const totalDiscount = $('.total-discount');
+    const discountPercent = $('.discount-percent');
     const totalElement = $('.total-price');
 
     checkboxes.on('change', updateCart);
@@ -111,9 +113,14 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     const subtotal = response.subtotal;
+                    const discount = response.total_discount;
+                    const total_discount = response.discounted_price;
+                    const grand_total = response.grand_total;
 
-                    subtotalElement.text(`Rp. ${subtotal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
-                    totalElement.text(`Rp. ${subtotal.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                    subtotalElement.text(`Rp. ${grand_total.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                    discountPercent.text(new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2, }).format(discount) + '%');
+                    totalDiscount.text('-Rp. ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2, }).format(total_discount));
+                    totalElement.text(`Rp. ${subtotal.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })},00`);
                 },
                 error: function (error) {
                     console.log(error);
@@ -123,5 +130,14 @@ $(document).ready(function () {
             subtotalElement.text('Rp. 0.00');
             totalElement.text('Rp. 0.00');
         }
+    }
+});
+
+// checkout
+document.getElementById('product-selection-form').addEventListener('submit', function (e) {
+    const checkboxes = document.querySelectorAll('input[name="product_ids[]"]:checked');
+    if (checkboxes.length === 0) {
+        e.preventDefault();
+        alert('Please select at least one product.');
     }
 });
