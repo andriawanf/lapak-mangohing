@@ -155,27 +155,38 @@
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Subtotal
                                         </dt>
-                                        <dd class="text-sm font-medium text-tertiary subtotal-product">Rp. 3.640.000
+                                        <dd class="text-sm font-medium text-tertiary subtotal-product">Rp.
+                                            {{ number_format($order->base_total_price, 0, ',', '.') }},00
                                         </dd>
                                     </dl>
 
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Diskon
                                         </dt>
-                                        <dd class="text-sm font-medium text-green-600">- Rp. 0.00</dd>
+                                        <dd class="text-sm font-medium text-tertiary">
+                                            {{ number_format($order->discount_percent, 0, ',', '.') }}%</dd>
+                                    </dl>
+
+                                    <dl class="flex items-center justify-between gap-4">
+                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Diskon
+                                        </dt>
+                                        <dd class="text-sm font-medium text-primary">- Rp.
+                                            {{ number_format($order->discount_amount, 0, ',', '.') }},00</dd>
                                     </dl>
 
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Biaya
                                             Pengiriman
                                         </dt>
-                                        <dd class="text-sm font-medium text-tertiary subtotal-product">Rp. 60.000</dd>
+                                        <dd class="text-sm font-medium text-tertiary subtotal-product">Rp.
+                                            {{ number_format($order->shipping_cost, 0, ',', '.') }},00</dd>
                                     </dl>
                                 </div>
 
                                 <dl class="flex items-center justify-between gap-4 pt-2 border-t border-gray-200">
                                     <dt class="text-sm font-bold text-tertiary">Total</dt>
-                                    <dd class="text-sm font-bold text-tertiary total-price">Rp. 3.700.000</dd>
+                                    <dd class="text-sm font-bold text-tertiary total-price">Rp.
+                                        {{ number_format($order->grand_total, 0, ',', '.') }},00</dd>
                                 </dl>
                             </div>
                         </div>

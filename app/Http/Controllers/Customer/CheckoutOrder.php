@@ -21,6 +21,28 @@ class CheckoutOrder extends Controller
             $productIds = $request->input('product_ids', []);
             $cartItems = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
 
+            $totalDiscount = $cartItems->sum(function ($item) {
+                $product = $item->product;
+                $discounts = $product->discounts()->get();
+                $totalDiscount = 0;
+                if ($discounts->isNotEmpty()) {
+                    $totalDiscount = $discounts->sum('discount_percentage');
+                }
+                return $totalDiscount;
+            });
+
+            $totalDiscountInRupiah = $cartItems->sum(function ($item) {
+                $product = $item->product;
+                $discounts = $product->discounts()->get();
+                $totalDiscount = 0;
+                if ($discounts->isNotEmpty()) {
+                    $totalDiscount = $discounts->sum('discount_percentage');
+                    $totalDiscount = $product->product_price * ($totalDiscount / 100);
+                }
+                return $totalDiscount;
+            });
+
+
             // DB::transaction(function () use ($cart) {
             //     foreach ($cart->cartItems as $item) {
             //         $product = $item->product;
@@ -33,7 +55,7 @@ class CheckoutOrder extends Controller
             //     $cart->cartItems()->delete();
             //     $cart->update(['total_price' => 0]);
             // });
-            return view('customer.product.checkout', compact('cartItems'));
+            return view('customer.product.checkout', compact('cartItems', 'totalDiscountInRupiah', 'totalDiscount'));
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }
