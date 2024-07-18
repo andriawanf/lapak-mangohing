@@ -11,7 +11,7 @@ class Order extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'status', 'order_date', 'payment_due', 'payment_status',
+        'order_number', 'user_id', 'status', 'order_date', 'payment_due', 'payment_status',
         'base_total_price', 'discount_amount', 'discount_percent',
         'shipping_cost', 'grand_total', 'shipping_method', 'purchase_option', 'customer_note',
         'customer_name', 'customer_address', 'customer_phone', 'customer_email',

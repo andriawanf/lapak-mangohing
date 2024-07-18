@@ -94,6 +94,7 @@ class CheckoutOrder extends Controller
             $cartItems = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
 
             $order = Order::create([
+                'order_number' => 'ORDER' . Str::random(7) . rand(100000, 999999),
                 'user_id' => $user->id,
                 'status' => 'pending',
                 'order_date' => now(),
@@ -148,7 +149,10 @@ class CheckoutOrder extends Controller
 
                 // Reduce product stock
                 $product->update(['product_stock' => $product->product_stock - $item->quantity]);
+                // delete cart & cart items
+                $item->delete();
             }
+
 
             $shippingMethod = $this->shippingMethod($request->shipping_method);
             $shippingCost = $this->calculateShippingCost($request->shipping_method);
@@ -162,6 +166,9 @@ class CheckoutOrder extends Controller
                 'shipping_method' => $shippingMethod,
                 'grand_total' => $grandTotal,
             ]);
+
+            // delete cart
+            Cart::where('user_id', $user->id)->delete();
 
             DB::commit();
 

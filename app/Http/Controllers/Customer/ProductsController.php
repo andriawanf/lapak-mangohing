@@ -84,7 +84,7 @@ class ProductsController extends Controller
         // Menambahkan atau memperbarui item keranjang
         $cartItem = $cart->cartItems()->where('product_id', $product_id->id)->first();
 
-        if ($product_id->product_stock < $request->quantity) {
+        if ($product_id->product_stock <= $request->quantity) {
             return redirect()->back()->with('error', 'Stok produk tidak mencukupi');
         } else {
             // Cek diskon yang berlaku
@@ -118,7 +118,7 @@ class ProductsController extends Controller
                 return $item->quantity * $item->price;
             });
             $cart->update(['total_price' => $totalHarga]);
-            return redirect()->back()->with(['success' => 'Product added to cart', 'cart' => $cart]);
+            return redirect()->back()->with(['success' => 'Produk ditambahkan ke keranjang', 'cart' => $cart]);
         }
     }
 

@@ -150,13 +150,13 @@
                                             {{ $order->shipping_method }}
                                         </dd>
                                     </dl>
-                                    <dl class="flex items-center justify-between gap-4">
+                                    {{-- <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Metode
                                             pembayaran:
                                         </dt>
                                         <dd class="text-sm font-medium text-tertiary subtotal-product">Credit Card
                                         </dd>
-                                    </dl>
+                                    </dl> --}}
                                 </div>
                                 <hr />
                                 <div class="space-y-2">

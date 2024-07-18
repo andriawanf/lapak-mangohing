@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->unique();
             $table->uuid('user_id');
             $table->string('status');
             $table->dateTime('order_date');
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->decimal('discount_percent', 16, 2)->default(0.00);
             $table->decimal('grand_total', 16, 2)->default(0.00);
             $table->decimal('shipping_cost', 16, 2)->default(0.00);
-            $table->string('shipping_option')->nullable();
+            $table->string('shipping_method')->nullable();
             $table->string('purchase_option')->nullable();
             $table->text('customer_note')->nullable();
             $table->string('customer_name');
