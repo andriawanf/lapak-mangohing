@@ -123,28 +123,36 @@
                             <div class="space-y-4">
                                 <div class="space-y-2">
                                     <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Order date
+                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Tanggal
+                                            order:
                                         </dt>
-                                        <dd class="text-sm font-medium text-tertiary subtotal-product">10 Juli 2024
+                                        <dd class="text-sm font-medium text-tertiary subtotal-product">
+                                            {{ $order->created_at->isoFormat('dddd, D MMM YYYY') }}
                                         </dd>
                                     </dl>
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Jenis
-                                            pembelian
+                                            pembelian:
                                         </dt>
-                                        <dd class="text-sm font-medium text-tertiary subtotal-product">Mitra Dagang
+                                        <dd class="text-sm font-medium text-tertiary subtotal-product">
+                                            @if ($order->purchase_option == 'mitra_dagang')
+                                                Mitra Dagang
+                                            @else
+                                                Bayar Sekarang
+                                            @endif
                                         </dd>
                                     </dl>
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Jenis
-                                            Pengiriman
+                                            Pengiriman:
                                         </dt>
-                                        <dd class="text-sm font-medium text-tertiary subtotal-product">Reguler
+                                        <dd class="text-sm font-medium text-tertiary subtotal-product capitalize">
+                                            {{ $order->shipping_method }}
                                         </dd>
                                     </dl>
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Metode
-                                            pembayaran
+                                            pembayaran:
                                         </dt>
                                         <dd class="text-sm font-medium text-tertiary subtotal-product">Credit Card
                                         </dd>
@@ -153,7 +161,7 @@
                                 <hr />
                                 <div class="space-y-2">
                                     <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Subtotal
+                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Subtotal:
                                         </dt>
                                         <dd class="text-sm font-medium text-tertiary subtotal-product">Rp.
                                             {{ number_format($order->base_total_price, 0, ',', '.') }},00
@@ -161,14 +169,14 @@
                                     </dl>
 
                                     <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Diskon
+                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Diskon:
                                         </dt>
                                         <dd class="text-sm font-medium text-tertiary">
                                             {{ number_format($order->discount_percent, 0, ',', '.') }}%</dd>
                                     </dl>
 
                                     <dl class="flex items-center justify-between gap-4">
-                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Diskon
+                                        <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Hemat:
                                         </dt>
                                         <dd class="text-sm font-medium text-primary">- Rp.
                                             {{ number_format($order->discount_amount, 0, ',', '.') }},00</dd>
@@ -176,7 +184,7 @@
 
                                     <dl class="flex items-center justify-between gap-4">
                                         <dt class="text-sm font-normal text-tertiary/50 hover:text-tertiary">Biaya
-                                            Pengiriman
+                                            Pengiriman:
                                         </dt>
                                         <dd class="text-sm font-medium text-tertiary subtotal-product">Rp.
                                             {{ number_format($order->shipping_cost, 0, ',', '.') }},00</dd>
@@ -184,7 +192,7 @@
                                 </div>
 
                                 <dl class="flex items-center justify-between gap-4 pt-2 border-t border-gray-200">
-                                    <dt class="text-sm font-bold text-tertiary">Total</dt>
+                                    <dt class="text-sm font-bold text-tertiary">Total:</dt>
                                     <dd class="text-sm font-bold text-tertiary total-price">Rp.
                                         {{ number_format($order->grand_total, 0, ',', '.') }},00</dd>
                                 </dl>

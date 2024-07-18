@@ -21,8 +21,9 @@ return new class extends Migration
             $table->decimal('base_total_price', 16, 2)->default(0.00);
             $table->decimal('discount_amount', 16, 2)->default(0.00);
             $table->decimal('discount_percent', 16, 2)->default(0.00);
-            $table->decimal('shipping_cost', 16, 2)->default(0.00);
             $table->decimal('grand_total', 16, 2)->default(0.00);
+            $table->decimal('shipping_cost', 16, 2)->default(0.00);
+            $table->string('shipping_option')->nullable();
             $table->string('purchase_option')->nullable();
             $table->text('customer_note')->nullable();
             $table->string('customer_name');

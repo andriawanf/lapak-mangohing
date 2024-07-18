@@ -65,6 +65,7 @@ class CheckoutOrder extends Controller
     {
         $request->validate([
             'purchase_option' => 'required',
+            'shipping_method' => 'required',
             'customer_name' => 'required',
             'customer_email' => 'required|email|max:255',
             'customer_phone' => 'required',
@@ -76,8 +77,8 @@ class CheckoutOrder extends Controller
             'customer_postcode' => 'required|integer',
             'customer_address' => 'required',
             'customer_note' => 'required',
-            'shipping_method' => 'required',
         ]);
+        // dd($request->all());
 
         DB::beginTransaction();
 
@@ -103,6 +104,7 @@ class CheckoutOrder extends Controller
                 'discount_percent' => 0,
                 'shipping_cost' => 0,
                 'grand_total' => 0,
+                'shipping_method' => $request->shipping_method,
                 'purchase_option' => $request->purchase_option,
                 'customer_note' => $request->customer_note,
                 'customer_name' => $request->customer_name,
@@ -145,9 +147,10 @@ class CheckoutOrder extends Controller
                 ]);
 
                 // Reduce product stock
-                $product->update(['stock' => $product->stock - $item->quantity]);
+                $product->update(['product_stock' => $product->product_stock - $item->quantity]);
             }
 
+            $shippingMethod = $this->shippingMethod($request->shipping_method);
             $shippingCost = $this->calculateShippingCost($request->shipping_method);
             $grandTotal = $baseTotalPrice - $discountAmount + $shippingCost;
 
@@ -156,6 +159,7 @@ class CheckoutOrder extends Controller
                 'discount_amount' => $discountAmount,
                 'discount_percent' => ($discountAmount / $baseTotalPrice) * 100,
                 'shipping_cost' => $shippingCost,
+                'shipping_method' => $shippingMethod,
                 'grand_total' => $grandTotal,
             ]);
 
@@ -182,6 +186,20 @@ class CheckoutOrder extends Controller
                 return 20000;
             default:
                 return 0;
+        }
+    }
+
+    private function shippingMethod($shippingMethod)
+    {
+        switch ($shippingMethod) {
+            case 'pengiriman_gratis':
+                return 'gratis';
+            case 'pengiriman_reguler':
+                return 'reguler';
+            case 'pengiriman_cepat':
+                return 'cepat';
+            default:
+                return 'gratis';
         }
     }
 
