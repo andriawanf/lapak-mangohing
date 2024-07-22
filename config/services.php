@@ -36,5 +36,7 @@ return [
     ],
 
     'api_url' => env('API_URL', 'http://127.0.0.1:8000/api'),
+    'url_whatsapp_sender' => env('URL_WHATSAPP', 'https://api.whatsapp.com/send'),
+    'admin_phone_number' => env('ADMIN_PHONE_NUMBER', '+6287723511912'),
 
 ];

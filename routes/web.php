@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Customer\CheckoutOrder;
+use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductsController as CustomerProductsController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProductController;
@@ -34,7 +35,8 @@ Route::group(['prefix' => '/product'], function () {
     Route::get('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout')->middleware('auth');
     Route::post('/checkout-form', [CheckoutOrder::class, 'checkoutProcess'])->name('checkout.process')->middleware('auth');
     // order summary
-    Route::get('/order-summary/{order}', [CheckoutOrder::class, 'orderSummary'])->name('orderSummary')->middleware('auth');
+    Route::get('/order-summary/{order}', [OrderController::class, 'orderSummary'])->name('orderSummary')->middleware('auth');
+    Route::post('/send-whatsapp', [OrderController::class, 'sendWhatsApp'])->name('send.whatsapp')->middleware('auth');
 });
 
 Route::middleware('auth')->group(function () {

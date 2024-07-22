@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItems;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\isEmpty;
 
 class CheckoutOrder extends Controller
 {
@@ -20,42 +23,28 @@ class CheckoutOrder extends Controller
             $user = Auth::user();
             $productIds = $request->input('product_ids', []);
             $cartItems = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
+            // dd($cartItems);
 
-            $totalDiscount = $cartItems->sum(function ($item) {
+            $baseTotalPrice = 0;
+            $discountAmount = 0;
+
+            foreach ($cartItems as $item) {
                 $product = $item->product;
-                $discounts = $product->discounts()->get();
-                $totalDiscount = 0;
-                if ($discounts->isNotEmpty()) {
-                    $totalDiscount = $discounts->sum('discount_percentage');
-                }
-                return $totalDiscount;
-            });
+                $discounts = $product->discounts;
 
-            $totalDiscountInRupiah = $cartItems->sum(function ($item) {
-                $product = $item->product;
-                $discounts = $product->discounts()->get();
-                $totalDiscount = 0;
-                if ($discounts->isNotEmpty()) {
-                    $totalDiscount = $discounts->sum('discount_percentage');
-                    $totalDiscount = $product->product_price * ($totalDiscount / 100);
-                }
-                return $totalDiscount;
-            });
+                $price = $product->product_price;
+                $discountPercent = $discounts->sum('discount_percentage');
+                $discountAmountItem = $price * ($discountPercent / 100);
+                $subTotal = ($price - $discountAmountItem) * $item->quantity;
 
+                $baseTotalPrice += $price * $item->quantity;
+                $discountAmount += $discountAmountItem * $item->quantity;
+            }
 
-            // DB::transaction(function () use ($cart) {
-            //     foreach ($cart->cartItems as $item) {
-            //         $product = $item->product;
-            //         if ($product->product_stock < $item->quantity) {
-            //             throw new \Exception("Product {$product->product_name} out of stock");
-            //         }
-            //         $product->decrement('product_stock', $item->quantity);
-            //     }
+            $totalDiscount = ($discountAmount / $baseTotalPrice) * 100;
+            $grandTotal = $baseTotalPrice - $discountAmount;
 
-            //     $cart->cartItems()->delete();
-            //     $cart->update(['total_price' => 0]);
-            // });
-            return view('customer.product.checkout', compact('cartItems', 'totalDiscountInRupiah', 'totalDiscount'));
+            return view('customer.product.checkout', compact('cartItems', 'discountAmount', 'totalDiscount', 'baseTotalPrice', 'grandTotal'));
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }
@@ -78,7 +67,6 @@ class CheckoutOrder extends Controller
             'customer_address' => 'required',
             'customer_note' => 'required',
         ]);
-        // dd($request->all());
 
         DB::beginTransaction();
 
@@ -91,7 +79,27 @@ class CheckoutOrder extends Controller
             // Ambil setiap product_id dari array dan simpan dalam array baru
             $productIds = array_map('intval', $productIdsArray);
 
-            $cartItems = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
+            // Dapatkan cart items untuk user dan produk yang dipilih
+            $cart = Cart::where('user_id', $user->id)->with('cartItems.product')->first();
+
+            if (!$cart) {
+                return redirect()->back()->withErrors(['error' => 'No items in the cart.']);
+            }
+
+            $cartItems = $cart->cartItems->whereIn('product_id', $productIds)->all();
+
+            if (count($cartItems) == 0) {
+                return redirect()->back()->withErrors(['error' => 'Selected products not found in the cart.']);
+            }
+
+            // Debugging
+            if ($cartItems == null) {
+                return redirect()->back()->withErrors(['error' => 'Cart items is null.']);
+            }
+
+            if (!is_array($cartItems) && !$cartItems instanceof \Illuminate\Support\Collection) {
+                return redirect()->back()->withErrors(['error' => 'Cart items is not an array or collection.']);
+            }
 
             $order = Order::create([
                 'order_number' => 'ORDER' . Str::random(7) . rand(100000, 999999),
@@ -149,10 +157,10 @@ class CheckoutOrder extends Controller
 
                 // Reduce product stock
                 $product->update(['product_stock' => $product->product_stock - $item->quantity]);
-                // delete cart & cart items
+
+                // Remove cart item
                 $item->delete();
             }
-
 
             $shippingMethod = $this->shippingMethod($request->shipping_method);
             $shippingCost = $this->calculateShippingCost($request->shipping_method);
@@ -167,15 +175,16 @@ class CheckoutOrder extends Controller
                 'grand_total' => $grandTotal,
             ]);
 
+            DB::commit();
+
             // delete cart
             Cart::where('user_id', $user->id)->delete();
 
-            DB::commit();
-
-            // Optionally, you can send an email confirmation to the user here.
+            // generate whatsapp message for send to admin.
+            $whatsappMessage = $this->generateWhatsAppMessage($order);
 
             return redirect()->route('orderSummary', ['order' => $order->id])
-                ->with('success', 'Order placed successfully!');
+                ->with(['success' => 'Order placed successfully!', 'order' => $order, 'whatsappMessage' => $whatsappMessage]);
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -210,14 +219,40 @@ class CheckoutOrder extends Controller
         }
     }
 
-    // order summary
-    public function orderSummary($orderId)
+    private function generateWhatsAppMessage($order)
     {
-        if (Auth::check()) {
-            $order = Order::findOrFail($orderId);
-            return view('customer.product.order-summary', compact('order'));
+        $message = "Pesanan Baru\n\n";
+        $message .= "Order No: {$order->order_number}\n";
+        $message .= "Nama Pembeli: {$order->customer_name}\n";
+        $message .= "Email: {$order->customer_email}\n";
+        $message .= "No. Telepon: {$order->customer_phone}\n";
+        $message .= "Alamat Lengkap: {$order->customer_address}, Kec. {$order->customer_district}, Kab. {$order->customer_regency}, Kota {$order->customer_city}, {$order->customer_province}, {$order->customer_country}, Kode Pos {$order->customer_postcode}\n";
+        $orderDate = Carbon::parse($order->order_date)->isoFormat('dddd, D MMMM Y');
+        $message .= "Tanggal Pemesanan: {$orderDate}\n";
+        $message .= "Metode Pengiriman: Pengiriman {$order->shipping_method}\n";
+        if ($order->purchase_option == 'mitra_dagang') {
+            $message .= "Jenis Pembelian: Mitra Dagang\n";
         } else {
-            return redirect()->route('login')->with('error', 'Please login first');
+            $message .= "Jenis Pembelian: Bayar Sekarang\n";
         }
+        $message .= "Catatan: {$order->customer_note}\n\n";
+        $message .= "Produk:\n";
+        foreach ($order->items as $item) {
+            $basePriceProduct = number_format($item->base_price, 0, ',', '.');
+            $subTotalProduct = number_format($item->sub_total, 0, ',', '.');
+            $message .= "- {$item->product_name} ({$item->quantity} pcs) (Rp. {$basePriceProduct}) = Rp. {$subTotalProduct}\n";
+        }
+        $baseTotalPrice = number_format($order->base_total_price, 0, ',', '.');
+        $discountAmount = number_format($order->discount_amount, 0, ',', '.');
+        $shippingCost = number_format($order->shipping_cost, 0, ',', '.');
+        $grandTotal = number_format($order->grand_total, 0, ',', '.');
+        $message .= "\n\n";
+        $message .= "Rincian Total Harga:\n";
+        $message .= "Subtotal: Rp. {$baseTotalPrice}\n";
+        $message .= "Diskon : Rp. {$discountAmount}\n";
+        $message .= "Biaya Pengiriman: Rp. {$shippingCost}\n";
+        $message .= "Total: Rp. {$grandTotal}\n";
+
+        return $message;
     }
 }
