@@ -8,13 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class OrderItems extends Model
+class Payment extends Model
 {
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'id', 'order_id', 'product_id', 'quantity', 'base_price', 'base_total',
-        'discount_amount', 'discount_percent', 'sub_total', 'product_name'
+        'id',
+        'order_id',
+        'user_id',
+        'payment_status',
+        'price',
+        'product_name',
+        'customer_name',
+        'customer_email',
+        // 'payment_method',
+        'payment_link',
     ];
 
     public $incrementing = false;
@@ -30,10 +38,5 @@ class OrderItems extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(product::class);
     }
 }

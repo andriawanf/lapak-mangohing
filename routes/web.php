@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\CheckoutOrder;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\PaymentController;
 use App\Http\Controllers\Customer\ProductsController as CustomerProductsController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProductController;
@@ -32,11 +33,19 @@ Route::group(['prefix' => '/product'], function () {
 
 
     // checkout
-    Route::get('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout')->middleware('auth');
+    Route::post('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout')->middleware('auth');
+    Route::delete('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout')->middleware('auth');
     Route::post('/checkout-form', [CheckoutOrder::class, 'checkoutProcess'])->name('checkout.process')->middleware('auth');
     // order summary
     Route::get('/order-summary/{order}', [OrderController::class, 'orderSummary'])->name('orderSummary')->middleware('auth');
     Route::post('/send-whatsapp', [OrderController::class, 'sendWhatsApp'])->name('send.whatsapp')->middleware('auth');
+
+    // payment
+    Route::post('/process-payment/{order}', [PaymentController::class, 'processPayment'])->name('processPayment');
+    Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('paymentCallback');
+
+    // order confirmation
+    Route::get('/order-confirmation/{order}', [OrderController::class, 'orderConfirmation'])->name('orderConfirmation');
 });
 
 Route::middleware('auth')->group(function () {

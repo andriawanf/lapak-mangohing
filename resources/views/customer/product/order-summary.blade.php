@@ -200,12 +200,12 @@
                         </div>
 
                         <div class="space-y-3">
-                            @if (session()->has('whatsappMessage'))
+                            @if ($whatsappMessage && $order->purchase_option == 'mitra_dagang')
                                 <button data-modal-target="sendWhatsAppButton" data-modal-toggle="sendWhatsAppButton"
                                     class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Kirim
                                     Pesanan via Whatsapp</button>
                             @else
-                                <button type="submit"
+                                <button type="button" id="payNowButton"
                                     class="flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-0  focus:ring-primary">Bayar
                                     Sekarang</button>
                             @endif
@@ -223,61 +223,63 @@
         </div>
     </section>
 
-    {{-- modal send whatsapp --}}
-    <div id="sendWhatsAppButton" tabindex="-1" aria-hidden="true"
-        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-lg max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                    <h3 class="text-xl font-medium text-gray-900 ">
-                        Kirim Pesan Whatsapp
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="sendWhatsAppButton">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <div class="p-4 md:p-5 space-y-4">
-                    {{-- <textarea id="whatsappMessage" class="w-full h-48 border-gray-300 rounded-md p-2" readonly>{{ session('whatsappMessage') }}</textarea> --}}
-                    <textarea id="whatsappMessage" rows="6" name="whatsappMessage"
-                        class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
-                        disabled>{{ session('whatsappMessage') }}</textarea>
-                    <form id="sendWhatsAppForm" action="{{ route('send.whatsapp') }}" method="POST"
-                        class="mt-4">
-                        @csrf
-                        <input type="hidden" name="order_id" value="{{ $order->id }}">
-                        <input type="hidden" name="message" value="{{ session('whatsappMessage') }}">
-                        <x-input-label for="whatsappNumber" class="mb-2 text-xs text-tertiary/60">
-                            Nomor WhatsApp Anda: <span class="text-red-500">*</span>
-                        </x-input-label>
-                        <x-text-input type="text" name="whatsapp_number" id="whatsappNumber"
-                            label="whatsapp_number" class="w-full text-sm" value="{{ old('whatsapp_number') }}"
-                            required pattern="^\+\d{10,15}$" placeholder="+6281234567890" />
-                        @error('whatsapp_number')
-                            <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
-                        @enderror
-                        <!-- Modal footer -->
-                        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
-                            <button type="submit"
-                                class="text-white bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Kirim
-                                Pesan</button>
-                            <button data-modal-hide="sendWhatsAppButton" type="button"
-                                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal</button>
-                        </div>
-                    </form>
+    @if ($whatsappMessage && $order->purchase_option == 'mitra_dagang')
+        {{-- modal send whatsapp --}}
+        <div id="sendWhatsAppButton" tabindex="-1" aria-hidden="true"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-lg max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 class="text-xl font-medium text-gray-900 ">
+                            Kirim Pesan Whatsapp
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="sendWhatsAppButton">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-4 md:p-5 space-y-4">
+                        {{-- <textarea id="whatsappMessage" class="w-full h-48 border-gray-300 rounded-md p-2" readonly>{{ session('whatsappMessage') }}</textarea> --}}
+                        <textarea id="whatsappMessage" rows="6" name="whatsappMessage"
+                            class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
+                            disabled>{{ $whatsappMessage }}</textarea>
+                        <form id="sendWhatsAppForm" action="{{ route('send.whatsapp') }}" method="POST"
+                            class="mt-4">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                            <input type="hidden" name="message" value="{{ session('whatsappMessage') }}">
+                            <x-input-label for="whatsappNumber" class="mb-2 text-xs text-tertiary/60">
+                                Nomor WhatsApp Anda: <span class="text-red-500">*</span>
+                            </x-input-label>
+                            <x-text-input type="text" name="whatsapp_number" id="whatsappNumber"
+                                label="whatsapp_number" class="w-full text-sm" value="{{ old('whatsapp_number') }}"
+                                required pattern="^\+\d{10,15}$" placeholder="+6281234567890" />
+                            @error('whatsapp_number')
+                                <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
+                            @enderror
+                            <!-- Modal footer -->
+                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                <button type="submit"
+                                    class="text-white bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Kirim
+                                    Pesan</button>
+                                <button data-modal-hide="sendWhatsAppButton" type="button"
+                                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <!-- Main modal -->
     <div id="editAddressModal" tabindex="-1" aria-hidden="true"
@@ -626,4 +628,28 @@
     </div>
     {{-- footer --}}
     <livewire:customer.components.footer />
+    <!-- Midtrans Snap Token -->
+    @if (isset($payment))
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.clientKey') }}">
+        </script>
+        <script type="text/javascript">
+            document.getElementById('payNowButton').onclick = function() {
+                snap.pay('{{ $payment }}', {
+                    // Optional
+                    onSuccess: function(result) {
+                        alert("Payment success!");
+                        console.log(result);
+                    },
+                    onPending: function(result) {
+                        alert("Waiting for payment!");
+                        console.log(result);
+                    },
+                    onError: function(result) {
+                        alert("Payment failed!");
+                        console.log(result);
+                    }
+                });
+            };
+        </script>
+    @endif
 </x-guest-layout>

@@ -4,7 +4,7 @@
         <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
             <h2 class="mb-8 text-xl font-semibold text-tertiary sm:text-lg">Keranjang Belanja </h2>
 
-            <form action="{{ route('checkout') }}" method="GET" id="product-selection-form">
+            <form action="{{ route('checkout') }}" method="POST" id="product-selection-form">
                 <div class="md:gap-4 lg:flex lg:items-start ">
                     <div class="flex-none w-full mx-auto lg:max-w-2xl xl:max-w-4xl">
                         <div class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">

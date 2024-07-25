@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('order_number')->unique();
             $table->uuid('user_id');
-            $table->string('status');
+            $table->string('status')->default('pending');
             $table->dateTime('order_date');
             $table->dateTime('payment_due');
-            $table->string('payment_status');
+            $table->string('payment_status')->default('pending');
             $table->decimal('base_total_price', 16, 2)->default(0.00);
             $table->decimal('discount_amount', 16, 2)->default(0.00);
             $table->decimal('discount_percent', 16, 2)->default(0.00);

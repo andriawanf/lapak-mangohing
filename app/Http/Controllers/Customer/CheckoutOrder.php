@@ -102,7 +102,7 @@ class CheckoutOrder extends Controller
             }
 
             $order = Order::create([
-                'order_number' => 'ORDER' . Str::random(7) . rand(100000, 999999),
+                'order_number' => 'ORDER-' . Str::random(10) . rand(100000, 999999),
                 'user_id' => $user->id,
                 'status' => 'pending',
                 'order_date' => now(),
@@ -159,7 +159,7 @@ class CheckoutOrder extends Controller
                 $product->update(['product_stock' => $product->product_stock - $item->quantity]);
 
                 // Remove cart item
-                $item->delete();
+                // $item->delete();
             }
 
             $shippingMethod = $this->shippingMethod($request->shipping_method);
@@ -178,13 +178,13 @@ class CheckoutOrder extends Controller
             DB::commit();
 
             // delete cart
-            Cart::where('user_id', $user->id)->delete();
+            // Cart::where('user_id', $user->id)->delete();
 
             // generate whatsapp message for send to admin.
-            $whatsappMessage = $this->generateWhatsAppMessage($order);
+            // $whatsappMessage = $this->generateWhatsAppMessage($order);
 
             return redirect()->route('orderSummary', ['order' => $order->id])
-                ->with(['success' => 'Order placed successfully!', 'order' => $order, 'whatsappMessage' => $whatsappMessage]);
+                ->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -217,42 +217,5 @@ class CheckoutOrder extends Controller
             default:
                 return 'gratis';
         }
-    }
-
-    private function generateWhatsAppMessage($order)
-    {
-        $message = "Pesanan Baru\n\n";
-        $message .= "Order No: {$order->order_number}\n";
-        $message .= "Nama Pembeli: {$order->customer_name}\n";
-        $message .= "Email: {$order->customer_email}\n";
-        $message .= "No. Telepon: {$order->customer_phone}\n";
-        $message .= "Alamat Lengkap: {$order->customer_address}, Kec. {$order->customer_district}, Kab. {$order->customer_regency}, Kota {$order->customer_city}, {$order->customer_province}, {$order->customer_country}, Kode Pos {$order->customer_postcode}\n";
-        $orderDate = Carbon::parse($order->order_date)->isoFormat('dddd, D MMMM Y');
-        $message .= "Tanggal Pemesanan: {$orderDate}\n";
-        $message .= "Metode Pengiriman: Pengiriman {$order->shipping_method}\n";
-        if ($order->purchase_option == 'mitra_dagang') {
-            $message .= "Jenis Pembelian: Mitra Dagang\n";
-        } else {
-            $message .= "Jenis Pembelian: Bayar Sekarang\n";
-        }
-        $message .= "Catatan: {$order->customer_note}\n\n";
-        $message .= "Produk:\n";
-        foreach ($order->items as $item) {
-            $basePriceProduct = number_format($item->base_price, 0, ',', '.');
-            $subTotalProduct = number_format($item->sub_total, 0, ',', '.');
-            $message .= "- {$item->product_name} ({$item->quantity} pcs) (Rp. {$basePriceProduct}) = Rp. {$subTotalProduct}\n";
-        }
-        $baseTotalPrice = number_format($order->base_total_price, 0, ',', '.');
-        $discountAmount = number_format($order->discount_amount, 0, ',', '.');
-        $shippingCost = number_format($order->shipping_cost, 0, ',', '.');
-        $grandTotal = number_format($order->grand_total, 0, ',', '.');
-        $message .= "\n\n";
-        $message .= "Rincian Total Harga:\n";
-        $message .= "Subtotal: Rp. {$baseTotalPrice}\n";
-        $message .= "Diskon : Rp. {$discountAmount}\n";
-        $message .= "Biaya Pengiriman: Rp. {$shippingCost}\n";
-        $message .= "Total: Rp. {$grandTotal}\n";
-
-        return $message;
     }
 }
