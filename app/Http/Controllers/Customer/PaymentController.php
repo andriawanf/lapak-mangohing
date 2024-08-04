@@ -50,7 +50,7 @@ class PaymentController extends Controller
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Authorization' => "Basic $auth",
-            ])->post('https://app.sandbox.midtrans.com/snap/v1/transaction', $params);
+            ])->post(config('midtrans.snapUrl'), $params);
 
             $snapToken = Snap::getSnapToken($params);
             $order->update(['payment_link' => $snapToken]);
