@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\OrderItems;
 use App\Models\Payment;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -142,6 +145,29 @@ class OrderController extends Controller
             $payment = Payment::where('order_id', $order)->first();
             $orders = Order::where('id', $payment->order_id)->first();
             return view('customer.product.order-confirmation', compact('payment', 'orders'));
+        } else {
+            return redirect()->route('login')->with('error', 'Please login first');
+        }
+    }
+
+    // order success
+    public function orderSuccess($order)
+    {
+        if (Auth::check()) {
+            $payment = Payment::where('order_id', $order)->first();
+            $orders = Order::where('id', $payment->order_id)->first();
+            $user = Auth::user();
+            if ($payment) {
+                // delete all cart
+                $cart = Cart::where('user_id', $user->id)->delete();
+                // delete all cart items
+                CartItem::where('cart_id', $cart)->delete();
+                // delete all order items
+                $orderItems = OrderItems::where('order_id', $orders->id)->delete();
+                // delete all orders 
+                $orders->delete();
+            }
+            return view('customer.product.order-success', compact('payment', 'orders'));
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }

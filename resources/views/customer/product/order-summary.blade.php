@@ -231,12 +231,12 @@
                 <!-- Modal content -->
                 <div class="relative bg-white rounded-lg shadow">
                     <!-- Modal header -->
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5">
                         <h3 class="text-xl font-medium text-gray-900 ">
                             Kirim Pesan Whatsapp
                         </h3>
                         <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto"
                             data-modal-hide="sendWhatsAppButton">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 14 14">
@@ -247,8 +247,8 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <div class="p-4 md:p-5 space-y-4">
-                        {{-- <textarea id="whatsappMessage" class="w-full h-48 border-gray-300 rounded-md p-2" readonly>{{ session('whatsappMessage') }}</textarea> --}}
+                    <div class="p-4 space-y-4 md:p-5">
+                        {{-- <textarea id="whatsappMessage" class="w-full h-48 p-2 border-gray-300 rounded-md" readonly>{{ session('whatsappMessage') }}</textarea> --}}
                         <textarea id="whatsappMessage" rows="6" name="whatsappMessage"
                             class="block p-2.5 w-full text-sm text-tertiary bg-gray-white rounded-lg border border-gray-300 focus:ring-primary focus:border-primary font-poppins"
                             disabled>{{ $whatsappMessage }}</textarea>
@@ -267,7 +267,7 @@
                                 <p class="mt-2 text-xs text-red-600 dark:text-red-500">{{ $message }}</p>
                             @enderror
                             <!-- Modal footer -->
-                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                            <div class="flex items-center p-4 border-t border-gray-200 rounded-b md:p-5 ">
                                 <button type="submit"
                                     class="text-white bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Kirim
                                     Pesan</button>
@@ -637,8 +637,7 @@
                 snap.pay('{{ $payment }}', {
                     // Optional
                     onSuccess: function(result) {
-                        alert("Payment success!");
-                        console.log(result);
+                        window.location.href = "{{ route('orderSuccess', $order->id) }}";
                     },
                     onPending: function(result) {
                         alert("Waiting for payment!");

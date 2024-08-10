@@ -46,6 +46,7 @@ Route::group(['prefix' => '/product'], function () {
 
     // order confirmation
     Route::get('/order-confirmation/{order}', [OrderController::class, 'orderConfirmation'])->name('orderConfirmation');
+    Route::get('/order-success/{order}', [OrderController::class, 'orderSuccess'])->name('orderSuccess');
 });
 
 Route::middleware('auth')->group(function () {
