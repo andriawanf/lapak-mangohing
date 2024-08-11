@@ -163,9 +163,9 @@ class OrderController extends Controller
                 // delete all cart items
                 CartItem::where('cart_id', $cart)->delete();
                 // delete all order items
-                $orderItems = OrderItems::where('order_id', $orders->id)->delete();
+                // $orderItems = OrderItems::where('order_id', $orders->id)->delete();
                 // delete all orders 
-                $orders->delete();
+                // $orders->delete();
             }
             return view('customer.product.order-success', compact('payment', 'orders'));
         } else {

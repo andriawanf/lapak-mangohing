@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItems;
 use Carbon\Carbon;
@@ -72,122 +73,103 @@ class CheckoutOrder extends Controller
 
         try {
             $user = Auth::user();
-            $productIds = $request->product_ids;
-            $productIds = trim($productIds, '[]');
-            $productIdsArray = explode(',', $productIds); // Ubah string menjadi array menggunakan explode
+            $productIds = array_map('intval', explode(',', trim($request->product_ids, '[]')));
 
-            // Ambil setiap product_id dari array dan simpan dalam array baru
-            $productIds = array_map('intval', $productIdsArray);
+            $cartItems = CartItem::where('cart_id', function ($query) use ($user) {
+                $query->select('id')->from('carts')->where('user_id', $user->id);
+            })->whereIn('product_id', $productIds)->with('product')->get();
 
-            // Dapatkan cart items untuk user dan produk yang dipilih
-            $cart = Cart::where('user_id', $user->id)->with('cartItems.product')->first();
-
-            if (!$cart) {
+            if ($cartItems->isEmpty()) {
                 return redirect()->back()->withErrors(['error' => 'No items in the cart.']);
             }
 
-            $cartItems = $cart->cartItems->whereIn('product_id', $productIds)->all();
+            $order = $this->createOrder($user, $request, $cartItems);
 
-            if (count($cartItems) == 0) {
-                return redirect()->back()->withErrors(['error' => 'Selected products not found in the cart.']);
-            }
+            $this->createOrderItems($order, $cartItems);
 
-            // Debugging
-            if ($cartItems == null) {
-                return redirect()->back()->withErrors(['error' => 'Cart items is null.']);
-            }
+            $this->updateProductStock($cartItems);
 
-            if (!is_array($cartItems) && !$cartItems instanceof \Illuminate\Support\Collection) {
-                return redirect()->back()->withErrors(['error' => 'Cart items is not an array or collection.']);
-            }
-
-            $order = Order::create([
-                'order_number' => 'ORDER-' . Str::random(10) . rand(100000, 999999),
-                'user_id' => $user->id,
-                'status' => 'pending',
-                'order_date' => now(),
-                'payment_due' => now()->addDays(1),
-                'payment_status' => 'pending',
-                'base_total_price' => 0,
-                'discount_amount' => 0,
-                'discount_percent' => 0,
-                'shipping_cost' => 0,
-                'grand_total' => 0,
-                'shipping_method' => $request->shipping_method,
-                'purchase_option' => $request->purchase_option,
-                'customer_note' => $request->customer_note,
-                'customer_name' => $request->customer_name,
-                'customer_address' => $request->customer_address,
-                'customer_phone' => $request->customer_phone,
-                'customer_email' => $request->customer_email,
-                'customer_country' => $request->customer_country,
-                'customer_province' => $request->customer_province,
-                'customer_city' => $request->customer_city,
-                'customer_regency' => $request->customer_regency,
-                'customer_district' => $request->customer_district,
-                'customer_postcode' => $request->customer_postcode,
-            ]);
-
-            $baseTotalPrice = 0;
-            $discountAmount = 0;
-
-            foreach ($cartItems as $item) {
-                $product = $item->product;
-                $discounts = $product->discounts;
-
-                $price = $product->product_price;
-                $discountPercent = $discounts->sum('discount_percentage');
-                $discountAmountItem = $price * ($discountPercent / 100);
-                $subTotal = ($price - $discountAmountItem) * $item->quantity;
-
-                $baseTotalPrice += $price * $item->quantity;
-                $discountAmount += $discountAmountItem * $item->quantity;
-
-                OrderItems::create([
-                    'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'quantity' => $item->quantity,
-                    'base_price' => $price,
-                    'base_total' => $price * $item->quantity,
-                    'discount_amount' => $discountAmountItem,
-                    'discount_percent' => $discountPercent,
-                    'sub_total' => $subTotal,
-                    'product_name' => $product->product_name,
-                ]);
-
-                // Reduce product stock
-                $product->update(['product_stock' => $product->product_stock - $item->quantity]);
-
-                // Remove cart item
-                // $item->delete();
-            }
-
-            $shippingMethod = $this->shippingMethod($request->shipping_method);
             $shippingCost = $this->calculateShippingCost($request->shipping_method);
-            $grandTotal = $baseTotalPrice - $discountAmount + $shippingCost;
-
             $order->update([
-                'base_total_price' => $baseTotalPrice,
-                'discount_amount' => $discountAmount,
-                'discount_percent' => ($discountAmount / $baseTotalPrice) * 100,
                 'shipping_cost' => $shippingCost,
-                'shipping_method' => $shippingMethod,
-                'grand_total' => $grandTotal,
+                'grand_total' => $order->base_total_price - $order->discount_amount + $shippingCost,
             ]);
 
             DB::commit();
-
-            // delete cart
-            // Cart::where('user_id', $user->id)->delete();
-
-            // generate whatsapp message for send to admin.
-            // $whatsappMessage = $this->generateWhatsAppMessage($order);
 
             return redirect()->route('orderSummary', ['order' => $order->id])
                 ->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    private function createOrder($user, $request, $cartItems)
+    {
+        $order = Order::create([
+            'order_number' => 'ORDER-' . Str::random(10) . rand(100000, 999999),
+            'user_id' => $user->id,
+            'status' => 'pending',
+            'order_date' => now(),
+            'payment_due' => now()->addDays(1),
+            'payment_status' => 'pending',
+            'customer_note' => $request->customer_note,
+            'customer_name' => $request->customer_name,
+            'customer_address' => $request->customer_address,
+            'customer_phone' => $request->customer_phone,
+            'customer_email' => $request->customer_email,
+            'customer_country' => $request->customer_country,
+            'customer_province' => $request->customer_province,
+            'customer_city' => $request->customer_city,
+            'customer_regency' => $request->customer_regency,
+            'customer_district' => $request->customer_district,
+            'customer_postcode' => $request->customer_postcode,
+            'shipping_method' => $request->shipping_method,
+            'purchase_option' => $request->purchase_option,
+        ]);
+
+        $baseTotalPrice = $discountAmount = 0;
+
+        foreach ($cartItems as $item) {
+            $baseTotalPrice += $item->product->product_price * $item->quantity;
+            $discountAmount += $item->product->discounts->sum('discount_percentage') * $item->product->product_price * $item->quantity / 100;
+        }
+
+        $order->update([
+            'base_total_price' => $baseTotalPrice,
+            'discount_amount' => $discountAmount,
+            'discount_percent' => ($discountAmount / $baseTotalPrice) * 100,
+        ]);
+
+        return $order;
+    }
+
+    private function createOrderItems($order, $cartItems)
+    {
+        foreach ($cartItems as $item) {
+            $discountPercent = $item->product->discounts->sum('discount_percentage');
+            $discountAmount = $item->product->product_price * $discountPercent / 100;
+            $subTotal = ($item->product->product_price - $discountAmount) * $item->quantity;
+
+            OrderItems::create([
+                'order_id' => $order->id,
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'base_price' => $item->product->product_price,
+                'base_total' => $item->product->product_price * $item->quantity,
+                'discount_amount' => $discountAmount,
+                'discount_percent' => $discountPercent,
+                'sub_total' => $subTotal,
+                'product_name' => $item->product->product_name,
+            ]);
+        }
+    }
+
+    private function updateProductStock($cartItems)
+    {
+        foreach ($cartItems as $item) {
+            $item->product->decrement('product_stock', $item->quantity);
         }
     }
 

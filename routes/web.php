@@ -42,7 +42,7 @@ Route::group(['prefix' => '/product'], function () {
 
     // payment
     Route::post('/process-payment/{order}', [PaymentController::class, 'processPayment'])->name('processPayment');
-    Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('paymentCallback');
+    // Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('paymentCallback');
 
     // order confirmation
     Route::get('/order-confirmation/{order}', [OrderController::class, 'orderConfirmation'])->name('orderConfirmation');

@@ -1,6 +1,7 @@
 <section
     class="relative z-0 w-full min-h-screen px-6 pt-24 pb-10 lg:min-h-screen sm:pt-32 sm:pb-16 lg:pb-24 isolate lg:px-8 bg-background">
-    <img src="{{ asset('images/40.jpg') }}" alt="bg-header" class="absolute top-0 left-0 object-cover w-full h-full">
+    <img src="{{ asset('images/40.jpg') }}" alt="bg-header" class="absolute top-0 left-0 object-cover w-full h-full"
+        loading="lazy">
     <div class="absolute top-0 left-0 object-cover w-full h-full bg-tertiary/25"></div>
     <div class="relative z-20 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="relative max-w-2xl mx-auto text-center">

@@ -14,15 +14,20 @@ class PaymentController extends Controller
 {
     public function processPayment(Request $request, $orderId)
     {
+        // Find the order by ID
         $order = Order::findOrFail($orderId);
 
-        // configure payment gateway
-        Config::$serverKey = config('midtrans.serverKey');
+        // Configure the payment gateway
+        $serverKey = config('midtrans.serverKey');
+        if (empty($serverKey)) {
+            throw new \Exception('Midtrans server key is not configured.');
+        }
+        Config::$serverKey = $serverKey;
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        // Buat payload untuk Midtrans
+        // Prepare the payload for Midtrans
         $params = [
             'transaction_details' => [
                 'order_id' => $order->id,
@@ -45,70 +50,84 @@ class PaymentController extends Controller
         ];
 
         try {
-            $auth = base64_encode(config('midtrans.serverKey'));
+            $auth = base64_encode($serverKey);
 
+            // Initiate the payment
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Authorization' => "Basic $auth",
             ])->post(config('midtrans.snapUrl'), $params);
 
-            $snapToken = Snap::getSnapToken($params);
+            // Check if the payment initiation was successful
+            if ($response->failed()) {
+                throw new \Exception('Failed to initiate payment: ' . $response->body());
+            }
+
+            // Update the order with the payment link
+            $snapToken = $response['token'];
             $order->update(['payment_link' => $snapToken]);
+
+            // Render the order summary view with the payment link and order
             return view('order-summary', compact('snapToken', 'order'));
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Failed to initiate payment.']);
+            // If the payment initiation fails, redirect back with an error message
+            return redirect()->back()->withErrors(['error' => 'Failed to initiate payment. ' . $e->getMessage()]);
         }
     }
 
     public function paymentCallback(Request $request)
     {
         $serverKey = config('midtrans.serverKey');
-        $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        $hash = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
-        if ($hashed == $request->signature_key) {
-            $order = Order::findOrFail($request->order_id);
-            $paymentStatus = $request->transaction_status;
-            $paymentType = $request->payment_type;
-            $fraudStatus = $request->fraud_status;
-
-            if ($paymentStatus == 'capture') {
-                if ($paymentType == 'credit_card') {
-                    if ($fraudStatus == 'challenge') {
-                        // Challenge payment
-                        $order->update(['payment_status' => 'challenge']);
-                    } else {
-                        // Payment success
-                        $order->update(['payment_status' => 'paid']);
-                    }
-                }
-            } elseif ($paymentStatus == 'settlement') {
-                // Payment success
-                $order->update(['payment_status' => 'paid']);
-            } elseif ($paymentStatus == 'pending') {
-                // Waiting for payment
-                $order->update(['payment_status' => 'pending']);
-            } elseif ($paymentStatus == 'deny') {
-                // Payment denied
-                $order->update(['payment_status' => 'denied']);
-            } elseif ($paymentStatus == 'expire') {
-                // Payment expired
-                $order->update(['payment_status' => 'expired']);
-            } elseif ($paymentStatus == 'cancel') {
-                // Payment canceled
-                $order->update(['payment_status' => 'canceled']);
-            }
-
-            Payment::create([
-                'order_id' => $order->id,
-                'user_id' => $order->user_id,
-                'payment_status' => $paymentStatus,
-                'price' => $request->gross_amount,
-                'payment_link' => $request->payment_link,
-            ]);
-        } else {
+        if ($hash !== $request->signature_key) {
             return response()->json(['message' => 'Invalid signature'], 403);
         }
 
+        $orderId = $request->order_id;
+        $paymentStatus = $request->transaction_status;
+        $paymentType = $request->payment_type;
+        $fraudStatus = $request->fraud_status;
+        $grossAmount = $request->gross_amount;
+        $paymentLink = $request->payment_link;
+
+        try {
+            $order = Order::findOrFail($orderId);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        $paymentStatus = $this->getPaymentStatus($paymentStatus, $paymentType, $fraudStatus);
+
+        $order->update(['payment_status' => $paymentStatus]);
+
+        Payment::create([
+            'order_id' => $orderId,
+            'user_id' => $order->user_id,
+            'payment_status' => $paymentStatus,
+            'price' => $grossAmount,
+            'payment_link' => $paymentLink,
+        ]);
+
         return response()->json(['message' => 'Payment status updated'], 200);
+    }
+
+    private function getPaymentStatus($transactionStatus, $paymentType, $fraudStatus)
+    {
+        if ($transactionStatus == 'capture') {
+            if ($paymentType == 'credit_card') {
+                return $fraudStatus == 'challenge' ? 'challenge' : 'paid';
+            }
+        }
+
+        $statusMap = [
+            'settlement' => 'paid',
+            'pending' => 'pending',
+            'deny' => 'denied',
+            'expire' => 'expired',
+            'cancel' => 'canceled',
+        ];
+
+        return $statusMap[$transactionStatus] ?? 'unknown';
     }
 }
