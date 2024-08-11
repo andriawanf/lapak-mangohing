@@ -62,29 +62,53 @@ class PaymentController extends Controller
 
     public function paymentCallback(Request $request)
     {
-        // Handle Midtrans payment notification here
         $serverKey = config('midtrans.serverKey');
-        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         if ($hashed == $request->signature_key) {
-            $order = Order::find($request->order_id);
+            $order = Order::findOrFail($request->order_id);
+            $paymentStatus = $request->transaction_status;
+            $paymentType = $request->payment_type;
+            $fraudStatus = $request->fraud_status;
 
-            if ($order) {
-                if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
-                    $order->payment_status = 'paid';
-                    $order->status = 'paid';
-                } elseif ($request->transaction_status == 'pending') {
-                    $order->payment_status = 'pending';
-                    $order->status = 'pending';
-                } elseif ($request->transaction_status == 'deny' || $request->transaction_status == 'expire' || $request->transaction_status == 'cancel') {
-                    $order->payment_status = 'failed';
-                    $order->status = 'failed';
+            if ($paymentStatus == 'capture') {
+                if ($paymentType == 'credit_card') {
+                    if ($fraudStatus == 'challenge') {
+                        // Challenge payment
+                        $order->update(['payment_status' => 'challenge']);
+                    } else {
+                        // Payment success
+                        $order->update(['payment_status' => 'paid']);
+                    }
                 }
-
-                $order->save();
+            } elseif ($paymentStatus == 'settlement') {
+                // Payment success
+                $order->update(['payment_status' => 'paid']);
+            } elseif ($paymentStatus == 'pending') {
+                // Waiting for payment
+                $order->update(['payment_status' => 'pending']);
+            } elseif ($paymentStatus == 'deny') {
+                // Payment denied
+                $order->update(['payment_status' => 'denied']);
+            } elseif ($paymentStatus == 'expire') {
+                // Payment expired
+                $order->update(['payment_status' => 'expired']);
+            } elseif ($paymentStatus == 'cancel') {
+                // Payment canceled
+                $order->update(['payment_status' => 'canceled']);
             }
+
+            Payment::create([
+                'order_id' => $order->id,
+                'user_id' => $order->user_id,
+                'payment_status' => $paymentStatus,
+                'price' => $request->gross_amount,
+                'payment_link' => $request->payment_link,
+            ]);
+        } else {
+            return response()->json(['message' => 'Invalid signature'], 403);
         }
 
-        return response()->json(['message' => 'Payment notification received.']);
+        return response()->json(['message' => 'Payment status updated'], 200);
     }
 }

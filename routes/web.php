@@ -49,6 +49,9 @@ Route::group(['prefix' => '/product'], function () {
     Route::get('/order-success/{order}', [OrderController::class, 'orderSuccess'])->name('orderSuccess');
 });
 
+// payment callback from midtrans
+Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('paymentCallback');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
