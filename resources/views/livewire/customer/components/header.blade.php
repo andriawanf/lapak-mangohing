@@ -2,10 +2,11 @@
     <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="md:flex md:items-center md:gap-2">
-                <img src="/images/mang-ohing-logo.png" width="50" height="50" alt="" class="object-cover">
+                <img src="/images/mang-ohing-logo.png" width="50" height="50" alt=""
+                    class="object-cover w-8 h-8">
                 <div class="text-sm font-semibold text-primary leading-[120%] text-nowrap">
-                    <h1>Lapak</h1>
-                    <h1>Mang Ohing</h1>
+                    <h1 class="hidden lg:block">Lapak</h1>
+                    <h1 class="hidden lg:block">Mang Ohing</h1>
                 </div>
             </div>
 
@@ -41,7 +42,7 @@
             </div>
 
             @if (auth()->check())
-                <div class="flex items-center lg:space-x-4">
+                <div class="flex items-center space-x-3 lg:space-x-4">
 
                     <button data-drawer-target="drawer-my-cart" data-drawer-show="drawer-my-cart"
                         data-drawer-placement="right" aria-controls="drawer-my-cart" id="myCart" type="button"
@@ -228,8 +229,9 @@
                         <span class="sr-only">Open user menu</span>
                         <img class="w-8 h-8 rounded-full me-2" src="{{ asset('/images/mang-ohing-logo.png') }}"
                             alt="user photo">
-                        <p class="w-20 overflow-hidden text-ellipsis text-nowrap">{{ Auth::user()->username }}</p>
-                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        <p class="hidden w-20 overflow-hidden text-ellipsis text-nowrap lg:block">
+                            {{ Auth::user()->username }}</p>
+                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                 stroke-width="2" d="m1 1 4 4 4-4" />
@@ -260,10 +262,32 @@
                         </form>
                     </div>
 
+                </div>
 
-                    <button type="button" data-collapse-toggle="ecommerce-navbar-menu-1"
-                        aria-controls="ecommerce-navbar-menu-1" aria-expanded="false"
-                        class="inline-flex items-center justify-center p-2 text-gray-900 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
+                {{-- <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button
+                    class="px-5 py-2 text-sm font-medium text-white rounded-full shadow bg-primary hover:bg-red-800 focus:bg-red-800"
+                    type="submit">
+                    Logout
+                </button>
+            </form> --}}
+            @else
+                <div class="flex items-center gap-4">
+                    <div class="hidden lg:flex sm:gap-2">
+                        <a class="px-5 py-2 text-sm font-medium text-white rounded-full shadow bg-primary hover:bg-red-800 focus:bg-red-800"
+                            href="{{ route('login') }}">
+                            Login
+                        </a>
+
+                        <a class="rounded-full bg-transparent px-5 py-2 text-sm font-medium border border-[#F2F2F2] text-primary hover:border hover:border-primary focus:bg-primary focus:text-white"
+                            href="{{ route('register') }}">
+                            Register
+                        </a>
+                    </div>
+
+                    <button type="button" data-collapse-toggle="navbar-menu"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-primary lg:hidden hover:bg-gray-300">
                         <span class="sr-only">
                             Open Menu
                         </span>
@@ -273,66 +297,27 @@
                                 d="M5 7h14M5 12h14M5 17h14" />
                         </svg>
                     </button>
-                    <div id="ecommerce-navbar-menu-1"
-                        class="hidden px-4 py-3 mt-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                        <ul class="space-y-3 text-sm font-medium text-gray-900 dark:text-white">
-                            <li>
-                                <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500">Home</a>
-                            </li>
-                            <li>
-                                <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500">Best
-                                    Sellers</a>
-                            </li>
-                            <li>
-                                <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500">Gift
-                                    Ideas</a>
-                            </li>
-                            <li>
-                                <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500">Games</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="hover:text-primary-700 dark:hover:text-primary-500">Electronics</a>
-                            </li>
-                            <li>
-                                <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500">Home &
-                                    Garden</a>
-                            </li>
+                    <div id="navbar-menu"
+                        class="absolute z-10 hidden w-56 overflow-hidden overflow-y-auto antialiased bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-sm top-14 right-4 ">
+                        <ul class="p-2 text-sm font-medium text-tertiary text-start ">
+                            <li><a href="{{ route('dashboard') }}"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                    Home</a></li>
+                            <li><a href="{{ route('product.collections') }}"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                    Produk</a></li>
+                            <li><a href="#"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                    Mitra Dagang </a></li>
+                            <li><a href="#"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                    Tentang Kami </a></li>
                         </ul>
-                    </div>
-                </div>
 
-                {{-- <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button
-            class="px-5 py-2 text-sm font-medium text-white rounded-full shadow bg-primary hover:bg-red-800 focus:bg-red-800"
-            type="submit">
-            Logout
-        </button>
-    </form> --}}
-            @else
-                <div class="flex items-center gap-4">
-                    <div class="sm:flex sm:gap-2">
-                        <a class="px-5 py-2 text-sm font-medium text-white rounded-full shadow bg-primary hover:bg-red-800 focus:bg-red-800"
-                            href="{{ route('login') }}">
-                            Login
-                        </a>
-
-                        <div class="hidden sm:flex">
-                            <a class="rounded-full bg-transparent px-5 py-2 text-sm font-medium border border-[#F2F2F2] text-primary hover:border hover:border-primary focus:bg-primary focus:text-white"
-                                href="{{ route('register') }}">
-                                Register
-                            </a>
+                        <div class="p-2">
+                            <a href="{{ route('login') }}"
+                                class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm font-medium text-white rounded-md bg-primary hover:bg-red-800 ">Login</a>
                         </div>
-                    </div>
-
-                    <div class="block md:hidden">
-                        <button class="p-2 text-gray-600 transition bg-gray-100 rounded hover:text-gray-600/75">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
             @endif
