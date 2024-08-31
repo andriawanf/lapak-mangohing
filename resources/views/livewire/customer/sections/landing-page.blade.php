@@ -23,8 +23,8 @@
                 </svg>
             </a>
         </div>
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 px-20 mt-12 text-left gap-x-6 gap-y-8 sm:grid-cols-3 sm:px-0">
+        <div class="w-full mx-auto lg:max-w-6xl">
+            <div class="grid grid-cols-1 mt-12 text-left lg:px-20 gap-x-6 gap-y-6 md:grid-cols-3">
                 <div class="flex items-start gap-4">
                     <div class="p-2 border bg-background rounded-xl border-primary/25">
                         <i data-lucide="person-standing" class="flex-shrink-0 w-6 h-6 stroke-1 text-primary"></i>

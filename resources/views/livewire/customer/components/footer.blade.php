@@ -3,10 +3,10 @@
         <div class="flex flex-wrap items-center justify-between -m-8">
             <div class="w-auto p-8">
                 <a href="#">
-                    <div class="inline-flex items-center">
+                    <div class="flex flex-col items-center md:inline-flex">
                         <img src="/images/mang-ohing-logo.png" width="50" height="50" alt=""
                             class="object-cover">
-                        <div class="text-sm font-semibold text-primary leading-[120%] text-nowrap">
+                        <div class="text-sm text-center font-semibold text-primary leading-[120%] text-nowrap">
                             <h1>Lapak</h1>
                             <h1>Mang Ohing</h1>
                         </div>
@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="w-auto p-8">
-                <ul class="flex flex-wrap items-center -m-5">
+                <ul class="flex flex-wrap items-center md:-m-5">
                     <li class="p-5">
                         <a class="text-sm font-medium text-tertiary/60 hover:text-tertiary" href="#">
                             Privacy Policy
