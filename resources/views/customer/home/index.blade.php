@@ -17,6 +17,9 @@
     {{-- produk-produk --}}
     <livewire:customer.sections.products />
 
+    {{-- mitra dagang services --}}
+    <livewire:customer.sections.mitra-dagang-service />
+
     {{-- testimonials --}}
     <livewire:customer.sections.testimonials />
 
