@@ -1,12 +1,13 @@
 <x-guest-layout>
     {{-- Form Sign Up --}}
-    <div class="flex items-center justify-center w-full min-h-screen food-pattern">
-        <div class="max-w-md">
+    <div class="flex items-center justify-center w-full min-h-screen px-6 md:px-0 food-pattern">
+        <div class="w-full md:max-w-md">
             <div>
                 <h2 class="text-3xl font-bold text-[#010101] leading-[110%]">
                     Create an account
                 </h2>
-                <p class="mt-4 text-sm leading-[140%]  w-96">Let's create your account first. Just enter your details in
+                <p class="mt-4 text-sm leading-[140%] md:w-96 w-full">Let's create your account first. Just enter your
+                    details in
                     all
                     fields.</p>
             </div>
@@ -40,7 +41,7 @@
                         placeholder="example@gmail.com" required autofocus />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div>
                         <x-input-label for="password" class="block mb-2 text-sm font-medium">
                             Password<span class="text-red-500">*</span></x-input-label>

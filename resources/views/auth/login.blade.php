@@ -1,13 +1,14 @@
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
     {{-- Form Sign In --}}
-    <div class="flex items-center justify-center w-full min-h-screen food-pattern">
-        <div class="max-w-md">
+    <div class="flex items-center justify-center w-full min-h-screen px-6 md:px-0 food-pattern">
+        <div class="w-full md:max-w-sm">
             <div>
                 <h2 class="text-3xl font-bold text-[#010101] leading-[110%]">
                     Login
                 </h2>
-                <p class="mt-4 text-sm leading-[140%]  w-96">Thank you for get back to <span class="text-[#d43637]">Lapak
+                <p class="mt-4 text-sm leading-[140%] md:w-96 w-full ">Thank you for get back to <span
+                        class="text-[#d43637]">Lapak
                         Mang
                         Ohing</span> access our the best product
                     for
