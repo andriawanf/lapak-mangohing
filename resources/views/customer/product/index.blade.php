@@ -4,11 +4,11 @@
             class="relative z-0 w-full pt-12 pb-12 min-h-fit lg:min-h-fit lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
             @if (session()->has('error'))
                 <div id="toast-error"
-                    class="absolute flex items-center justify-center p-4  text-gray-500 bg-white rounded-lg shadow right-20 -top-2 w-fit z-50"
+                    class="absolute z-50 flex items-center justify-center p-4 text-gray-500 bg-white rounded-lg shadow right-20 -top-2 w-fit"
                     role="alert">
                     <div
                         class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-red-100 rounded-lg">
-                        <div class="bg-primary rounded-full">
+                        <div class="rounded-full bg-primary">
                             <i data-lucide="circle-x" class="w-5 h-5"></i>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                 </div>
             @elseif (session()->has('success'))
                 <div id="toast-success"
-                    class="absolute flex items-center justify-center p-4 mb-4 text-gray-500 bg-white rounded-lg shadow right-20 -top-2 w-fit z-50"
+                    class="absolute z-50 flex items-center justify-center p-4 mb-4 text-gray-500 bg-white rounded-lg shadow right-6 md:right-20 -top-2 w-fit"
                     role="alert">
                     <div
                         class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
@@ -53,13 +53,13 @@
             {{-- header --}}
             <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
                 <div class="flex flex-col p-4 bg-white shadow rounded-2xl sm:p-6">
-                    <div class="inline-flex items-start justify-between">
+                    <div class="flex flex-col items-start gap-3 md:gap-0 md:flex-row md:justify-between">
                         <h1 class="text-base font-bold md:text-xl">Mang Ohing - Produk Unggulan </h1>
                         <h1 class="text-base font-medium md:text-xl text-tertiary/60">({{ $productCount }} Produk)
                         </h1>
                     </div>
                     <hr class="mt-4" />
-                    <div class="inline-flex items-start justify-between mt-4">
+                    <div class="flex flex-col items-start justify-between gap-3 mt-4 md:gap-0 md:flex-row">
                         <div class="flex items-center gap-4">
                             {{-- filter sort --}}
                             <div>
@@ -234,11 +234,11 @@
                             {{-- hidden input product_id --}}
                             <input type="hidden" name="product_id" value="{{ $product['id'] }}">
                             <input type="hidden" name="quantity" value="1">
-                            <div class="w-full h-56 relative">
+                            <div class="relative w-full h-56">
                                 @if ($product['product_stock'] <= 0)
                                     <div
-                                        class="absolute top-0 start-0 w-full h-full bg-primary/5 backdrop-blur-sm backdrop-brightness-90 flex items-center justify-center rounded-2xl">
-                                        <span class="text-primary text-xs font-medium">Stok habis</span>
+                                        class="absolute top-0 flex items-center justify-center w-full h-full start-0 bg-primary/5 backdrop-blur-sm backdrop-brightness-90 rounded-2xl">
+                                        <span class="text-xs font-medium text-primary">Stok habis</span>
                                     </div>
                                 @endif
                                 <a href="#">

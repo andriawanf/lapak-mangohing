@@ -1,31 +1,40 @@
 <x-guest-layout>
     <section
         class="relative z-0 w-full pt-12 pb-12 min-h-fit lg:min-h-fit lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
-        <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 mx-auto lg:max-w-screen-xl sm:px-6 lg:px-8">
             <h2 class="mb-8 text-xl font-semibold text-tertiary sm:text-lg">Keranjang Belanja </h2>
 
             <form action="{{ route('checkout') }}" method="POST" id="product-selection-form">
+                @csrf
+                @method('POST')
                 <div class="md:gap-4 lg:flex lg:items-start ">
                     <div class="flex-none w-full mx-auto lg:max-w-2xl xl:max-w-4xl">
-                        <div class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
-                            <table class="w-full text-sm text-left text-tertiary" id="tableCartList">
+                        <div
+                            class="relative p-4 space-y-4 overflow-x-auto bg-white border border-gray-200 rounded-lg shadow-sm sm:rounded-lg sm:p-6">
+                            <table class="w-full text-sm text-left text-tertiary rtl:text-right ">
                                 <thead class="text-xs uppercase text-tertiary/50 ">
                                     <tr class="bg-tertiary/5">
-                                        <th scope="col" class="p-4 rounded-tl-md">
+                                        <th scope="col" class="p-4 rounded-tl-sm">
                                             <div class="flex items-center">
                                                 <input id="checkbox-all-search" type="checkbox"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary focus:ring-primary focus:ring-2">
                                                 <label for="checkbox-all-search" class="sr-only">checkbox</label>
                                             </div>
                                         </th>
+                                        <th scope="col" class="px-16 py-3">
+                                            <span class="sr-only">Image</span>
+                                        </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Produk
+                                            Product
                                         </th>
-                                        <th scope="col" class="px-6 py-3 text-center ">
-                                            Quantity
+                                        <th scope="col" class="px-6 py-3">
+                                            Qty
                                         </th>
-                                        <th scope="col" class="px-6 py-3 rounded-tr-md">
-                                            Harga
+                                        <th scope="col" class="px-6 py-3">
+                                            Price
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 rounded-tr-sm">
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
@@ -41,8 +50,8 @@
                                         </tr>
                                     @else
                                         @foreach ($dataCart->cartItems as $data)
-                                            <tr class="py-2 bg-white border-b" id="trCartList"
-                                                data-trCartList = "{{ $data['id'] }}">
+                                            <tr class="bg-white border-b hover:bg-gray-50" id="trCartList"
+                                                data-trCartList="{{ $data['id'] }}">
                                                 <td class="w-4 p-4">
                                                     <div class="flex items-center">
                                                         <input id="checkbox-product-{{ $data['id'] }}" type="checkbox"
@@ -53,29 +62,32 @@
                                                             class="sr-only">checkbox</label>
                                                     </div>
                                                 </td>
-                                                <td class="flex items-start px-6 py-4">
-                                                    <a href="#" class="shrink-0 ">
-                                                        <img class="object-cover w-24 h-24"
-                                                            src="{{ $data['product']['images'] ? asset('storage/images/products/' . $data['product']['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                                            alt="image-{{ $data['product']['product_name'] }}}" />
-                                                    </a>
-                                                    <div class="ml-4">
-                                                        <a href="#"
-                                                            class="font-medium text-md text-tertiary hover:underline line-clamp-2">{{ $data['product']['product_name'] }}</a>
-                                                        <p class="mt-1 text-sm font-normal text-primary"
-                                                            data-discount={{ number_format($data->product->discounts->first() ? $data->product->discounts->first()->discount_percentage : 0) }}>
-                                                            Diskon:
-                                                            {{ $data->product->discounts->first() ? number_format($data->product->discounts->first()->discount_percentage) . '%' : '0%' }}
-                                                        </p>
-                                                    </div>
+                                                <td class="p-4">
+                                                    <img src="{{ $data['product']['images'] ? asset('storage/images/products/' . $data['product']['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
+                                                        alt="image-{{ $data['product']['product_name'] }}}"
+                                                        class="w-16 max-w-full max-h-full md:w-32">
+                                                </td>
+                                                <td class="px-6 py-4 font-semibold text-gray-900 ">
+                                                    <a href="#"
+                                                        class="font-medium text-md text-tertiary hover:underline line-clamp-2">{{ $data['product']['product_name'] }}</a>
+                                                    <p class="mt-1 text-sm font-normal text-primary"
+                                                        data-discount={{ number_format(
+                                                            $data->product->discounts->first() ? $data->product->discounts->first()->discount_percentage : 0,
+                                                        ) }}>
+                                                        Diskon:
+                                                        {{ $data->product->discounts->first()
+                                                            ? number_format($data->product->discounts->first()->discount_percentage) . '%'
+                                                            : '0%' }}
+                                                    </p>
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    <div class="relative flex items-center max-w-[8rem] mx-auto">
-                                                        <button type="button"
-                                                            id="decrement-button-{{ $data['id'] }}"
-                                                            data-counter-decrement="quantity-input-{{ $data['id'] }}"
-                                                            class="h-10 p-3 bg-gray-100 border border-gray-200 hover:bg-gray-200 rounded-s-lg focus:ring-gray-100 focus:ring-0 focus:outline-none">
-                                                            <svg class="w-2 h-2 text-tertiary " aria-hidden="true"
+                                                    <div class="flex items-center">
+                                                        <button
+                                                            class="inline-flex items-center justify-center w-6 h-6 p-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200"
+                                                            type="button" id="decrement-button-{{ $data['id'] }}"
+                                                            data-counter-decrement="quantity-input-{{ $data['id'] }}">
+                                                            <span class="sr-only">Quantity button</span>
+                                                            <svg class="w-3 h-3" aria-hidden="true"
                                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                 viewBox="0 0 18 2">
                                                                 <path stroke="currentColor" stroke-linecap="round"
@@ -83,17 +95,21 @@
                                                                     d="M1 1h16" />
                                                             </svg>
                                                         </button>
-                                                        <input type="text" id="quantity-input-{{ $data['id'] }}"
-                                                            aria-describedby="helper-text-explanation"
-                                                            data-id="{{ $data['id'] }}"
-                                                            data-price="{{ $data['product']['product_price'] }}"
-                                                            class="bg-gray-100 border-x-0 border-gray-200 h-10 text-center text-tertiary text-sm  focus:ring-0 focus:ring-primary block w-full py-2.5 "
-                                                            value="{{ $data['quantity'] }}" min="1" />
-                                                        <button type="button"
-                                                            id="increment-button-{{ $data['id'] }}"
-                                                            data-counter-increment="quantity-input-{{ $data['id'] }}"
-                                                            class="h-10 p-3 bg-gray-100 border border-gray-200 hover:bg-gray-200 rounded-e-lg focus:ring-gray-100 focus:ring-0 focus:outline-none">
-                                                            <svg class="w-2 h-2 text-tertiary" aria-hidden="true"
+                                                        <div class="ms-3">
+                                                            <input type="number"
+                                                                id="quantity-input-{{ $data['id'] }}"
+                                                                aria-describedby="helper-text-explanation"
+                                                                data-id="{{ $data['id'] }}"
+                                                                data-price="{{ $data['product']['product_price'] }}"
+                                                                class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1"
+                                                                value="{{ $data['quantity'] }}" min="1" />
+                                                        </div>
+                                                        <button
+                                                            class="inline-flex items-center justify-center w-6 h-6 p-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full ms-3 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200"
+                                                            type="button" id="increment-button-{{ $data['id'] }}"
+                                                            data-counter-increment="quantity-input-{{ $data['id'] }}">
+                                                            <span class="sr-only">Quantity button</span>
+                                                            <svg class="w-3 h-3" aria-hidden="true"
                                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                 viewBox="0 0 18 18">
                                                                 <path stroke="currentColor" stroke-linecap="round"
@@ -102,16 +118,9 @@
                                                             </svg>
                                                         </button>
                                                     </div>
-                                                    <button type="button"
-                                                        data-modal-target="deleteCart-{{ $data['id'] }}"
-                                                        data-modal-toggle="deleteCart-{{ $data['id'] }}"
-                                                        class="flex items-center mx-auto mt-4 text-xs font-medium text-tertiary hover:text-primary hover:underline">
-                                                        <i data-lucide="trash-2" class="w-3 h-3 mr-1"></i>
-                                                        Remove
-                                                    </button>
                                                 </td>
-                                                <td id="subtotal-{{ $data['id'] }}"
-                                                    class="px-6 py-4 font-bold text-md text-tertiary">
+                                                <td class="px-6 py-4 font-semibold text-gray-900 "
+                                                    id="subtotal-{{ $data['id'] }}">
                                                     @php
                                                         $subtotal =
                                                             $data['product']['product_price'] * $data['quantity'];
@@ -119,11 +128,22 @@
                                                     <p class="subtotal-value text-nowrap"> Rp.
                                                         {{ number_format($data->price, 0, ',', '.') }},00
                                                     </p>
-                                                    <p
-                                                        class="text-xs mt-0.5 line-through subtotal-value text-nowrap text-tertiary/50">
-                                                        Rp.
-                                                        {{ number_format($data->product->product_price, 0, ',', '.') }},00
-                                                    </p>
+                                                    @if ($data->product->discounts->first())
+                                                        <p
+                                                            class="text-xs mt-0.5 line-through subtotal-value text-nowrap text-tertiary/50">
+                                                            Rp.
+                                                            {{ number_format($data->product->product_price, 0, ',', '.') }},00
+                                                        </p>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <button type="button"
+                                                        data-modal-target="deleteCart-{{ $data['id'] }}"
+                                                        data-modal-toggle="deleteCart-{{ $data['id'] }}"
+                                                        class="flex items-center mx-auto mt-4 text-xs font-medium text-tertiary hover:text-primary hover:underline">
+                                                        <i data-lucide="trash-2" class="w-3 h-3 mr-1"></i>
+                                                        Remove
+                                                    </button>
                                                 </td>
                                             </tr>
                                             {{-- modal --}}

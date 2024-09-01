@@ -72,7 +72,7 @@
 
                             <hr />
 
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <h2 class="col-span-2 text-sm font-semibold lg:text-md text-tertiary">Detail
                                     Pengiriman</h2>
                                 <div class="col-span-2">
@@ -87,7 +87,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_email" class="mb-2 text-xs text-tertiary/60">
                                         Email Penerima <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -99,7 +99,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_phone" class="mb-2 text-xs text-tertiary/60">
                                         No. telpon <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -117,7 +117,7 @@
                                     </div>
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_country" class="mb-2 text-xs text-tertiary/60">
                                         Negara <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -137,7 +137,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_province" class="mb-2 text-xs text-tertiary/60">
                                         Provinsi <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -157,7 +157,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_city" class="mb-2 text-xs text-tertiary/60">
                                         Kota <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -177,7 +177,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_regency" class="mb-2 text-xs text-tertiary/60">
                                         Kabupaten <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -197,7 +197,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_district" class="mb-2 text-xs text-tertiary/60">
                                         Kecamatan <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -217,7 +217,7 @@
                                     @enderror
                                 </div>
 
-                                <div>
+                                <div class="col-span-2 md:col-span-1">
                                     <x-input-label for="customer_postcode" class="mb-2 text-xs text-tertiary/60">
                                         Kode pos <span class="text-red-500">*</span>
                                     </x-input-label>
@@ -260,7 +260,7 @@
 
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                                 <div class="p-4 border border-gray-200 rounded-lg bg-gray-50 ps-4 ">
-                                    <div class="grid items-start grid-cols-2 gap-4 lg:grid-cols-1">
+                                    <div class="grid items-start grid-cols-1 gap-4">
                                         <div class="flex items-start">
                                             <div class="flex items-center h-5">
                                                 <input id="pengiriman_gratis"
@@ -284,14 +284,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex justify-end w-full lg:justify-center">
+                                        <div class="flex justify-start w-full">
                                             <p class="text-sm font-bold text-tertiary">Rp. 0</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="p-4 border border-gray-200 rounded-lg bg-gray-50 ps-4 ">
-                                    <div class="grid items-start grid-cols-2 gap-4 lg:grid-cols-1">
+                                    <div class="grid items-start grid-cols-1 gap-4">
                                         <div class="flex items-start w-full">
                                             <div class="flex items-center h-5">
                                                 <input id="pengiriman_reguler"
@@ -316,14 +316,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex justify-end w-full lg:justify-center">
+                                        <div class="flex justify-start w-full ">
                                             <p class="text-sm font-bold text-tertiary">Rp. 20.000 - Rp. 30.000</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="p-4 border border-gray-200 rounded-lg bg-gray-50 ps-4 ">
-                                    <div class="grid items-start grid-cols-2 gap-4 lg:grid-cols-1">
+                                    <div class="grid items-start grid-cols-1 gap-4">
                                         <div class="flex items-start w-full">
                                             <div class="flex items-center h-5">
                                                 <input id="pengiriman_cepat" aria-describedby="pengiriman_cepat-text"
@@ -348,7 +348,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="flex justify-end w-full lg:justify-center">
+                                        <div class="flex justify-start w-full">
                                             <p class="text-sm font-bold text-tertiary">Rp. 40.000 - Rp. 60.000</p>
                                         </div>
                                     </div>
@@ -367,7 +367,7 @@
                             </h2>
                             <div class="space-y-4">
                                 @foreach ($cartItems as $item)
-                                    <div class="grid grid-cols-3 gap-2">
+                                    <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                                         <div class="flex items-start w-full col-span-2 gap-3">
                                             <img src="{{ asset('/images/mang-ohing-logo.png') }}" alt=""
                                                 class="object-cover rounded-lg size-16">

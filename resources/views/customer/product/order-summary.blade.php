@@ -95,12 +95,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center justify-between gap-4">
+                                    <div
+                                        class="flex flex-col items-start justify-between w-full gap-4 md:w-fit md:items-center">
                                         <p class="text-sm font-normal text-gray-500 "><span
                                                 class="font-medium text-tertiary ">Product ID:</span>
                                             {{ $item->product->product_number }}</p>
 
-                                        <div class="flex flex-col items-end justify-end gap-2">
+                                        <div class="flex flex-col items-end justify-end w-full gap-2 md:w-fit">
                                             <p class="text-sm font-normal text-tertiary ">x{{ $item->quantity }} pcs
                                             </p>
 

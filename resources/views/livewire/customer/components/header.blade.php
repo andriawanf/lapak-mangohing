@@ -240,26 +240,44 @@
 
                     <!-- Dropdown menu -->
                     <div id="userDropdown"
-                        class="z-10 hidden w-56 overflow-hidden overflow-y-auto antialiased bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-sm ">
-                        <ul class="p-2 text-sm font-medium text-tertiary text-start ">
-                            <li><a href="#" title=""
+                        class="z-10 hidden w-64 overflow-hidden overflow-y-auto antialiased bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-sm ">
+
+                        <div class="flex items-center gap-2 p-2">
+                            <img class="w-10 h-10 rounded-full" src="{{ asset('/images/mang-ohing-logo.png') }}"
+                                alt="">
+                            <div class="text-sm font-medium text-tertiary ">
+                                <div>{{ Auth()->user()->username }}</div>
+                                <div class="text-xs text-gray-500 ">{{ Auth()->user()->email }}</div>
+                            </div>
+                        </div>
+
+                        <ul class="block p-2 text-sm font-medium text-tertiary text-start md:hidden ">
+                            <li><a href="{{ route('dashboard') }}"
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Informasi Akun </a></li>
-                            <li><a href="#" title=""
+                                    Home</a></li>
+                            <li><a href="{{ route('product.collections') }}"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                    Produk</a></li>
+                            <li><a href="#"
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
                                     Mitra Dagang </a></li>
-                            <li><a href="#" title=""
+                            <li><a href="#"
                                     class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Pengaturan </a></li>
+                                    Tentang Kami </a></li>
                         </ul>
 
-                        <form action="{{ route('logout') }}" method="POST"
-                            class="p-2 text-sm font-medium text-tertiary">
-                            @csrf
-                            <button type="submit"
-                                class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-primary hover:text-white">
-                                Sign Out </button>
-                        </form>
+                        <ul class="p-2 text-sm font-medium text-tertiary text-start ">
+                            <li><a href="#"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                    Pengaturan </a></li>
+                            <form action="{{ route('logout') }}" method="POST"
+                                class="text-sm font-medium text-tertiary">
+                                @csrf
+                                <button type="submit"
+                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-primary hover:text-white">
+                                    Sign Out </button>
+                            </form>
+                        </ul>
                     </div>
 
                 </div>
