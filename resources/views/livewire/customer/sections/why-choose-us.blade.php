@@ -23,7 +23,7 @@
                     oleh semua orang Cobain sekarang juga pengalaman ngemil yang memuaskan.
                 </p>
 
-                <a href="#"
+                <a href="{{ route('login') }}"
                     class="inline-block px-12 py-3 mt-8 text-sm font-medium text-white transition rounded-full bg-primary hover:bg-red-800 focus:outline-none focus:ring-0">
                     Cobain sekarang!
                 </a>
