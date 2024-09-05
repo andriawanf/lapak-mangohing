@@ -25,16 +25,16 @@
                                 Produk
                             </li>
                         </a>
-                        <a href="#"
+                        <a href="#mitra-dagang"
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out">
                             <li>
                                 <h1 class="transition text-tertiary/60 group-hover:text-white"> Mitra Dagang </h1>
                             </li>
                         </a>
-                        <a href="#"
-                            class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out">
+                        <a href="{{ route('about-us') }}"
+                            class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out text-tertiary/60 hover:text-white hover:font-medium {{ route('about-us') == request()->url() ? 'bg-primary text-white font-medium' : '' }}">
                             <li>
-                                <h1 class="transition text-tertiary/60 group-hover:text-white"> Tentang </h1>
+                                Tentang
                             </li>
                         </a>
                     </ul>
