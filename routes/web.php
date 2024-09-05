@@ -22,6 +22,11 @@ Route::get('/', function () {
     return view('customer.home.index');
 })->name('dashboard');
 
+// about us
+Route::get('/about-us', function () {
+    return view('customer.aboutUs.index');
+})->name('about-us');
+
 Route::group(['prefix' => '/product'], function () {
     Route::get('/collection', [CustomerProductsController::class, 'index'])->name('product.collections');
     Route::get('/collection/search', [CustomerProductsController::class, 'search'])->name('product.collections.search');
