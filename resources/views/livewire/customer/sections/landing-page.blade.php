@@ -12,7 +12,7 @@
             <p class="mt-5 text-base text-background/80 sm:text-xl">Nikmati cemilan lezat untuk segala usia. Berbagai
                 varian rasa yang cocok dinikmati kapan saja.</p>
 
-            <a href="#" title=""
+            <a href="{{ route('product.collections') }}" title=""
                 class="inline-flex items-center px-6 py-4 mt-6 font-semibold transition-all duration-200 rounded-full text-background bg-primary sm:mt-12 hover:bg-red-800 focus:bg-red-800"
                 role="button">
                 Order sekarang
