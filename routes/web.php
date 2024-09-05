@@ -52,6 +52,8 @@ Route::group(['prefix' => '/product'], function () {
 // payment callback from midtrans
 Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('paymentCallback');
 
+Route::post('/send-whatsapp-to-mitra', [OrderController::class, 'sendWhatsAppToMitra'])->name('send.whatsapp.to.mitra');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

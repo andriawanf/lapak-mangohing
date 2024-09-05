@@ -139,6 +139,26 @@ class OrderController extends Controller
         }
     }
 
+    public function sendWhatsAppToMitra(Request $request)
+    {
+        $request->validate([
+            'whatsappMessageMitraDagang' => 'required',
+            'whatsapp_number' => 'required',
+        ]);
+
+        try {
+            $adminPhoneNumber = config('services.admin_phone_number');
+            $userPhoneNumber = $request->whatsapp_number;
+            $whatsappMessageMitraDagang = $request->whatsappMessageMitraDagang;
+
+            $whatsappLink = "https://wa.me/$adminPhoneNumber?text=" . urlencode("$whatsappMessageMitraDagang");
+
+            return redirect($whatsappLink);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Failed to send message');
+        }
+    }
+
     public function orderConfirmation($order)
     {
         if (Auth::check()) {
