@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8">
@@ -32,9 +32,62 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pagedone@1.1.2/src/js/pagedone.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
     <script>
         lucide.createIcons();
+    </script>
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            spaceBetween: -10,
+            slidesPerView: 3,
+            watchSlidesProgress: true,
+        });
+        var swiper2 = new Swiper(".mySwiper2", {
+            loop: true,
+            spaceBetween: 32,
+            thumbs: {
+                swiper: swiper,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    </script>
+    <script>
+        var swiper = new Swiper(".teamswiper", {
+            slidesPerView: 1,
+            spaceBetween: 32,
+            centeredSlides: false,
+            slidesPerGroupSkip: 1,
+            grabCursor: true,
+            loop: true,
+            keyboard: {
+                enabled: true,
+            },
+            breakpoints: {
+                769: {
+                    slidesPerView: 2,
+                    slidesPerGroup: 1,
+                },
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            scrollbar: {
+                el: ".swiper-scrollbar",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                type: "fraction",
+            },
+        });
     </script>
 </body>
 
