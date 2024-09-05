@@ -5,7 +5,7 @@
                 <a href="#">
                     <div class="flex flex-col items-center md:inline-flex">
                         <img src="/images/mang-ohing-logo.png" width="50" height="50" alt=""
-                            class="object-cover">
+                            class="object-cover" loading="lazy">
                         <div class="text-sm text-center font-semibold text-primary leading-[120%] text-nowrap">
                             <h1>Lapak</h1>
                             <h1>Mang Ohing</h1>

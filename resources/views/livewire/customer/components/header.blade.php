@@ -1,42 +1,42 @@
-<header class="z-50 bg-background">
+<header class="z-50 bg-white">
     <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="md:flex md:items-center md:gap-2">
                 <img src="/images/mang-ohing-logo.png" width="50" height="50" alt=""
-                    class="object-cover w-8 h-8">
-                <div class="text-sm font-semibold text-primary leading-[120%] text-nowrap">
-                    <h1 class="hidden lg:block">Lapak</h1>
-                    <h1 class="hidden lg:block">Mang Ohing</h1>
+                    class="object-cover w-8 h-8" loading="lazy">
+                <div class=" leading-[120%] text-nowrap">
+                    <h1 class="hidden text-sm font-semibold text-primary lg:block">Lapak</h1>
+                    <h1 class="hidden text-sm font-semibold text-primary lg:block">Mang Ohing</h1>
                 </div>
             </div>
 
             <div class="hidden md:block md:ms-20">
                 <nav aria-label="Global">
                     <ul class="flex items-center gap-2 text-sm">
-                        <a href="{{ route('dashboard') }}"
+                        <li
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out text-tertiary/60 hover:text-white hover:font-medium {{ route('dashboard') == request()->url() ? 'bg-primary text-white font-medium' : '' }}">
-                            <li>
-                                Home
-                            </li>
-                        </a>
-                        <a href="{{ route('product.collections') }}"
+                            <a href="{{ route('dashboard') }}">
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out text-tertiary/60 hover:text-white hover:font-medium {{ route('product.collections') == request()->url() || route('product.collections.search') == request()->url() ? 'bg-primary text-white font-medium' : '' }}">
-                            <li>
-                                Produk
-                            </li>
-                        </a>
-                        <a href="#mitra-dagang"
+                            <a href="{{ route('product.collections') }}">
+                                <p>Produk</p>
+                            </a>
+                        </li>
+                        <li
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out">
-                            <li>
+                            <a href="#mitra-dagang">
                                 <h1 class="transition text-tertiary/60 group-hover:text-white"> Mitra Dagang </h1>
-                            </li>
-                        </a>
-                        <a href="{{ route('about-us') }}"
+                            </a>
+                        </li>
+                        <li
                             class="relative px-5 py-1.5 rounded-full group hover:bg-primary transition-all duration-200 ease-out text-tertiary/60 hover:text-white hover:font-medium {{ route('about-us') == request()->url() ? 'bg-primary text-white font-medium' : '' }}">
-                            <li>
-                                Tentang
-                            </li>
-                        </a>
+                            <a href="{{ route('about-us') }}">
+                                <p>Tentang</p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -76,7 +76,7 @@
                             @foreach ($dataCart->cartItems as $data)
                                 <div class="flex items-start gap-2">
                                     <img src="{{ $data->product->images->isNotEmpty() ? asset('storage/images/products/' . $data->product->images[0]->url) : asset('/storage/images/products/default-product.png') }}"
-                                        alt="image-product" class="object-cover rounded size-16">
+                                        alt="image-product" class="object-cover rounded size-16" loading="lazy">
                                     <div class="w-full">
                                         <div>
                                             <p class="text-sm font-normal text-tertiary/60">
@@ -228,7 +228,7 @@
                         type="button">
                         <span class="sr-only">Open user menu</span>
                         <img class="w-8 h-8 rounded-full me-2" src="{{ asset('/images/mang-ohing-logo.png') }}"
-                            alt="user photo">
+                            alt="user photo" loading="lazy">
                         <p class="hidden w-20 overflow-hidden text-ellipsis text-nowrap lg:block">
                             {{ Auth::user()->username }}</p>
                         <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -243,8 +243,8 @@
                         class="z-10 hidden w-64 overflow-hidden overflow-y-auto antialiased bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-sm ">
 
                         <div class="flex items-center gap-2 p-2">
-                            <img class="w-10 h-10 rounded-full" src="{{ asset('/images/mang-ohing-logo.png') }}"
-                                alt="">
+                            <img class="w-10 h-10 rounded-full aspect-square"
+                                src="{{ asset('/images/mang-ohing-logo.png') }}" alt="" loading="lazy">
                             <div class="text-sm font-medium text-tertiary ">
                                 <div>{{ Auth()->user()->username }}</div>
                                 <div class="text-xs text-gray-500 ">{{ Auth()->user()->email }}</div>

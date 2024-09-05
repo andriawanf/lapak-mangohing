@@ -20,7 +20,8 @@
         <div class="max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-9">
                 <div class="img-box">
-                    <img src="{{ asset('images/mang-ohing-logo.png') }}" alt="About Us tailwind page" class="mx-auto">
+                    <img src="{{ asset('images/mang-ohing-logo.png') }}" alt="About Us tailwind page"
+                        class="object-cover w-full mx-auto" loading="lazy">
                 </div>
                 <div class="lg:pl-[100px] flex items-center">
                     <div class="w-full data">
@@ -100,7 +101,7 @@
                 <div class="flex items-center lg:pr-24">
                     <div class="w-full data">
                         <img src="https://pagedone.io/asset/uploads/1702034785.png" alt="About Us tailwind page"
-                            class="block mx-auto lg:hidden mb-9">
+                            class="block object-cover w-full mx-auto lg:hidden mb-9" loading="lazy">
                         <h2
                             class="text-4xl leading-10 tracking-wide text-black lg:text-5xl font-superFood mb-9 max-lg:text-center">
                             Banyak Keuntungan yang Didapatkan</h2>
@@ -115,7 +116,7 @@
                 </div>
                 <div class="img-box ">
                     <img src="https://pagedone.io/asset/uploads/1702034785.png" alt="About Us tailwind page"
-                        class="hidden lg:block ">
+                        class="hidden object-cover w-full lg:block" loading="lazy">
                 </div>
             </div>
         </div>

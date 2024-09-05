@@ -344,7 +344,7 @@
                     <div class="flex items-center gap-4">
                         <img alt=""
                             src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                            class="object-cover rounded-full size-14" />
+                            class="object-cover rounded-full size-14" loading="lazy" />
 
                         <div>
                             <div class="flex justify-center gap-0.5 text-green-500">
@@ -390,7 +390,7 @@
                     <div class="flex items-center gap-4">
                         <img alt=""
                             src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                            class="object-cover rounded-full size-14" />
+                            class="object-cover rounded-full size-14" loading="lazy" />
 
                         <div>
                             <div class="flex justify-center gap-0.5 text-green-500">

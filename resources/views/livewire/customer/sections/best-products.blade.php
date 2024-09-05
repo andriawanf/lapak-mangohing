@@ -18,7 +18,7 @@
                                     <a href="#">
                                         <img class="h-full mx-auto"
                                             src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                            alt="" />
+                                            alt="" loading="lazy" />
                                     </a>
                                 </div>
                                 <div class="pt-6">
@@ -200,7 +200,7 @@
                             <a href="#">
                                 <img class="h-full mx-auto"
                                     src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                    alt="" />
+                                    alt="" loading="lazy" />
                             </a>
                         </div>
                         <div class="pt-6">

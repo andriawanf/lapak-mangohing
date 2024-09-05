@@ -74,10 +74,10 @@
             <div class="grid grid-cols-1 gap-4 mt-8 md:grid-cols-2">
                 <img class="w-full rounded-lg"
                     src="https://plus.unsplash.com/premium_photo-1664474699781-f6785d8bb615?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fG93bmVyJTIwc2hvcHxlbnwwfDF8MHx8fDA%3D"
-                    alt="office content 1">
+                    alt="office content 1" loading="lazy">
                 <img class="w-full mt-4 rounded-lg lg:mt-10"
                     src="https://plus.unsplash.com/premium_photo-1681493339705-91c25ca62d04?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzN8fG93bmVyJTIwc2hvcHxlbnwwfDF8MHx8fDA%3D"
-                    alt="office content 2">
+                    alt="office content 2" loading="lazy">
             </div>
         </div>
     </div>
