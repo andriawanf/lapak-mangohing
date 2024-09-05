@@ -47,12 +47,12 @@
                         </dl>
                     </div>
                     <div class="flex flex-col items-center space-x-0 space-y-4 md:space-y-0 md:space-x-4 md:flex-row">
-                        <a href="#"
-                            class="w-full md:w-fit text-center text-white bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Track
-                            your order</a>
                         <a href="{{ route('product.collections') }}"
-                            class="w-full md:w-fit py-2.5 px-5 text-center text-sm font-medium text-tertiary focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-0 focus:ring-gray-100">Return
+                            class="w-full md:w-fit text-center text-white bg-primary hover:bg-red-800 focus:ring-0 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Return
                             to shopping</a>
+                        <a href="{{ route('dashboard') }}"
+                            class="w-full md:w-fit py-2.5 px-5 text-center text-sm font-medium text-tertiary focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-0 focus:ring-gray-100">Return
+                            home</a>
                     </div>
                 </div>
             </div>

@@ -10,11 +10,7 @@ class BestProducts extends Component
 {
     public function render()
     {
-        $client = new Client();
-        $url = config('services.api_url') . '/products';
-        $response = $client->get($url);
-        $productsArray = json_decode($response->getBody()->getContents(), true);
-        $bestProducts = collect($productsArray['data'])->sortByDesc('id')->take(3)->values();
+        $bestProducts = product::latest()->take(3)->get();
         return view('livewire.customer.sections.best-products', compact('bestProducts'));
     }
 }

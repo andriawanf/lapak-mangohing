@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
-use App\Models\product;
-use GuzzleHttp\Client;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -15,31 +14,23 @@ use Illuminate\Support\Facades\Session;
 
 class ProductsController extends Controller
 {
+    // Menampilkan daftar produk dengan pagination
     public function index(Request $request)
     {
-        $client = new Client();
-        $url = config('services.api_url') . '/products';
-
         // Ambil parameter halaman dari request atau default ke halaman 1
         $page = $request->input('page', 1);
         $perPage = 12; // Jumlah item per halaman
 
-        // Tambahkan parameter pagination ke URL
-        $response = $client->request('GET', $url, [
-            'query' => [
-                'page' => $page,
-                'per_page' => $perPage,
-            ]
-        ]);
+        // Ambil semua produk dari database, dan urutkan yang ada diskon terlebih dahulu
+        $productsData = Product::with('discounts') // Pastikan relasi diskon sudah ada
+            ->get()
+            ->sortBy(function ($product) {
+                return $product->discounts ? 0 : 1; // Prioritaskan produk yang memiliki diskon
+            });
 
-        $dataproducts = json_decode($response->getBody()->getContents(), true);
-        $productsData = collect($dataproducts['data'])->sortBy(function ($product) {
-            return $product['discounts'] ? 0 : 1;
-        });
+        $total = $productsData->count(); // Total produk dari database
 
-        $total = count($dataproducts['data']); // Total produk dari API
-
-        // Buat instance LengthAwarePaginator
+        // Buat instance LengthAwarePaginator untuk pagination
         $products = new LengthAwarePaginator(
             $productsData->forPage($page, $perPage)->values(),
             $total,
@@ -51,63 +42,67 @@ class ProductsController extends Controller
         return view('customer.product.index', ['products' => $products, 'productCount' => $total]);
     }
 
+    // Pencarian produk berdasarkan kata kunci
     public function search(Request $request)
     {
-        $client = new Client();
-        if ($request->search != '') {
-            $url = config('services.api_url') . '/product/search?query=' . $request->search;
-            $response = $client->request('GET', $url);
-            $dataproducts = json_decode($response->getBody()->getContents(), true);
-            $products = collect($dataproducts['data'])->sortByDesc('id')->forPage(1, 12)->values();
-            $productCount = collect($dataproducts['data'])->count();
-            return view('customer.product.index', ['products' => $products, 'productCount' => $productCount]);
+        $query = $request->search;
+
+        if (!empty($query)) {
+            // Ambil produk berdasarkan kata kunci pencarian
+            $productsData = Product::with('discounts')
+                ->where('product_name', 'like', '%' . $query . '%')
+                ->orWhere('product_number', 'like', '%' . $query . '%')
+                ->orWhere('product_stock', 'like', '%' . $query . '%')
+                ->orWhere('product_tag', 'like', '%' . $query . '%')
+                ->orWhere('product_price', 'like', '%' . $query . '%')
+                ->orderByDesc('id')
+                ->paginate(12);
+
+            $productCount = $productsData->total();
+
+            return view('customer.product.index', ['products' => $productsData, 'productCount' => $productCount]);
         } else {
-            $url = config('services.api_url') . '/products';
-            $response = $client->request('GET', $url);
-            $dataproducts = json_decode($response->getBody()->getContents(), true);
-            $products = collect($dataproducts['data'])->sortByDesc('id')->forPage(1, 12)->values();
-            $productCount = collect($dataproducts['data'])->count();
-            return view('customer.product.index', ['products' => $products, 'productCount' => $productCount]);
+            // Jika pencarian kosong, kembalikan semua produk seperti fungsi index
+            return $this->index($request);
         }
     }
 
+    // Menambahkan produk ke keranjang belanja
     public function addCart(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
-        $product_id = product::findOrFail($request->product_id);
+
+        $product = Product::findOrFail($request->product_id);
         $user = Auth::user();
         $cart = Cart::firstOrCreate(['user_id' => $user->id], ['total_price' => 0]);
 
         // Menambahkan atau memperbarui item keranjang
-        $cartItem = $cart->cartItems()->where('product_id', $product_id->id)->first();
+        $cartItem = $cart->cartItems()->where('product_id', $product->id)->first();
 
-        if ($product_id->product_stock <= $request->quantity) {
+        if ($product->product_stock < $request->quantity) {
             return redirect()->back()->with('error', 'Stok produk tidak mencukupi');
         } else {
             // Cek diskon yang berlaku
-            $discount = $product_id->discounts()
+            $discount = $product->discounts()
                 ->where('start_date', '<=', now())
                 ->where('end_date', '>=', now())
                 ->where('status', true)
                 ->first();
 
-            $discountedPrice = 0;
-            if ($discount) {
-                $discountedPrice = $product_id->product_price - ($discount->discount_percentage / 100) * $product_id->product_price;
-            } else {
-                $discountedPrice = $product_id->product_price;
-            }
+            $discountedPrice = $discount ? $product->product_price * (1 - $discount->discount_percentage / 100) : $product->product_price;
 
             if ($cartItem) {
+                // Update item di keranjang
                 $cartItem->quantity += $request->quantity;
                 $cartItem->price = $discountedPrice;
                 $cartItem->save();
             } else {
-                $cartItem = $cart->cartItems()->create([
-                    'product_id' => $product_id->id,
+                // Tambahkan item baru ke keranjang
+                $cart->cartItems()->create([
+                    'product_id' => $product->id,
                     'quantity' => $request->quantity,
                     'price' => $discountedPrice,
                 ]);
@@ -117,12 +112,14 @@ class ProductsController extends Controller
             $totalHarga = $cart->cartItems->sum(function ($item) {
                 return $item->quantity * $item->price;
             });
+
             $cart->update(['total_price' => $totalHarga]);
+
             return redirect()->back()->with(['success' => 'Produk ditambahkan ke keranjang', 'cart' => $cart]);
         }
     }
 
-
+    // Memperbarui jumlah produk di keranjang belanja
     public function updateCart(Request $request)
     {
         $cartItem = CartItem::findOrFail($request->input('id'));
@@ -138,6 +135,7 @@ class ProductsController extends Controller
         return response()->json(['message' => 'Cart updated', 'cart' => $cart]);
     }
 
+    // Menghapus item dari keranjang
     public function deleteCart($id)
     {
         $cartItem = CartItem::findOrFail($id);
@@ -149,81 +147,52 @@ class ProductsController extends Controller
             return $item->quantity * $item->price;
         });
         $cart->update(['total_price' => $totalHarga]);
+
         return redirect()->back()->with('success', 'Product deleted from cart');
     }
 
-    // my cart
+    // Menampilkan halaman keranjang belanja pengguna
     public function myCart()
     {
         $user = Auth::user();
         if (Auth::check()) {
             $dataCart = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first();
-            if ($dataCart) {
-                $cartCount = $dataCart->cartItems->count();
-                return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
-            } else {
-                $cartCount = 0;
-                return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
-            }
+            $cartCount = $dataCart ? $dataCart->cartItems->count() : 0;
+
+            return view('customer.product.shopping-cart', ['dataCart' => $dataCart, 'cartCount' => $cartCount]);
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }
     }
 
+    // Menghitung detail total pesanan dari keranjang
     public function calculateCartDetailOrder(Request $request)
     {
         $productIds = $request->product_ids;
         $user = Auth::user();
 
-        $cartItems = Cart::where('user_id', $user->id)->with('cartItems', 'cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
+        $cartItems = Cart::where('user_id', $user->id)->with('cartItems.product')->first()->cartItems()->whereIn('product_id', $productIds)->get();
 
         $subtotal = $cartItems->sum(function ($item) {
-            $product = $item->product;
-            $discounts = $product->discounts()->get();
-            $price = $product->product_price;
-
+            $price = $item->product->product_price;
+            $discounts = $item->product->discounts()->get();
             if ($discounts->isNotEmpty()) {
                 $totalDiscount = $discounts->sum('discount_percentage');
-                $price = $product->product_price * (1 - ($totalDiscount / 100));
+                $price = $price * (1 - ($totalDiscount / 100));
             }
-
             return $item->quantity * $price;
         });
 
-        $grandTotal = $cartItems->sum(function ($item) {
-            $product = $item->product->product_price;
-
-            return $item->quantity * $product;
-        });
-
-        $totalDiscount = $cartItems->sum(function ($item) {
-            $product = $item->product;
-            $discounts = $product->discounts()->get();
-            $totalDiscount = 0;
-            if ($discounts->isNotEmpty()) {
-                $totalDiscount = $discounts->sum('discount_percentage');
-            }
-            return $totalDiscount;
-        });
-
-        // calculate how much discount user get in rupiah
         $totalDiscountInRupiah = $cartItems->sum(function ($item) {
-            $product = $item->product;
-            $discounts = $product->discounts()->get();
-            $discounted_price = $item->price;
-            $price = $product->product_price;
-            $discountSum = 0;
-            if ($discounts->isNotEmpty()) {
-                $discountSum += $price - $discounted_price;
-            }
-            return $discountSum;
+            $price = $item->product->product_price;
+            $discountedPrice = $item->price;
+            return $price - $discountedPrice;
         });
 
         return response()->json([
             'subtotal' => $subtotal,
-            'total_discount' => $totalDiscount ?? 0,
-            'discounted_price' => $totalDiscountInRupiah ?? 0,
-            'grand_total' => $grandTotal
+            'total_discount' => $totalDiscountInRupiah,
+            'grand_total' => $subtotal - $totalDiscountInRupiah
         ]);
     }
 }

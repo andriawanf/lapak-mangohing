@@ -24,7 +24,7 @@
                                             <span
                                                 class="me-2 rounded bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary ">
                                                 Diskon
-                                                {{ $product['discounts'][0]['discount_percentage'] }}%</span>
+                                                {{ $product['discounts']->first()?->discount_percentage ?? 0 }}%</span>
                                         @else
                                             <span
                                                 class="me-2 rounded bg-tertiary/10 px-2.5 py-0.5 text-xs font-medium text-tertiary ">Harga
@@ -205,7 +205,7 @@
                                 @if ($product['discounts'])
                                     <span
                                         class="me-2 rounded bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary ">Diskon
-                                        {{ $product['discounts'][0]['discount_percentage'] }}%</span>
+                                        {{ $product['discounts']->first()?->discount_percentage ?? 0 }}%</span>
                                 @else
                                     <span
                                         class="me-2 rounded bg-tertiary/10 px-2.5 py-0.5 text-xs font-medium text-tertiary ">Harga
@@ -334,9 +334,11 @@
                 @endforeach
             </div>
             <div class="w-full mt-6 text-center">
-                <button type="button"
-                    class="rounded-full border border-gray-200 bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-100">Show
-                    more</button>
+                <a href="{{ route('product.collections') }}">
+                    <button type="button"
+                        class="rounded-full border border-gray-200 bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-100">Show
+                        more</button>
+                </a>
             </div>
         </div>
     </div>

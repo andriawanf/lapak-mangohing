@@ -27,7 +27,7 @@
                                             <span
                                                 class="me-2 rounded bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary ">
                                                 Diskon
-                                                {{ $product['discounts'][0]['discount_percentage'] }}%</span>
+                                                {{ $product['discounts']->first()?->discount_percentage ?? 0 }}%</span>
                                         @else
                                             <span
                                                 class="me-2 rounded bg-tertiary/10 px-2.5 py-0.5 text-xs font-medium text-tertiary ">Harga
@@ -209,7 +209,7 @@
                                     <span
                                         class="me-2 rounded bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary ">
                                         Diskon
-                                        {{ $product['discounts'][0]['discount_percentage'] }}%</span>
+                                        {{ $product['discounts']->first()?->discount_percentage ?? 0 }}%</span>
                                 @else
                                     <span
                                         class="me-2 rounded bg-tertiary/10 px-2.5 py-0.5 text-xs font-medium text-tertiary ">Harga
