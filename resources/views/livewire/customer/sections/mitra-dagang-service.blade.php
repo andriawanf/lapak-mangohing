@@ -1,6 +1,5 @@
-<div>
-
-    <section
+<section id="mitra-dagang">
+    <div
         class="relative z-0 w-full px-6 pt-12 pb-12 min-h-fit lg:min-h-fit lg:pt-16 lg:pb-16 isolate lg:px-8 bg-background food-pattern">
         <div class="items-center max-w-screen-xl gap-16 px-4 py-8 mx-auto lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
             <div>
@@ -81,7 +80,7 @@
                     alt="office content 2">
             </div>
         </div>
-    </section>
+    </div>
     {{-- modal send whatsapp --}}
     <div id="sendWhatsAppMitraDagang" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -128,7 +127,7 @@
                             <button type="submit"
                                 class="text-white bg-primary hover:bg-red-800 focus:ring-0 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Kirim
                                 Pesan</button>
-                            <button data-modal-hide="sendWhatsAppButton" type="button"
+                            <button data-modal-hide="sendWhatsAppMitraDagang" type="button"
                                 class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal</button>
                         </div>
                     </form>
@@ -136,4 +135,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>
