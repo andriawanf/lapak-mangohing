@@ -1,5 +1,5 @@
-<section class="relative py-4 overflow-hidden bg-[#F2F2F2]">
-    <div class="container relative z-10 max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
+<section class="relative py-4 overflow-hidden bg-[#F2F2F2] h-fit">
+    <div class="relative z-10 max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
         <div class="flex flex-wrap items-center justify-between -m-8">
             <div class="w-auto p-8">
                 <a href="#">

@@ -1,6 +1,5 @@
 <x-guest-layout>
-    <section
-        class="relative z-0 w-full pt-12 pb-12 min-h-fit lg:min-h-fit lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
+    <section class="relative z-0 w-full min-h-screen pt-12 pb-12 lg:pb-16 lg:pt-16 isolate bg-background food-pattern">
         <div class="w-full px-4 mx-auto lg:max-w-screen-xl sm:px-6 lg:px-8">
             <h2 class="mb-8 text-xl font-semibold text-tertiary sm:text-lg">Keranjang Belanja </h2>
 
@@ -41,7 +40,7 @@
                                 <tbody>
                                     @if ($dataCart == null)
                                         <tr>
-                                            <td colspan="4" class="p-4 text-center">Kamu belum memiliki produk
+                                            <td colspan="8" class="p-4 text-center">Kamu belum memiliki produk
                                                 apapun.
                                                 <span><a class="text-primary hover:underline"
                                                         href="{{ route('product.collections') }}">Yuk belanja
@@ -253,7 +252,7 @@
                 </div>
             </form>
             {{-- rekomendasi --}}
-            <div class="hidden xl:mt-8 xl:block">
+            {{-- <div class="hidden xl:mt-8 xl:block">
                 <h3 class="text-xl font-semibold text-tertiary">Rekomendasi</h3>
                 <div class="grid grid-cols-3 gap-4 mt-6 sm:mt-8">
                     <div class="p-6 space-y-6 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -307,7 +306,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
     {{-- footer --}}
