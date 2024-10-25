@@ -22,7 +22,9 @@ class Discount extends Model
     // one discount for one product
     public function products()
     {
-        return $this->belongsToMany(product::class, 'discount_products');
+        return $this->hasMany(product::class, 'discount_id')
+            ->withPivot('effective_date', 'expiry_date')
+            ->withTimestamps();
     }
 
     public function isValid()

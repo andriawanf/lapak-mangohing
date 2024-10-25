@@ -32,7 +32,9 @@ class Products extends Model
 
     public function discounts()
     {
-        return $this->belongsToMany(Discount::class, 'discount_products');
+        return $this->hasMany(Discount::class, 'discount_products')
+            ->withPivot('effective_date', 'expiry_date')
+            ->withTimestamps();
     }
 
     public function getActiveDiscountAttribute()

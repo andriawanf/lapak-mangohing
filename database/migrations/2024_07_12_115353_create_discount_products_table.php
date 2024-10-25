@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('discount_id')->references('id')->on('discounts')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->date('effective_date')->nullable();
+            $table->date('expiry_date')->nullable();
             $table->timestamps();
         });
     }

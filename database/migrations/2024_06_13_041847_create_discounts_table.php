@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
             $table->decimal('discount_percentage', 16, 2);
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->boolean('status')->default(1);
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
