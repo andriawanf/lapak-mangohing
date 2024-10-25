@@ -39,6 +39,8 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#f9b066',
             ])
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('sm')
             ->brandName('Lapak Mang Ohing')
             ->favicon(asset('images/mang-ohing-logo.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

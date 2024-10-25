@@ -87,12 +87,20 @@ class ProductsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('product_image')
+                    ->defaultImageUrl(url('/images/mang-ohing-logo.png'))
+                    ->square()
+                    ->width(50)
+                    ->height(50),
                 Tables\Columns\TextColumn::make('product_number')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('product_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('product_description'),
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('product_description')
+                    ->lineClamp(1)
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('product_category'),
                 Tables\Columns\TextColumn::make('product_stock')
                     ->numeric()
