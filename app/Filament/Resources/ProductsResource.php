@@ -37,7 +37,7 @@ class ProductsResource extends Resource
                     ->required()
                     ->columnSpan('full')
                     ->minLength(10)
-                    ->maxLength(255),
+                    ->maxLength(300),
                 Forms\Components\Select::make('product_category')
                     ->options([
                         'Keripik' => 'Keripik',
