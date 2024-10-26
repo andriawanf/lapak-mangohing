@@ -67,12 +67,12 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->badge(function (User $record) {
-                        return $record->email_verified_at ? 'success' : 'danger';
-                    }),
+                // Tables\Columns\TextColumn::make('email_verified_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->badge(function (User $record) {
+                //         return $record->email_verified_at ? 'success' : 'danger';
+                //     }),
                 Tables\Columns\TextColumn::make('is_active')
                     ->label('Active')
                     ->badge(function (User $record) {
