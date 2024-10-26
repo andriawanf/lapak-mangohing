@@ -369,7 +369,20 @@
                                 @foreach ($cartItems as $item)
                                     <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                                         <div class="flex items-start w-full col-span-2 gap-3">
-                                            <img src="{{ asset('/images/mang-ohing-logo.png') }}" alt=""
+                                            @php
+                                                // Decode JSON untuk mendapatkan array path
+                                                $imageData = json_decode($item->product->product_image, true);
+
+                                                // Ambil path pertama dari array, jika ada, dan ambil nama file menggunakan basename
+                                                $filePath = $imageData ? reset($imageData) : null;
+                                                $fileName = $filePath ? basename($filePath) : null;
+
+                                                // Gabungkan path direktori dengan nama file atau gunakan gambar default jika file tidak ada
+                                                $imageUrl = $fileName
+                                                    ? asset('storage/images/products/' . $fileName)
+                                                    : asset('/storage/images/products/default-product.png');
+                                            @endphp
+                                            <img src="{{ $imageUrl }}" alt=""
                                                 class="object-cover rounded-lg size-16">
                                             <div>
                                                 <p class="text-sm font-medium text-tertiary line-clamp-2">

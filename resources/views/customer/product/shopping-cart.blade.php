@@ -62,9 +62,24 @@
                                                     </div>
                                                 </td>
                                                 <td class="p-4">
-                                                    <img src="{{ $data['product']['images'] ? asset('storage/images/products/' . $data['product']['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                                        alt="image-{{ $data['product']['product_name'] }}}"
-                                                        class="w-16 max-w-full max-h-full md:w-32">
+                                                    @php
+                                                        // Decode JSON untuk mendapatkan array path
+                                                        $imageData = json_decode(
+                                                            $data['product']['product_image'],
+                                                            true,
+                                                        );
+
+                                                        // Ambil path pertama dari array, jika ada, dan ambil nama file menggunakan basename
+                                                        $filePath = $imageData ? reset($imageData) : null;
+                                                        $fileName = $filePath ? basename($filePath) : null;
+
+                                                        // Gabungkan path direktori dengan nama file atau gunakan gambar default jika file tidak ada
+                                                        $imageUrl = $fileName
+                                                            ? asset('storage/images/products/' . $fileName)
+                                                            : asset('/storage/images/products/default-product.png');
+                                                    @endphp
+                                                    <img src="{{ $imageUrl }}"
+                                                        class="w-16 max-w-full max-h-full md:w-32 rounded-xl">
                                                 </td>
                                                 <td class="px-6 py-4 font-semibold text-gray-900 ">
                                                     <a href="#"

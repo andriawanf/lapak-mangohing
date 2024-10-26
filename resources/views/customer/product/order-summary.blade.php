@@ -73,8 +73,20 @@
                                 <div class="space-y-3">
                                     <div class="flex items-center gap-6">
                                         <a href="#" class="w-24 h-24 shrink-0">
-                                            <img class="object-cover w-full h-full size-16"
-                                                src="{{ asset('/images/mang-ohing-logo.png') }}"
+                                            @php
+                                                // Decode JSON untuk mendapatkan array path
+                                                $imageData = json_decode($item->product_image, true);
+
+                                                // Ambil path pertama dari array, jika ada, dan ambil nama file menggunakan basename
+                                                $filePath = $imageData ? reset($imageData) : null;
+                                                $fileName = $filePath ? basename($filePath) : null;
+
+                                                // Gabungkan path direktori dengan nama file atau gunakan gambar default jika file tidak ada
+                                                $imageUrl = $fileName
+                                                    ? asset('storage/images/products/' . $fileName)
+                                                    : asset('/storage/images/products/default-product.png');
+                                            @endphp
+                                            <img class="object-cover w-full h-full size-16" src="{{ $imageUrl }}"
                                                 alt="image-{{ $item->product_name }}" />
                                         </a>
 
