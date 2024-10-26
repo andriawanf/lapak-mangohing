@@ -240,9 +240,22 @@
                                         <span class="text-xs font-medium text-primary">Stok habis</span>
                                     </div>
                                 @endif
-                                <img class="object-cover w-full h-full mx-auto"
-                                    src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                    loading="lazy" alt="" />
+                                @php
+                                    // Decode JSON untuk mendapatkan array path
+                                    $imageData = json_decode($product['product_image'], true);
+
+                                    // Ambil path pertama dari array, jika ada, dan ambil nama file menggunakan basename
+                                    $filePath = $imageData ? reset($imageData) : null;
+                                    $fileName = $filePath ? basename($filePath) : null;
+
+                                    // Gabungkan path direktori dengan nama file atau gunakan gambar default jika file tidak ada
+                                    $imageUrl = $fileName
+                                        ? asset('storage/images/products/' . $fileName)
+                                        : asset('/storage/images/products/default-product.png');
+                                @endphp
+
+                                <img class="object-cover w-full h-full rounded-xl" src="{{ $imageUrl }}"
+                                    alt="Product Image" loading="lazy" />
                             </div>
                             <div class="pt-6">
                                 <div class="flex items-center justify-between gap-4 mb-4">
@@ -337,13 +350,33 @@
                                                         </div>
                                                     </div>
                                                     <div class="grid grid-cols-2 gap-4 mb-4 md:grid-cols-3 sm:mb-5">
-                                                        @foreach ($product['images'] as $image)
-                                                            <div class="border border-tertiary/10 rounded-xl">
-                                                                <img src="{{ asset('storage/images/products/' . $image['url']) }}"
-                                                                    alt="{{ $product['name'] }}"
-                                                                    class="object-cover w-full h-auto rounded-xl">
-                                                            </div>
-                                                        @endforeach
+                                                        @php
+                                                            // Decode JSON untuk mendapatkan array path gambar
+                                                            $imageData = json_decode($product['product_image'], true);
+                                                        @endphp
+
+                                                        @if ($imageData)
+                                                            @foreach ($imageData as $key => $filePath)
+                                                                @php
+                                                                    // Ambil nama file menggunakan basename
+                                                                    $fileName = basename($filePath);
+
+                                                                    // Gabungkan path direktori dengan nama file
+                                                                    $imageUrl = asset(
+                                                                        'storage/images/products/' . $fileName,
+                                                                    );
+                                                                @endphp
+
+                                                                <img class="h-full mx-auto mb-4 rounded-xl"
+                                                                    src="{{ $imageUrl }}"
+                                                                    alt="Product Image {{ $key }}"
+                                                                    loading="lazy" />
+                                                            @endforeach
+                                                        @else
+                                                            <img class="h-full mx-auto rounded-xl"
+                                                                src="{{ asset('/storage/images/products/default-product.png') }}"
+                                                                alt="Default Product Image" loading="lazy" />
+                                                        @endif
                                                     </div>
                                                     <dl>
                                                         <dt class="mb-2 font-semibold leading-none text-tertiary ">

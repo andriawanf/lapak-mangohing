@@ -13,9 +13,22 @@
                             <div class="p-6 bg-white border border-gray-200 shadow-sm rounded-3xl">
                                 <div class="w-full h-36">
                                     <a href="#">
-                                        <img class="h-full mx-auto"
-                                            src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                            alt="" loading="lazy" />
+                                        @php
+                                            // Decode JSON untuk mendapatkan array path
+                                            $imageData = json_decode($product['product_image'], true);
+
+                                            // Ambil path pertama dari array, jika ada, dan ambil nama file menggunakan basename
+                                            $filePath = $imageData ? reset($imageData) : null;
+                                            $fileName = $filePath ? basename($filePath) : null;
+
+                                            // Gabungkan path direktori dengan nama file atau gunakan gambar default jika file tidak ada
+                                            $imageUrl = $fileName
+                                                ? asset('storage/images/products/' . $fileName)
+                                                : asset('/storage/images/products/default-product.png');
+                                        @endphp
+
+                                        <img class="object-cover w-full h-full" src="{{ $imageUrl }}"
+                                            alt="Product Image" loading="lazy" />
                                     </a>
                                 </div>
                                 <div class="pt-6">
@@ -195,9 +208,22 @@
                     <div class="p-6 bg-white border border-gray-200 shadow-sm rounded-3xl">
                         <div class="w-full h-56">
                             <a href="#">
-                                <img class="h-full mx-auto"
-                                    src="{{ $product['images'] ? asset('storage/images/products/' . $product['images'][0]['url']) : asset('/storage/images/products/default-product.png') }}"
-                                    alt="" loading="lazy" />
+                                @php
+                                    // Decode JSON untuk mendapatkan array path
+                                    $imageData = json_decode($product['product_image'], true);
+
+                                    // Ambil path pertama dari array, jika ada, dan ambil nama file menggunakan basename
+                                    $filePath = $imageData ? reset($imageData) : null;
+                                    $fileName = $filePath ? basename($filePath) : null;
+
+                                    // Gabungkan path direktori dengan nama file atau gunakan gambar default jika file tidak ada
+                                    $imageUrl = $fileName
+                                        ? asset('storage/images/products/' . $fileName)
+                                        : asset('/storage/images/products/default-product.png');
+                                @endphp
+
+                                <img class="object-cover w-full h-full" src="{{ $imageUrl }}" alt="Product Image"
+                                    loading="lazy" />
                             </a>
                         </div>
                         <div class="pt-6">

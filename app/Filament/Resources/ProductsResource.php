@@ -33,7 +33,7 @@ class ProductsResource extends Resource
                     ->required()
                     ->minLength(5)
                     ->maxLength(255),
-                Forms\Components\Textarea::make('product_description')
+                Forms\Components\MarkdownEditor::make('product_description')
                     ->required()
                     ->columnSpan('full')
                     ->minLength(10)
@@ -80,6 +80,17 @@ class ProductsResource extends Resource
                     ->numeric()
                     ->required()
                     ->minValue(0),
+                Forms\Components\FileUpload::make('product_image')
+                    ->columnSpan('full')
+                    ->panelLayout('grid')
+                    ->multiple()
+                    ->maxFiles(3)
+                    ->reorderable()
+                    ->openable()
+                    ->downloadable()
+                    ->visibility('public')
+                    ->directory('images/products')
+                    ->storeFileNamesIn('product_image'),
             ]);
     }
 
@@ -88,10 +99,16 @@ class ProductsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('product_image')
-                    ->defaultImageUrl(url('/images/mang-ohing-logo.png'))
-                    ->square()
+                    ->defaultImageUrl(url('/storage/images/products/default-product.png'))
+                    ->circular()
+                    ->stacked()
+                    ->limit(1)
+                    ->limitedRemainingText()
                     ->width(50)
-                    ->height(50),
+                    ->height(50)
+                    ->extraImgAttributes(fn (Products $record): array => [
+                        'alt' => "{$record->product_name} product image",
+                    ]),
                 Tables\Columns\TextColumn::make('product_number')
                     ->sortable()
                     ->searchable(),

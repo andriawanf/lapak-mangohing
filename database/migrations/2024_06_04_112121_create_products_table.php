@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('product_length');
             $table->integer('product_breadth');
             $table->integer('product_width');
+            $table->string('product_image')->nullable();
             $table->timestamps();
         });
     }

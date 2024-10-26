@@ -22,7 +22,8 @@ class Products extends Model
         'product_weight',
         'product_length',
         'product_breadth',
-        'product_width'
+        'product_width',
+        'product_image',
     ];
 
     public function images()
@@ -55,4 +56,9 @@ class Products extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+
+    protected $casts = [
+        'product_tag' => 'array',
+        'product_image' => 'array',
+    ];
 }
