@@ -267,9 +267,11 @@
                         </ul>
 
                         <ul class="p-2 text-sm font-medium text-tertiary text-start ">
-                            <li><a href="#"
-                                    class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
-                                    Pengaturan </a></li>
+                            @if (Auth()->user()->roles->pluck('name')->contains('admin'))
+                                <li><a href="{{route('dashboard.admin')}}"
+                                        class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-200 ">
+                                        Dashboard Admin </a></li>
+                            @endif
                             <form action="{{ route('logout') }}" method="POST"
                                 class="text-sm font-medium text-tertiary">
                                 @csrf
