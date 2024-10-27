@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,7 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasName
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
@@ -60,14 +61,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return auth()->user()->roles->pluck('name')->contains('admin');
     }
-    public function panel(Panel $panel): Panel
+
+    public function getFilamentName(): string
     {
-        return $panel
-            // ...
-            ->login()
-            ->registration()
-            ->passwordReset()
-            ->emailVerification()
-            ->profile(isSimple: false);
+        return "{$this->username}";
     }
 }
