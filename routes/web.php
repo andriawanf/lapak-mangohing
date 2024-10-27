@@ -38,7 +38,7 @@ Route::group(['prefix' => '/product'], function () {
 
 
     // checkout
-    Route::post('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout')->middleware('auth');
+    // Route::post('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout')->middleware('auth');
     Route::delete('/checkout', [CheckoutOrder::class, 'checkout'])->name('checkout.delete')->middleware('auth');
     Route::post('/checkout-form', [CheckoutOrder::class, 'checkoutProcess'])->name('checkout.process')->middleware('auth');
     // order summary
