@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
-use App\Models\Products;
+use App\Models\product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +13,7 @@ class ProductController extends Controller
     // Menampilkan daftar produk
     public function index()
     {
-        $products = Products::with('images')->get();
+        $products = product::with('images')->get();
         return view('dashboard.products.index', compact('products'));
     }
 
@@ -39,7 +39,7 @@ class ProductController extends Controller
         }
 
         try {
-            $product = new Products();
+            $product = new product();
             $product->product_name = $request->product_name;
             $product->product_description = $request->product_description;
             $product->product_price = $request->product_price;
@@ -74,7 +74,7 @@ class ProductController extends Controller
     // Menampilkan detail produk
     public function show($id)
     {
-        $product = Products::with('images')->findOrFail($id);
+        $product = product::with('images')->findOrFail($id);
         return view('dashboard.products.show', compact('product'));
     }
 
@@ -100,7 +100,7 @@ class ProductController extends Controller
         }
 
         try {
-            $product = Products::findOrFail($id);
+            $product = product::findOrFail($id);
             $product->product_name = $request->product_name;
             $product->product_description = $request->product_description;
             $product->product_price = $request->product_price;
@@ -143,7 +143,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         try {
-            $product = Products::findOrFail($id);
+            $product = product::findOrFail($id);
             foreach ($product->images as $image) {
                 Storage::delete('public/images/products/' . $image->url);
                 $image->delete();
@@ -163,7 +163,7 @@ class ProductController extends Controller
         $sortBy = $request->input('sort_by', 'product_name');
         $minPrice = $request->input('min_price', []);
 
-        $products = Products::with('images')
+        $products = product::with('images')
             ->where('product_name', 'LIKE', "%{$query}%")
             ->orWhere('product_number', 'LIKE', "%{$query}%")
             ->orWhere('product_tag', 'LIKE', "%{$query}%")
