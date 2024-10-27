@@ -327,8 +327,8 @@
                                                                 @php
                                                                     $discount =
                                                                         ($product['discounts']->first()
-                                                                            ?->discount_percentage ??
-                                                                            0 / 100) *
+                                                                            ?->discount_percentage /
+                                                                            100) *
                                                                         $product['product_price'];
                                                                     $price_after_discount =
                                                                         $product['product_price'] - $discount;
