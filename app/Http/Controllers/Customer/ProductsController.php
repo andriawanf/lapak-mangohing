@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
-use App\Models\Product;
+use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class ProductsController extends Controller
 {
@@ -22,7 +20,7 @@ class ProductsController extends Controller
         $perPage = 12; // Jumlah item per halaman
 
         // Ambil semua produk dari database, dan urutkan yang ada diskon terlebih dahulu
-        $productsData = Product::with('discounts') // Pastikan relasi diskon sudah ada
+        $productsData = Products::with('discounts') // Pastikan relasi diskon sudah ada
             ->get()
             ->sortBy(function ($product) {
                 return $product->discounts ? 0 : 1; // Prioritaskan produk yang memiliki diskon
@@ -49,7 +47,7 @@ class ProductsController extends Controller
 
         if (!empty($query)) {
             // Ambil produk berdasarkan kata kunci pencarian
-            $productsData = Product::with('discounts')
+            $productsData = Products::with('discounts')
                 ->where('product_name', 'like', '%' . $query . '%')
                 ->orWhere('product_number', 'like', '%' . $query . '%')
                 ->orWhere('product_stock', 'like', '%' . $query . '%')
@@ -75,7 +73,7 @@ class ProductsController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $product = Product::findOrFail($request->product_id);
+        $product = Products::findOrFail($request->product_id);
         $user = Auth::user();
         $cart = Cart::firstOrCreate(['user_id' => $user->id], ['total_price' => 0]);
 
